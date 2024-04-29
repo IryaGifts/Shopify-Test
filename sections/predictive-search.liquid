@@ -1,5 +1,22 @@
 {%- if predictive_search.performed -%}
     <div id="predictive-search-results" class="quickSearchResults quickSearchResultsBlock custom-scrollbar" >
+        <!-- Text Dropdown (Vertical List) -->
+    <div class="text-dropdown">
+        <ul id="search-dropdown">
+            {% for product in predictive_search.resources.products %}
+                <li>{{ product.title }}</li>
+            {% endfor %}
+            <!-- {% for collection in collections %}
+                {% unless collection.title == 'Home Page' %} -->
+                    <!-- <li>{{ collection.title }}</li>
+                {% endunless %} -->
+            {% endfor %}
+            {% for hashtag in hashtags %}
+                <li>{{ hashtag }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
         <div class="container">
             <h2 id="predictive-search-products" class="predictive-search__heading text-body caption-with-letter-spacing search-block-title text-left">
                 <span class="text">{{ 'general.search.search_result_title' | t }}</span>
