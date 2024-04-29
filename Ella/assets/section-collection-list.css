@@ -1,0 +1,99 @@
+/* section-collection-list.css */
+
+/* Wrapper for the entire section */
+.collection-list-wrapper {
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 1200px;
+}
+
+/* Title wrapper */
+.title-wrapper-with-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Collection list title */
+.collection-list-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+/* View all link */
+.link {
+  text-decoration: none;
+  color: #007bff;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Collection list */
+.collection-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap; /* Ensure items wrap to the next line */
+  justify-content: flex-start; /* Align items to the start of the container */
+}
+
+/* Individual collection item */
+.collection-list__item {
+  flex: 0 0 calc(33.33% - 20px); /* Adjust this width for desired number of columns */
+  margin-right: 20px;
+  margin-bottom: 20px;
+
+}
+
+/* Slider buttons */
+.slider-buttons {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Slider button styles */
+.slider-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+/* Slider counter */
+.slider-counter {
+  font-size: 16px;
+  color: #333;
+}
+
+/* View all button */
+.button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .collection-list__item {
+    flex: 0 0 calc(50% - 20px); /* Adjust for two columns on smaller screens */
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .collection-list__item {
+    flex: 0 0 100%; /* Full width on smaller screens */
+    margin-right: 0;
+  }
+}
