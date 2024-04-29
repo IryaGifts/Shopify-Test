@@ -25,37 +25,22 @@
         <form action="{{ routes.cart_url }}/add" method="post" class="variants" id="{{ id }}-{{ product.id }}-{{ sectionId }}{{ list }}" data-product-id="{{ product.id }}" enctype="multipart/form-data">
             {%- if sold_out -%}
                 {%- if settings.show_notify_form -%}
-                    <a class="button button-ATC is-notify-me" href="{{ product.url }}" data-btn-addToCart>
-                        {{ 'notify_form.general.label' | t }}
-                    </a>
+                    <a class="button button-ATC is-notify-me" href="{{ product.url }}" data-btn-addToCart>{{ 'notify_form.general.label' | t }}</a>
                 {%- else -%}
-                    <a class="button button-ATC" href="{{ product.url }}" disabled="disabled">
-                        {{ 'products.product.out_of_stock' | t }}
-                    </a>
+                    <a class="button button-ATC" href="{{ product.url }}" disabled="disabled">{{ 'products.product.out_of_stock' | t }}</a>
                 {%- endif -%}
             {%- else -%}
-                {%- if variantCount > 0 and product.variants.first.title != 'Default Title' -%}
+                {%- if variantCount > 1 and product.variants.first.title != 'Default Title' -%}
                    {%- if settings.show_quick_shop -%}
                         {%- if product.options_with_values.size == 1 and product_swatch_option contains option_name and settings.quick_shop_type == '1' -%}
                             <input type="hidden" name="id" value="{{ product.variants[0].id }}" />
                             <input type="hidden" name="quantity" value="1" />
-                            <button
-                                  class="button button-ATC"
-                                  type="submit"
-                                  data-form-id="#{{ id }}-{{ product.id }}-{{ sectionId }}{{ list }}"
-                                  data-btn-addToCart
-                            >
-                                  {{ 'products.product.add_to_cart' | t }}
-                            </button>
+                            <button class="button button-ATC" type="submit" data-form-id="#{{ id }}-{{ product.id }}-{{ sectionId }}{{ list }}" data-btn-addToCart>{{ 'products.product.add_to_cart' | t }}</button>
                         {%- else -%}
-                            <a class="button button-ATC" href="{{ product.url }}" data-quickshop-popup>
-                                {{ 'products.product.quick_shop' | t }}
-                            </a>
+                            <a class="button button-ATC" href="{{ product.url }}" data-quickshop-popup>{{ 'products.product.quick_shop' | t }}</a>
                           {%- endif -%}
                     {%- else -%}
-                        <a class="button button-ATC" href="{{ product.url }}">
-                            {{ 'products.product.select_options' | t }}
-                        </a>
+                        <a class="button button-ATC" href="{{ product.url }}">{{ 'products.product.select_options' | t }}</a>
                     {%- endif -%}
                 {%- else -%}
                     <input type="hidden" name="id" value="{{ product.variants[0].id }}" />
@@ -66,23 +51,9 @@
                     -%}
           
                     {%- if first_inventory_grid > 0 -%}
-                        <button
-                            class="button button-ATC"
-                            type="submit"
-                            data-form-id="#{{ id }}-{{ product.id }}-{{ sectionId }}{{ list }}"
-                            data-btn-addToCart
-                        >
-                            {{ 'products.product.add_to_cart' | t }}
-                        </button>
+                        <button class="button button-ATC" type="submit" data-form-id="#{{ id }}-{{ product.id }}-{{ sectionId }}{{ list }}" data-btn-addToCart>{{ 'products.product.add_to_cart' | t }}</button>
                     {%- else -%}
-                        <button
-                            class="button button-ATC"
-                            type="submit"
-                            data-form-id="#{{ id }}-{{ product.id }}-{{ sectionId }}{{ list }}"
-                            data-btn-addToCart
-                        >
-                            {{ 'products.product.pre_order' | t }}
-                        </button>
+                        <button class="button button-ATC" type="submit" data-form-id="#{{ id }}-{{ product.id }}-{{ sectionId }}{{ list }}" data-btn-addToCart>{{ 'products.product.pre_order' | t }}</button>
                     {%- endif -%} 
                 {%- endif -%}
             {%- endif -%}
@@ -92,15 +63,16 @@
 <div class="card-action__group variants-popup card-list__hidden">
     <div class="card-action variants-popup-form">
         {%- if settings.show_quick_shop and product.available -%}
-            {%- if variantCount > 0 and product.variants.first.title != 'Default Title' -%}
+            {%- if variantCount > 1 and product.variants.first.title != 'Default Title' -%}
                 {%- if has_popup -%}
                     <div class="custom-scrollbar">
+                        {% capture sectionId_category %}{{ sectionId }}-category{% endcapture %}
                         {% render 'product-quick-shop-popup',
                             product: product,
                             id: id,
                             list: list,
                             position: position,
-                            sectionId: sectionId 
+                            sectionId: sectionId_category 
                         %}
                     </div>
                 {%- endif -%}

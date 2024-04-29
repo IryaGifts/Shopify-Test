@@ -261,17 +261,17 @@
             }
         }
     </style>
-    <{% if swipe %}product-slider-component{% else %}div{% endif %} class="halo-block halo-product-block halo-recommendations-block section-block-{{section.id}}" id="halo-recommendations-block-{{ section.id }}" data-limit="{{ limit }}" data-layout="{{ layout }}" sectionId="{{ section.id }}" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ limit }}" data-image-ratio="{{ image_ratio }}" data-swipe="{{ swipe }}" data-recommendations-block style="--grid-gap: {{ grid_gap }}">
+    <{% if swipe %}product-slider-component{% else %}div{% endif %} class="halo-block halo-product-block halo-recommendations-block section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="halo-recommendations-block-{{ section.id }}" data-limit="{{ limit }}" data-layout="{{ layout }}" sectionId="{{ section.id }}" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ limit }}" data-image-ratio="{{ image_ratio }}" data-swipe="{{ swipe }}" data-recommendations-block style="--grid-gap: {{ grid_gap }}">
         {% if recommendations.performed and recommendations.products_count > 0 %}
             <{% if layout == 'scroll' %}product-scroller{% else %}div{% endif %} class="wrapper-container {% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%}container-full{% else %}container{% endif %}">
                 {%- if block_title != blank -%}
                     <div class="halo-block-header text-{{ block_title_align }} block-title--{{section.settings.style_block_header}}">
-                        <h3 class="title">
+                        <h3 class="title{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                             <span class="text">{{ block_title | escape }}</span>
                         </h3>
                     </div>
                 {%- endif -%}
-                <div class="halo-block-content {% if layout == 'scroll' %}is-scroll{% endif %}" {% if layout == 'scroll' %}data-drag-container{% endif %}>
+                <{% if swipe %}product-slider-component{% else %}div{% endif %} class="halo-block-content {% if layout == 'scroll' %}is-scroll{% endif %}" {% if layout == 'scroll' %}data-drag-container{% endif %}>
                     {%- if layout== 'grid' -%}
                         {%- liquid
                             assign product_limit = 0
@@ -329,7 +329,7 @@
                         >
                     {%- endif -%}
                         {%- for product in recommendations.products limit: limit -%}
-                            <div class="product{% if swipe %} slider__slide grid__item{% endif %}">
+                            <div class="product{% if swipe %} slider__slide grid__item{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} style="--animation-order: {{ forloop.index }};"{% endif %}>
                                 {% render 'product-grid-layout',
                                     product_card_product: product,
                                     media_size: image_ratio,
@@ -358,7 +358,7 @@
                             </div>
                         </div>
                     {%- endif -%}
-                </div>
+                </{% if swipe %}product-slider-component{% else %}div{% endif %}>
             </{% if layout == 'scroll' %}product-scroller{% else %}div{% endif %}>
         {% else %}
             <div class="wrapper-container product-recommendations-loading {% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%}container-full{% else %}container{% endif %}">
@@ -447,7 +447,7 @@
     "settings": [
         {
             "type": "header",
-            "content": "t:sections.product-recently-viewed.settings.header__1.content"
+            "content": "t:settings_schema.general.name"
         },
         {
             "type": "checkbox",

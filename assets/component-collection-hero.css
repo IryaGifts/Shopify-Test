@@ -84,6 +84,9 @@
 
 .collection-description .read-description {
     display: inline;
+    border: none;
+    background: none;
+    vertical-align: unset;
 }
 
 .collection-description.show-full .short-description {
@@ -246,8 +249,13 @@
     left: 0;
     width: 100%;
     z-index: 1;
+    max-height: 90%;
+    overflow-y: auto;
+    overflow-x: inherit;
 }
-
+.collection-header--hasSub .collection-info--absolute {
+  max-height: 75%
+}
 .collection-info--absolute.align-top {
     top: 0;
 }
@@ -255,6 +263,10 @@
 .collection-info--absolute.align-center {
     top: 50%;
     transform: translateY(-50%);
+}
+
+.collection-info--absolute.align-center.show_sub_collection {
+    transform: translateY(calc(-50% - 33px));
 }
 
 .collection-info--absolute.align-bottom {
@@ -363,6 +375,7 @@
 .collection-info-item .button-show-more .button {
     width: max-content;
     border: none;
+    background: none;
     text-transform: initial;
     font-weight: 400;
     text-decoration: underline;
@@ -512,8 +525,8 @@
         padding-top: 0;
     }
 
-    .collection-banner .image:not(.image-mobile){
-        padding-top: 18.361702% !important;
+    .collection-content--absolute .collection-banner .image:not(.image-mobile){
+        min-height: 250px;
     }
 
     .collection-banner .image.not-image{
@@ -667,7 +680,9 @@
     .collection-title {
         padding-bottom: 14px;
     }
-
+    .collection-banner .image.image-mobile.from-desktop {
+       min-height: 188px;
+    }
     .collection-banner .image.image-mobile.from-desktop img {
         min-height: 188px;
     }

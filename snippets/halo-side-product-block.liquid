@@ -29,14 +29,10 @@
             <div class="sidebarBlock-headingWrapper">
         {%- endif -%}
             {%- if heading != blank -%}
-                <h3 class="sidebarBlock-heading{% if show_collapse %}{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}{% endif %}">
-                    {{ heading | escape }}
-                </h3>
+                <h2 class="sidebarBlock-heading{% if show_collapse %}{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}{% endif %}">{{ heading | escape }}</h2>
             {%- else -%}
                 {%- if show_collapse -%}
-                    <h3 class="sidebarBlock-heading{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}">
-                        BLock Heading
-                    </h3>
+                    <h2 class="sidebarBlock-heading{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}">BLock Heading</h2>
                 {%- endif -%}
             {%- endif -%}
         {%- if show_collapse -%}
@@ -45,29 +41,16 @@
         {%- endif -%}
             <div class="sidebarBlock-content">
                 <div class="sidebarBlock-product halo-product-block" data-limit="{{ limit }}">
-                    <div class="{% if layout == 'slider' %}products-carousel{% else %}products-grid{% endif %} column-{{ column }}" {% if layout == 'slider' %}{% if position == 'content' %}data-product-slider-article{% else %}data-product-slider-sidebar{% endif %} data-layout="slider"{% endif %}
-                        {% if layout == 'slider' %}
-                            data-item-to-show="{{ column }}"
-                            data-item-dots="{{ dots }}"
-                            data-item-arrows="{{ arrows }}"
-                        {% endif %}
-                    >
+                    <div class="{% if layout == 'slider' %}products-carousel{% else %}products-grid{% endif %} column-{{ column }}" {% if layout == 'slider' %}{% if position == 'content' %}data-product-slider-article{% else %}data-product-slider-sidebar{% endif %} data-layout="slider"{% endif %}{% if layout == 'slider' %} data-item-to-show="{{ column }}" data-item-dots="{{ dots }}" data-item-arrows="{{ arrows }}"{% endif %}>
                         {%- for product in collections[collection].products limit: limit -%}
                             <div class="product {% if layout == 'slider' %}slider__slide{% else %}grid__item{% endif %}">
-                                {% render 'product-grid-layout',
-                                    product_card_product: product,
-                                    media_size: image_ratio,
-                                    portrait_aspect_ratio: '133',
-                                    loading: true
-                                %}
+                                {% render 'product-grid-layout', product_card_product: product, media_size: image_ratio, portrait_aspect_ratio: '133', loading: true %}
                             </div>
                         {%- else -%}
                             {%- for product in (1..limit) -%}
                                 <div class="product {% if layout == 'slider' %}slider__slide{% else %}grid__item{% endif %}">
-                                    {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
-                                    {% render 'product-card-placeholder',
-                                        index: current
-                                    %}
+                                    {%- capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture -%}
+                                    {% render 'product-card-placeholder', index: current %}
                                 </div>
                             {%- endfor -%}
                         {%- endfor -%}

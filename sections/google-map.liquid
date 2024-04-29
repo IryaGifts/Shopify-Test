@@ -32,26 +32,32 @@
         assign btn_link = section.settings.btn_link
     -%}
 
-    <div class="custom-map" id="custom-map-{{ section.id }}">
+    <div class="custom-map{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="custom-map-{{ section.id }}">
     	<div class="{% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%} container-full{% else %}container{% endif %}">
     		{%- if block_title != blank or block_text != blank or btn_text != blank -%}
                 <div class="block-header">
-                    <h2 class="title text-{{ block_align }}">
+                    <h2 class="title text-{{ block_align }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} data-cascade style="--animation-order: 1;"{% endif %}>
                         {{ block_title | escape }}
                     </h2>
                     {%- if block_text != blank -%}
-	                    <p class="desc text-{{ block_align }}">
+	                    <p class="desc text-{{ block_align }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} data-cascade style="--animation-order: 2;"{% endif %}>
 	                    	{{ block_text | escape }}
                         </p>
 	                {%- endif -%}
                     {% if btn_text != blank %} 
-                        <{% if btn_link != blank %}a href={{ btn_link.url }}{% else %}button{% endif %} class="map-btn button align-{{ block_align }}">
-                            {{ btn_text }}
-                        </{% if btn_link != blank %}a{% else %}button{% endif %}>
+                        {% if settings.banner_animation == 'effect_fade_up' %}
+                        <div class="scroll-trigger animate--slide-in" style="--animation-order: 3;">
+                        {% endif %}
+                            <{% if btn_link != blank %}a href={{ btn_link.url }}{% else %}button{% endif %} class="map-btn button align-{{ block_align }}">
+                                {{ btn_text }}
+                            </{% if btn_link != blank %}a{% else %}button{% endif %}>
+                            {% if settings.banner_animation == 'effect_fade_up' %}
+                            </div>
+                            {% endif %}
                     {% endif %}
                 </div>
             {%- endif -%}
-            <div class="block-content">
+            <div class="block-content{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} data-cascade style="--animation-order: 4;"{% endif %}>
             	{{ block_content }}
             </div>
     	</div>
@@ -123,7 +129,7 @@
 		"settings": [
 			{
                 "type": "header",
-                "content": "t:sections.custom_map.settings.header__1"
+                "content": "t:settings_schema.general.name"
             },
             {
                 "type": "checkbox",
@@ -341,6 +347,9 @@
             {
                 "name": "t:sections.custom_map.presets.name"
             }
-        ]
+        ],
+        "disabled_on": {
+            "groups": ["header"]
+        }
 	}
 {% endschema %}

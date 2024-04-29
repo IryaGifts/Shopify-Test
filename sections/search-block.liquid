@@ -39,14 +39,14 @@
     assign padding_bottom_input = section.settings.padding_bottom_input | append: 'px'
 %}
 
-<div class="search-block-section" id="search-block-section-{{ section.id }}" data-id="{{ section.id }}" data-title="{{ search_block_title }}">
+<div class="search-block-section{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="search-block-section-{{ section.id }}" data-id="{{ section.id }}" data-title="{{ search_block_title }}">
     <div class="{% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%} container-full{% else %}container{% endif %}">
         <div class="search-block align-{{ content_align }}" style="--content-max-width: {{ content_max_width }};
                                                                     --input-padding-top: {{ padding_top_input }};
                                                                     --input-padding-bottom: {{ padding_bottom_input }};">
             <div class="block-header">
                 {% if search_block_title != blank %}
-                    <h2 class="title search-block-title text-{{ text_align }} {% if enable_border_title %}has_border{% endif %}"
+                    <h2 class="title search-block-title text-{{ text_align }} {% if enable_border_title %}has_border{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                         style="--title-color: {{ color_title }};
                         --title-fs: {{ fontsize_title }};
                         --title-fs-mb: {{ fontsize_title_mb }};
@@ -58,7 +58,7 @@
                     </h2>
                 {% endif %}
                 {% if search_block_des != blank %}
-                    <p class="desc search-block-des text-{{ text_align }}"
+                    <p class="desc search-block-des text-{{ text_align }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                         style="--desc-color: {{ color_des }};
                         --desc-margin-bottom: {{ margin_bottom_des }};
                         --des-fs: {{ fontsize_des }};
@@ -68,7 +68,7 @@
                     </p>
                 {% endif %}
             </div>
-            <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
+            <form action="{{ routes.search_url }}" method="get" role="search" class="search-form{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                 <input type="hidden" name="type" value="{{ search.terms | escape }}">
                 <input type="hidden" name="options[prefix]" value="last" />
                 <div class="form-field form-fieldInline">
@@ -466,6 +466,9 @@
             {
                 "name": "t:sections.search_block.presets.name"
             }
-        ]
+        ],
+        "disabled_on": {
+            "groups": ["header"]
+        }
 	}
 {% endschema %}

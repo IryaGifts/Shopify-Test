@@ -168,10 +168,6 @@
   bottom: -20px;
 }
 
-body:not(.safari).banner-animation-1 .articleGallery-slider .slick-dots {
-  transform: none;
-}
-
 .imgGallery-item .select-icon-1 {
   top: var(--top-position-1-style);
   left: var(--left-position-1-style);

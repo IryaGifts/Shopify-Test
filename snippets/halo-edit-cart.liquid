@@ -22,7 +22,7 @@
             <a class="product-edit-image card-media--adapt" href="{{ product.url | within: collection }}"
                     style="padding-bottom: {{ 1 | divided_by: image.aspect_ratio | times: 100 }}%;"
             >
-                <img srcset="{{ image | img_url: '270x' }}" src="{{ image | img_url: '270x' }}" alt="{{ product.title | escape }}" sizes="auto" loading="lazy">
+                <img srcset="{{ image | img_url: '270x' }}" src="{{ image | img_url: '270x' }}" alt="{{ product.title | escape }}" sizes="270px" loading="lazy">
             </a>
             <a href="javascript:void(0)" class="product-edit-remove" data-edit-cart-remove>
                 {% render 'icon-close' %}
@@ -99,30 +99,46 @@
                                                 assign values = values | split: ';'
                                             -%}
                                             <input class="product-form__radio" type="radio" id="option-edit-{{ product.id }}-{{ option.name }}-{{ forloop.index0 }}"
-                                                name="{{ option.name }}"
+                                                name="edit-cart-{{ option.name }}"
                                                 value="{{ value | escape }}"
                                                 {% if option.selected_value == value %}checked{% endif %}
                                             >
                                             {%- if is_swatch -%}
+                                                {%- liquid
+                                                    assign enable_variant_image = false
+                                                    case swatch_type
+                                                        when 'variant_image'
+                                                            assign background_image = variant.image.src | product_img_url: '40x'
+                                                            if variant.image
+                                                                assign enable_variant_image = true
+                                                            endif
+                                                        when 'color'
+                                                            assign background_image = value | handle | append: '.png' | file_url
+                                                            assign enable_variant_image = true
+                                                        when 'metafields'
+                                                            assign variant_color = variant.metafields.custom.variant_color
+                                                            assign color_codes = false
+                            
+                                                            if variant_color
+                                                                assign enable_variant_image = true
+                                                            
+                                                                if variant_color contains '#' or variant_color contains 'rgb' or variant_color contains 'hsl'
+                                                                    assign color_codes = true
+                                                                    assign background_color = variant_color
+                                                                else
+                                                                    assign background_image = variant_color | append: '.png' | file_url
+                                                                endif
+                                                            elsif variant.image
+                                                                assign enable_variant_image = true
+                                                                assign background_image = variant.image.src | product_img_url: '40x'
+                                                            endif
+                                                    endcase
+                                                -%}
                                                 <label class="product-form__label {% if variant.available %} available{% else %} soldout{% endif %}" for="option-edit-{{ product.id }}-{{ option.name }}-{{ forloop.index0 }}">
-                                                    {%- if variant.image %}
-                                                        <span class="pattern" style="background-image: url({{ variant.image.src | product_img_url: '40x'}});">
-                                                        </span>
-                                                        <!-- <span class="expand">
-                                                            <img srcset="{{ variant.image.src | product_img_url: '75x'}}" src="{{ variant.image.src | product_img_url: '75x'}}" sizes="auto" loading="lazy">
-                                                        </span> -->
-                                                    {%- else -%}
-                                                        {%- if swatch_type == 'variant_image' -%}
-                                                            <span class="pattern" style="background-image: url({{ value | handle | append: '.' | append: file_extension | file_url }})">              
-                                                            </span>
-                                                        {%- else -%}
-                                                            <span class="pattern" style="background-color: {{ value | split: ' ' | last | handle }};">              
-                                                            </span>
-                                                        {%- endif -%}
-                                                        <span class="tooltip">
-                                                            {{ value | escape }}
-                                                        </span>
-                                                    {%- endif -%}
+                                                    <span
+                                                        class="pattern"
+                                                        style="background-color: {{ value | split: ' ' | last | handle }};{% if enable_variant_image %}{% if swatch_type == 'metafields' %}{% if color_codes %} background: {{ background_color }}{% else %} background: url({{ background_image }}); background-size: cover;{% endif %}{% else %} background-image: url({{ background_image }});{% endif %}{% endif %}"
+                                                    ></span>
                                                 </label>
                                             {%- else -%}   
                                                 <label class="product-form__label{% if variant.available %} available{% else %} soldout{% endif %}" for="option-edit-{{ product.id }}-{{ option.name }}-{{ forloop.index0 }}">

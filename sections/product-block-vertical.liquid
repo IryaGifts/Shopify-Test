@@ -11,19 +11,15 @@
 
     assign swipe = section.settings.spotlight_block_swipe_on_mobile
 -%}
-<div class="product-block-vertical product-block section-block-{{section.id}}">
+<div class="product-block-vertical product-block section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
     <{% if swipe == 'slider' %}banner-slider-component{% else %}div{% endif %} class="halo-block halo-product-block" id="halo-product-block-{{ section.id }}">
         <div class="{% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%}container-full{% else %}container{% endif %}">
             {%- if block_title != blank -%}
                 <div class="halo-block-header text-{{ block_title_align }}">
-                    <h3 class="title">
-                        <span class="text">{{ block_title | escape }}</span>
-                    </h3>
-                    {% if section.settings.view_all != blank %}
-                    <a class="view_all"{% if section.settings.link_view_all == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.link_view_all }}"{% endif %} title="{{section.settings.view_all}}">
-                        {{ section.settings.view_all }}
-                    </a>
-                    {% endif %}
+                    <h3 class="title{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"><span class="text">{{ block_title | escape }}</span></h3>
+                    {%- if section.settings.view_all != blank -%}
+                    <a class="view_all{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if section.settings.link_view_all == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.link_view_all }}"{% endif %} title="{{section.settings.view_all}}">{{ section.settings.view_all }}</a>
+                    {%- endif -%}
                 </div>
             {%- endif -%}
             <div class="halo-block-content halo-row column-{{ section.blocks.size }} {% if swipe == 'slider' %} slider slider--tablet{% endif %}{% if swipe == 'scroll' %} scroll-snap-mobile disable-srollbar{% endif %}">
@@ -31,36 +27,28 @@
                 assign product_limit = 0
                 assign column = section.settings.product_block_per_row
             -%}
-            {% for block in section.blocks %}
+            {%- for block in section.blocks -%}
                 {%- assign collection = block.settings.collection -%}
                 <div class="product--vertical halo-item {% if swipe == 'slider' %} slider__slide{% endif %}">
-                    {% if block.settings.title %}
-                        <div class="product__vertical--header">
-                            <h4>{{ block.settings.title }}</h4>
-                            <a {% if block.settings.link_view_all == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link_view_all }}"{% endif %}>{{ block.settings.view_all }}</a>
-                        </div>
-                    {% endif %}
+                    {%- if block.settings.title -%}
+                        <div class="product__vertical--header{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"><h4>{{ block.settings.title }}</h4><a {% if block.settings.link_view_all == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link_view_all }}"{% endif %}>{{ block.settings.view_all }}</a></div>
+                    {%- endif -%}
                     <div class="product__list-vertical">
                         {%- for product in collections[collection].products limit: limit -%}
-                            <div class="product">
-                                {% render 'product-card-vertical',
-                                    product_card_product: product
-                                %}
+                            <div class="product{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} style="--animation-order: {{ forloop.index }};"{% endif %}>
+                                {% render 'product-card-vertical', product_card_product: product %}
                             </div>
                         {%- endfor -%}
                     </div>
                 </div>
-            {% endfor %}
-            
+            {%- endfor -%}
             </div>
             {%- if swipe == 'slider' and section.blocks.size > 1 -%}
                 <div class="slider-buttons no-js-hidden">
                     <ul class="slider-dots {% if section.blocks.size == 2 %}count_2{% endif %}">
-                        {% for block in section.blocks %}
-                        <li class="dots-item {% if forloop.first %}active{% endif %}">
-                            <button name="dots" data-index="{{ forloop.index0 }}">{{ forloop.index }}</button>
-                        </li>
-                        {% endfor %}
+                        {%- for block in section.blocks -%}
+                        <li class="dots-item{% if forloop.first %} active{% endif %}"><button name="dots" data-index="{{ forloop.index0 }}">{{ forloop.index }}</button></li>
+                        {%- endfor -%}
                     </ul>
                 </div>
             {%- endif -%}
@@ -68,7 +56,6 @@
     </{% if swipe == 'slider' %}banner-slider-component{% else %}div{% endif %}>
 </div>
 <style>
-
     {%- liquid
         assign color_title = section.settings.color_title
         assign fontsize_title = section.settings.fontsize_title
@@ -95,77 +82,33 @@
         assign color_border_block = section.settings.color_border_block
     -%}
 
-    {% if enable_border_title_block %}
-    .section-block-{{section.id}} .product__vertical--header {
-        border-bottom: 2px solid {{ color_border_block }};
-    }
-    {% endif %}
-
-    .section-block-{{section.id}} .product__vertical--header h4 {
-        color: {{color_title_block}};
-        font-size: {{ font_size_title_block | append: 'px' }};
-    }
-
-    .section-block-{{section.id}} .product__vertical--header a {
-        color: {{color_view_all_block}};
-    }
-
-    .section-block-{{section.id}} .halo-block-header .title {
-        color: {{ color_title }};
-        font-size: {{ fontsize_title | append: 'px'  }};
-    }
-
-    .section-block-{{section.id}} .halo-block-header .title:before {
-        background-color: {{ color_title }};
-        {% unless section.settings.enable_border_title %}
-        display: none;
-        {% endunless %}
-    }
-
-    .section-block-{{section.id}} .halo-block-header .view_all {
-        color: {{color_view_all}};
-        {%- unless section.settings.enable_border_view_all -%}
-            border: 0;
+    {%- if enable_border_title_block -%}
+    .section-block-{{section.id}} .product__vertical--header {border-bottom: 2px solid {{ color_border_block }}}
+    {%- endif -%}
+    .section-block-{{section.id}} .product__vertical--header h4 {color: {{color_title_block}};font-size: {{ font_size_title_block | append: 'px' }}}
+    .section-block-{{section.id}} .product__vertical--header a {color: {{color_view_all_block}}}
+    .section-block-{{section.id}} .halo-block-header .title {color: {{ color_title }};font-size: {{ fontsize_title | append: 'px' }}}
+    .section-block-{{section.id}} .halo-block-header .title:before {background-color: {{ color_title }};
+        {%- unless section.settings.enable_border_title -%}
+        display: none
         {%- endunless -%}
     }
-
-    @media (min-width: 1200px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_desktop | append: 'px' }};
-            padding-bottom: {{ mg_bottom_desktop | append: 'px' }};
-        }
+    .section-block-{{section.id}} .halo-block-header .view_all {color: {{color_view_all}};
+        {%- unless section.settings.enable_border_view_all -%}
+            border: 0
+        {%- endunless -%}
     }
-
-    @media (min-width: 1025px) {
-        {% if section.settings.container == 'fullwidth' %}
-            .section-block-{{section.id}} .container-full {
-                padding-left: {{ padding_full_width | append: 'px' }};
-                padding-right: {{ padding_full_width | append: 'px' }};
-            }
-        {% endif %}
-    }
-
-    @media (min-width: 768px) and (max-width: 1199px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_tablet | append: 'px' }};
-            padding-bottom: {{ mg_bottom_tablet | append: 'px' }};
-        }
-    }
-
+    @media (min-width: 1200px) {.section-block-{{section.id}} {padding-top: {{ mg_top_desktop | append: 'px' }};padding-bottom: {{ mg_bottom_desktop | append: 'px' }}}}
+    {%- if section.settings.container == 'fullwidth' -%}
+        @media (min-width: 1025px) {.section-block-{{section.id}} .container-full {padding-left: {{ padding_full_width | append: 'px' }};padding-right: {{ padding_full_width | append: 'px' }}}}
+    {%- endif -%}
+    @media (min-width: 768px) and (max-width: 1199px) {.section-block-{{section.id}} {padding-top: {{ mg_top_tablet | append: 'px' }};padding-bottom: {{ mg_bottom_tablet | append: 'px' }}}}
     @media (max-width: 767px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_mobile | append: 'px' }};
-            padding-bottom: {{ mg_bottom_mobile | append: 'px' }};
-        }
-        .section-block-{{section.id}} .halo-block-header .title {
-            font-size: {{ fontsize_title_mb | append: 'px'  }};
-        }
-        .section-block-{{section.id}} .product__vertical--header h4 {
-            font-size: {{ font_size_title_block_mb | append: 'px' }};
-        }
+        .section-block-{{section.id}} {padding-top: {{ mg_top_mobile | append: 'px' }};padding-bottom: {{ mg_bottom_mobile | append: 'px' }}}
+        .section-block-{{section.id}} .halo-block-header .title {font-size: {{ fontsize_title_mb | append: 'px'  }}}
+        .section-block-{{section.id}} .product__vertical--header h4 {font-size: {{ font_size_title_block_mb | append: 'px' }}}
     }
 </style>
-
 {% schema %}
 {
     "name": "t:sections.product_block_vetical.name",
@@ -174,7 +117,7 @@
     "settings": [
         {
             "type": "header",
-            "content": "t:sections.layout.content"
+            "content": "t:settings_schema.general.name"
         },
         {
             "type": "select",

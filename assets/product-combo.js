@@ -67,7 +67,16 @@ class ProductCombo extends HTMLElement {
         let attributes = {};
 
         Shopify.getCart((cart) => {
-            const itemsInCart = cart.items
+            const itemsInCart = cart.items;
+
+            itemsInCart.forEach(element => {
+                const variantId = element.id,
+                      qty = element.quantity;
+                if (variantId) {
+                    data = `${variantId}:${qty}${hint}${data}`;
+                }
+            })
+          
             bundleItem.forEach((item, index) => {
                 const variantId = item.querySelector('[name=group_id]').value;
                 
@@ -78,12 +87,12 @@ class ProductCombo extends HTMLElement {
                         currentQuantity = addedSameItem.quantity
                     }
 
-                    data = `${data}${variantId}:${currentQuantity + 1}${index == (bundleItem.length - 1) ? '' : hint}`;
+                    data = `${data}${variantId}:1${index == (bundleItem.length - 1) ? '' : hint}`;
                 }
                 
                 if (index === bundleItem.length - 1) {
                     const addProductsToCart = async () => {
-                        await fetch(`/cart/${data}`); 
+                        await fetch(`/cart/${data}`, {mode: 'no-cors'});
                     }
 
                     const updateComboDiscountData = async () => {

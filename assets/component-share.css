@@ -174,6 +174,7 @@
 .modal-share-open .background-overlay{
     opacity: 1;
     pointer-events: auto;
+    z-index: 101;
 }
 
 .modal-share-open .product-details .productView-sticky .halo-productView-right {
@@ -187,6 +188,24 @@
     --share-desk-top: 100%;
     --share-desk-left: auto;
     right: 0%;
+}
+
+/* Share Icon */
+.social-share {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+}
+
+.social-share li {
+    list-style: none;
+    margin-right: 20px;
+}
+
+.social-share li svg {
+    width: 18px;
+    height: 18px;
 }
 
 @media(max-width:1024px){
@@ -240,7 +259,7 @@
         text-transform: uppercase;
         padding: 0;
         margin: 0;
-        max-height: var(--header-height);
+        max-height: min(var(--header-height), auto);
         box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.21);
         padding: 8px 10px;
     }

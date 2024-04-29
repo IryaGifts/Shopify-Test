@@ -108,7 +108,7 @@
     }
 </style>
     
-<div class="image-comparison section-block-{{section.id}}" id="image-comparison-{{section.id}}"
+<div class="image-comparison section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="image-comparison-{{section.id}}"
     style="
         --section-bg: {% if section_gradient != blank %}{{ section_gradient }}{% elsif section_bg != blank %}{{ section_bg }}{% endif %};
     "
@@ -126,8 +126,9 @@
                 {% endif %}
             {% endif %}
             {% if section_subtitle != blank %}
-                <h4 class="subtitle text-{{ text_align}}"
+                <h4 class="subtitle text-{{ text_align }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
                     style="
+                        {% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 0;{% endif %}
                         --subtitle-font-size: {{ section_subtitle_font_size }};
                         --subtitle-font-size-mb: {{ section_subtitle_font_size_mb }}; 
                         --subtitle-font-weight: {{ section_subtitle_font_weight }};
@@ -141,8 +142,9 @@
                 </h4>
             {% endif %}
             {% if section_title != blank %}
-                <h3 class="title text-{{ text_align }}"
+                <h3 class="title text-{{ text_align }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
                     style="
+                    {% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 1;{% endif %}
                     --title-font-size: {{ section_title_font_size }};
                     --title-font-size-mb: {{ section_title_font_size_mb }}; 
                     --title-font-weight: {{ section_title_font_weight }};
@@ -158,8 +160,9 @@
                 </h3>
             {% endif %}
             {% if section_description != blank %}
-                <div class="description text-{{ text_align }}"
+                <div class="description text-{{ text_align }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
                     style="
+                        {% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 2;{% endif %}
                         --description-font-size: {{ section_description_font_size }};
                         --description-font-size-mb: {{ section_description_font_size_mb }};
                         --description-color: {% if section_description_color != blank %}{{ section_description_color }}{% endif %};
@@ -173,27 +176,33 @@
                 </div>
             {% endif %}     
             {% if button_text != blank %}
-                <a {% if button_link != blank %}href="{{ button_link }}"{% else %}role="link"{% endif %}
-                        class="shop-all text-{{ text_align }} {% if button_type == 'button' %}button{% else %}link{% endif %} {% if enable_button_custom_border %}custom-border{% endif %}" 
-                        style=" 
-                            --button-font-size: {{ button_font_size }};
-                            --button-text-color: {% if button_text_color != blank %}{{ button_text_color }}{% endif %};
-                            --button-border-color: {% if button_border_color != blank %}{{ button_border_color }}{% endif %};
-                            --button-text-color-hover: {% if button_text_color_hover != blank %}{{ button_text_color_hover }}{% endif %};
-                            --button-border-color-hover: {% if button_border_color_hover != blank %}{{ button_border_color_hover }}{% endif %};
-                            --button-text-transform: {{ button_text_transform }};
-                            --button-font-weight: {{ button_font_weight }};
-                            --button-margin-top: {{ button_margin_top }};
-                            --button-text-letter-spacing: {{ button_text_letter_spacing }};
-                            {% if button_type == 'button' %}    
-                                --button-width: {{ button_width }};
-                                --button-background: {% if button_gradient_color != blank %}{{ button_gradient_color }}{% elsif button_background_color != blank %}{{ button_background_color }}{% endif %};
-                                --button-background-hover: {% if button_gradient_color_hover != blank %}{{ button_gradient_color_hover }}{% elsif button_background_color_hover != blank %}{{ button_background_color_hover }}{% endif %};
-                            {% endif %}
-                            --custom-border-color: {{ custom_border_color }};
-                ">  
-                    <span class="text">{{ button_text }}</span>
-                </a>    
+                {% if settings.banner_animation == 'effect_fade_up' %}
+                <div class="scroll-trigger animate--slide-in" style="--animation-order: 3;">
+                {% endif %}
+                    <a {% if button_link != blank %}href="{{ button_link }}"{% else %}role="link"{% endif %}
+                            class="shop-all text-{{ text_align }} {% if button_type == 'button' %}button{% else %}link{% endif %} {% if enable_button_custom_border %}custom-border{% endif %}" 
+                            style=" 
+                                --button-font-size: {{ button_font_size }};
+                                --button-text-color: {% if button_text_color != blank %}{{ button_text_color }}{% endif %};
+                                --button-border-color: {% if button_border_color != blank %}{{ button_border_color }}{% endif %};
+                                --button-text-color-hover: {% if button_text_color_hover != blank %}{{ button_text_color_hover }}{% endif %};
+                                --button-border-color-hover: {% if button_border_color_hover != blank %}{{ button_border_color_hover }}{% endif %};
+                                --button-text-transform: {{ button_text_transform }};
+                                --button-font-weight: {{ button_font_weight }};
+                                --button-margin-top: {{ button_margin_top }};
+                                --button-text-letter-spacing: {{ button_text_letter_spacing }};
+                                {% if button_type == 'button' %}    
+                                    --button-width: {{ button_width }};
+                                    --button-background: {% if button_gradient_color != blank %}{{ button_gradient_color }}{% elsif button_background_color != blank %}{{ button_background_color }}{% endif %};
+                                    --button-background-hover: {% if button_gradient_color_hover != blank %}{{ button_gradient_color_hover }}{% elsif button_background_color_hover != blank %}{{ button_background_color_hover }}{% endif %};
+                                {% endif %}
+                                --custom-border-color: {{ custom_border_color }};
+                    ">  
+                        <span class="text">{{ button_text }}</span>
+                    </a>
+                {% if settings.banner_animation == 'effect_fade_up' %}
+                </div>
+                {% endif %}
             {% endif %} 
             {% if content_side_style == "2" %}
                 {% if content_position == "left" or content_position == "right" %}
@@ -202,10 +211,10 @@
             {% endif %}
         </div>  
         <image-comparison-component class="section-images">
-            <div class="images-container" data-images-container style="--left-pos: 95%">
+            <div class="images-container{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}" data-images-container style="--left-pos: 95%">
                 {% if image_2 != blank %}
-                    <div class="adaptive_height compare-image{% if image_1_mobile == blank %} not-image-mobile{% endif %}" data-image-overlay style="padding-top: {{ 1 | divided_by: image_2.aspect_ratio | times: 100 }}%;">
-                        <img {% render 'lazyload', preview_img: image_2 %} />
+                    <div class="adaptive_height compare-image{% if image_1_mobile == blank %} not-image-mobile{% endif %}" data-image-overlay style="padding-top: {% unless image_2.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: image_2.aspect_ratio | times: 120 }}%{% else %}{{ 1 | divided_by: image_2.aspect_ratio | times: 100 }}%{% endunless %}">
+                        <img {% render 'lazyload', preview_img: image_2 %}{% unless image_2.presentation.focal_point == '50.0% 50.0%' %} style="object-position: {{ image_2.presentation.focal_point }}"{% endunless %} />
                         {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
                     </div>  
                 {% else %}
@@ -214,8 +223,8 @@
                     </div>
                 {% endif %}
                 {% if image_2_mobile != blank %}
-                    <div class="adaptive_height compare-image compare-image-overlay mobile" data-image-overlay style="padding-top: {{ 1 | divided_by: image_2_mobile.aspect_ratio | times: 100 }}%;">
-                        <img {% render 'lazyload', preview_img: image_2_mobile %} />
+                    <div class="adaptive_height compare-image compare-image-overlay mobile" data-image-overlay style="padding-top: {% unless image_2_mobile.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: image_2_mobile.aspect_ratio | times: 120 }}%{% else %}{{ 1 | divided_by: image_2_mobile.aspect_ratio | times: 100 }}%{% endunless %}">
+                        <img {% render 'lazyload', preview_img: image_2_mobile %}{% unless image_2_mobile.presentation.focal_point == '50.0% 50.0%' %} style="object-position: {{ image_2_mobile.presentation.focal_point }}"{% endunless %} />
                         {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
                     </div>  
                 {% elsif image_2 == blank %}
@@ -233,8 +242,8 @@
                     </div>
                 </div>
                 {% if image_1 != blank %}
-                    <div class="adaptive_height compare-image compare-image-overlay{% if image_1_mobile == blank %} not-image-mobile{% endif %}"  style="padding-top: {{ 1 | divided_by: image_1.aspect_ratio | times: 100 }}%;">
-                        <img {% render 'lazyload', preview_img: image_1 %} />
+                    <div class="adaptive_height compare-image compare-image-overlay{% if image_1_mobile == blank %} not-image-mobile{% endif %}"  style="padding-top: {% unless image_1.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: image_1.aspect_ratio | times: 120 }}%{% else %}{{ 1 | divided_by: image_1.aspect_ratio | times: 100 }}%{% endunless %}">
+                        <img {% render 'lazyload', preview_img: image_1 %}{% unless image_1.presentation.focal_point == '50.0% 50.0%' %} style="object-position: {{ image_1.presentation.focal_point }}"{% endunless %} />
                         {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
                     </div>
                 {% else %}
@@ -243,8 +252,8 @@
                     </div>
                 {% endif %}    
                 {% if image_1_mobile != blank %}
-                    <div class="adaptive_height compare-image mobile"  style="padding-top: {{ 1 | divided_by: image_1_mobile.aspect_ratio | times: 100 }}%;">
-                        <img {% render 'lazyload', preview_img: image_1_mobile %} />
+                    <div class="adaptive_height compare-image mobile"  style="padding-top: {% unless image_1_mobile.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: image_1_mobile.aspect_ratio | times: 120 }}%{% else %}{{ 1 | divided_by: image_1_mobile.aspect_ratio | times: 100 }}%{% endunless %}">
+                        <img {% render 'lazyload', preview_img: image_1_mobile %}{% unless image_1_mobile.presentation.focal_point == '50.0% 50.0%' %} style="object-position: {{ image_1_mobile.presentation.focal_point }}"{% endunless %} />
                         {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
                     </div>
                 {% elsif image_1 == blank %}
@@ -357,7 +366,7 @@
     "settings": [
         {
             "type": "header",
-            "content": "t:sections.layout.content"
+            "content": "t:settings_schema.general.name"
         },
         { 
             "type": "select",
@@ -1076,6 +1085,9 @@
     "presets": [    
     {
         "name": "t:sections.image_comparison.name"
-    }]
+    }],
+    "disabled_on": {
+        "groups": ["header"]
+    }
 }
 {% endschema %}

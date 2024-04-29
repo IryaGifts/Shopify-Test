@@ -8,14 +8,14 @@
             <div class="sidebarBlock-headingWrapper">
         {%- endif -%}
             {%- if heading != blank -%}
-                <h3 class="sidebarBlock-heading{% if show_collapse %}{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}{% endif %}">
+                <h2 class="sidebarBlock-heading{% if show_collapse %}{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}{% endif %}">
                     {{ heading | escape }}
-                </h3>
+                </h2>
             {%- else -%}
                 {%- if show_collapse -%}
-                    <h3 class="sidebarBlock-heading{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}">
+                    <h2 class="sidebarBlock-heading{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}">
                         BLock Heading
-                    </h3>
+                    </h2>
                 {%- endif -%}
             {%- endif -%}
         {%- if show_collapse -%}

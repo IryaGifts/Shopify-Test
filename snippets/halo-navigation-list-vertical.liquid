@@ -1,15 +1,22 @@
 <ul class="{{ listClass }}" role="list">
-    {%- for link in section.settings.menu_vertical.links -%}
+    {%- for link in block.settings.vertical_menu.links -%}
         {%- liquid
-            assign sale_item_lv1 = section.settings.sale_item_1 | split: "," | strip | downcase | handle
-            assign sale_item_lv2 = section.settings.sale_item_2 | split: "," | strip | downcase | handle
-            assign sale_item_lv3 = section.settings.sale_item_3 | split: "," | strip | downcase | handle
+            assign sale_item_lv1 = block.settings.sale_item_1 | split: "," | strip | downcase | handle
+            assign sale_item_lv2 = block.settings.sale_item_2 | split: "," | strip | downcase | handle
+            assign sale_item_lv3 = block.settings.sale_item_3 | split: "," | strip | downcase | handle
             assign title = link.title | escape | downcase | handle
             assign check_vertical = true
-            if section.settings.show_label
-                assign new_label = section.settings.new_label | split: "," | strip | downcase | handle
-                assign sale_label = section.settings.sale_label | split: "," | strip | downcase | handle
-                assign hot_label = section.settings.hot_label | split: "," | strip | downcase | handle
+            if block.settings.label_position != 'none'
+                assign show_label_blink = block.settings.show_label_blink
+                assign new_label_1 = block.settings.new_label_1 | split: "," | strip | downcase | handle
+                assign new_label_2 = block.settings.new_label_2 | split: "," | strip | downcase | handle
+                assign new_label_3 = block.settings.new_label_3 | split: "," | strip | downcase | handle
+                assign sale_label_1 = block.settings.sale_label_1 | split: "," | strip | downcase | handle
+                assign sale_label_2 = block.settings.sale_label_2 | split: "," | strip | downcase | handle
+                assign sale_label_3 = block.settings.sale_label_3 | split: "," | strip | downcase | handle
+                assign hot_label_1 = block.settings.hot_label_1 | split: "," | strip | downcase | handle
+                assign hot_label_2 = block.settings.hot_label_2 | split: "," | strip | downcase | handle
+                assign hot_label_3 = block.settings.hot_label_3 | split: "," | strip | downcase | handle
             endif
             for menuItem in section.blocks
                 assign check_menu = false
@@ -36,6 +43,8 @@
                             assign banner_url_3 = menuItem.settings.banner_url_3
                         endif
                         assign show_banner_4 = menuItem.settings.show_banner_4
+                        assign bg_mega_menu_bottom = menuItem.settings.bg_mega_menu_bottom
+                        assign az_brand_link_text_color = menuItem.settings.az_brand_link_text_color
                         if show_banner_4
                             assign banner_4 = menuItem.settings.banner_4
                             assign banner_url_4 = menuItem.settings.banner_url_4
@@ -63,6 +72,7 @@
                         endif
 
                         assign menu_text_left = menuItem.settings.menu_text_left
+                        assign menu_text_left_sale = menuItem.settings.menu_text_left_sale | split: "," | strip | downcase | handle
                         assign mega_tyle = menuItem.settings.mega_tyle
                         assign product_limit = menuItem.settings.product_limit
 
@@ -70,7 +80,7 @@
                 endcase
             endfor
         -%}
-        {%- if section.settings.show_megamenu and check_menu -%}
+        {%- if check_menu -%}
             {% render 'halo-megamenu'
                 check_vertical: check_vertical,
                 container: container,
@@ -80,12 +90,18 @@
                 sale_item_lv1: sale_item_lv1,
                 sale_item_lv2: sale_item_lv2,
                 sale_item_lv3: sale_item_lv3,
-                new_label: new_label,
-                sale_label: sale_label,
-                hot_label: hot_label,
+                show_label_blink: show_label_blink,
+                new_label_1: new_label_1,
+                new_label_2: new_label_2,
+                new_label_3: new_label_3,
+                sale_label_1: sale_label_1,
+                sale_label_2: sale_label_2,
+                sale_label_3: sale_label_3,
+                hot_label_1: hot_label_1,
+                hot_label_2: hot_label_2,
+                hot_label_3: hot_label_3,
                 block_style: block_style,
                 column: column,
-               
                 show_banner_1: show_banner_1,
                 banner_1: banner_1,
                 banner_url_1: banner_url_1,
@@ -98,6 +114,8 @@
                 show_banner_4: show_banner_4,
                 banner_4: banner_4,
                 banner_url_4: banner_url_4,
+                bg_mega_menu_bottom: bg_mega_menu_bottom,
+                az_brand_link_text_color: az_brand_link_text_color,
                 show_banner_5: show_banner_5,
                 banner_5: banner_5,
                 banner_url_5: banner_url_5,
@@ -112,6 +130,7 @@
                 product_limit: product_limit,
                 product_per_row: product_per_row,
                 menu_text_left: menu_text_left,
+                menu_text_left_sale: menu_text_left_sale,
                 collection_product: product_collection,
                 product_limit: product_limit,
                 mega_tyle: mega_tyle
@@ -123,9 +142,16 @@
                 sale_item_lv1: sale_item_lv1,
                 sale_item_lv2: sale_item_lv2,
                 sale_item_lv3: sale_item_lv3,
-                new_label: new_label,
-                sale_label: sale_label,
-                hot_label: hot_label
+                show_label_blink: show_label_blink,
+                new_label_1: new_label_1,
+                new_label_2: new_label_2,
+                new_label_3: new_label_3,
+                sale_label_1: sale_label_1,
+                sale_label_2: sale_label_2,
+                sale_label_3: sale_label_3,
+                hot_label_1: hot_label_1,
+                hot_label_2: hot_label_2,
+                hot_label_3: hot_label_3
             %}
         {%- endif -%}
     {%- endfor -%}

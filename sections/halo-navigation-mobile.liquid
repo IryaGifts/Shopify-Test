@@ -54,6 +54,7 @@
 		    }
 
 			@media (max-width: 1024px){
+                #MenuMobileListSection-{{ heading | handleize }} .menu-lv-1 > p {padding-top: 0;padding-bottom:0}
 				#MenuMobileListSection-{{ heading | handleize }} .menu-lv-1__action{
 					font-family: var(--lv-1-{{ heading | handleize }}-font);
 			        font-size: {{ lv_1_font_size | append: 'px' }};
@@ -292,12 +293,12 @@
 		"settings": [
 		{
             "type": "header",
-            "content": "t:sections.mobile_menu.settings.header__1.content"
+            "content": "t:settings_schema.general.name"
         },
         {
             "type": "text",
             "id": "heading",
-            "label": "t:sections.mobile_menu.settings.general.label__1",
+            "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
             "default": "Menu"
         },
         {
@@ -725,7 +726,7 @@
         		"settings": [
         		{
                     "type": "header",
-                    "content": "t:sections.mobile_menu.settings.header__1.content"
+                    "content": "t:settings_schema.general.name"
                 },
                 {
                     "type": "checkbox",
@@ -746,7 +747,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.mobile_menu.blocks.menu-1.settings.general.label__1",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Demo"
                 },
                 {
@@ -786,7 +787,7 @@
                 },
                 {
 		            "type": "paragraph",
-		            "content": "t:sections.mobile_menu.blocks.menu-1.settings.style.paragraph__1.content"
+		            "content": "t:sections.image-banner.blocks.image.settings.content.label__16"
 		        },
                 {
 		            "type": "color",
@@ -817,12 +818,12 @@
         		"settings": [
         		{
                     "type": "header",
-                    "content": "t:sections.mobile_menu.settings.header__1.content"
+                    "content": "t:settings_schema.general.name"
                 },
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.mobile_menu.blocks.menu-2.settings.general.label__1",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Demo"
                 },
                 {
@@ -1111,7 +1112,7 @@
                 },
                 {
 		            "type": "paragraph",
-		            "content": "t:sections.mobile_menu.blocks.menu-2.settings.style.paragraph__1.content"
+		            "content": "t:sections.image-banner.blocks.image.settings.content.label__16"
 		        },
                 {
 		            "type": "color",
@@ -1142,7 +1143,7 @@
         		"settings": [
         		{
                     "type": "header",
-                    "content": "t:sections.mobile_menu.settings.header__1.content"
+                    "content": "t:settings_schema.general.name"
                 },
                 {
 		            "type": "link_list",

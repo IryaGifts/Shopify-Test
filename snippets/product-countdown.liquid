@@ -2,7 +2,7 @@
     {%- if countdown_type == 'all_product' -%}
         <div class="productView-countDown countdown_{{ product.id }} style-{{ countdown_style }} clearfix" data-countdown-id="{{ product.id }}" data-countdown="{{ countdown_time }}">
             <span class="text animated-loading">
-                <span>{{ 'countdown.general.text' | t }}</span>
+                <span>{{ settings.countdown_text }}</span>
             </span>
             <span class="num animated-loading">
                 <span>151<span>D</span></span>
@@ -32,7 +32,7 @@
         {%- if hasCountdown -%}
             <div class="productView-countDown countdown_{{ product.id }} style-{{ countdown_style }} clearfix" data-countdown-id="{{ product.id }}" data-countdown="{{ countdown_time }}">
                 <span class="text animated-loading">
-                    <span>{{ 'countdown.general.text' | t }}</span>
+                    <span>{{ settings.countdown_text }}</span>
                 </span>
                 <span class="num animated-loading">
                     <span>151<span>D</span></span>
@@ -53,7 +53,7 @@
             {% assign countdown_type = product.metafields.c_f.countdown %}
             <div class="productView-countDown countdown_{{ product.id }} style-{{ countdown_style }} clearfix" data-countdown-id="{{ product.id }}" data-countdown="{{ countdown_type }}">
                 <span class="text animated-loading">
-                    <span>{{ 'countdown.general.text' | t }}</span>
+                    <span>{{ settings.countdown_text }}</span>
                 </span>
                 <span class="num animated-loading">
                     <span>151<span>D</span></span>

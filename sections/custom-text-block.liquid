@@ -1,4 +1,4 @@
-<div class="custom-text-block section-block-{{section.id}}" id="custom-text-{{section.id}}">
+<div class="custom-text-block section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="custom-text-{{section.id}}">
     <div class="custom-text--block">
         <div class="{% if section.settings.container == 'fullwidth' %}container-full{% elsif section.settings.container == '1170' %}container-1170{% elsif section.settings.container == '1770' %}container-1770{% else %}container{% endif %}">
             {% if section.settings.brand_title != blank or section.settings.brand_des != blank %}
@@ -19,7 +19,7 @@
             {% endif %}
             <div class="block__custom--text">
                 {% for link in section.settings.menu.links %}
-                <div class="wrapper-text">
+                <div class="wrapper-text{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} data-cascade style="--animation-order: {{ forloop.index }};"{% endif %}>
                     <a title="{{ link.title }}"{% if link.url == blank %} role="link" aria-disabled="true"{% else %} href="{{ link.url }}"{% endif %}>
                         {{ link.title }}
                     </a>
@@ -188,7 +188,7 @@
     "settings": [
     {
         "type": "header",
-        "content": "t:sections.layout.content"
+        "content": "t:settings_schema.general.name"
     },
     {
         "type": "select",

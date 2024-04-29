@@ -27,6 +27,7 @@ faqs-item{
     vertical-align: top;
     position: relative;
     margin: 33px 0 47px 0;
+    z-index: 1;
 }
 
 .faqs-filterLabel{

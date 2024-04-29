@@ -194,7 +194,7 @@
 		-%}
 		{% if product_card_product.metafields.c_f.short_description %}
 			{%- liquid
-				assign desc = product_card_product.metafields.c_f.short_description
+				assign desc = product_card_product.metafields.c_f.short_description | strip_html
 				assign word_number = 100000
 			-%}
         {% else %}
@@ -202,7 +202,7 @@
         {% endif %}
         {%- if desc != blank -%}
             <div class="halo-text-format">
-                {{ desc | truncatewords: word_number }}
+                {{ desc | strip_html | truncatewords: word_number }}
             </div>
         {%- endif -%}
 	</td>
@@ -228,7 +228,7 @@
 		{{ product_card_product.type | escape }}
 	</td>
 	<td class="compareTable-item">
-		{%- if variantCount > 0  and product_card_product.variants[0].title != 'Default Title'  -%}
+		{%- if variantCount > 1  and product_card_product.variants[0].title != 'Default Title'  -%}
 			{%- for option in product_card_product.options_with_values -%}
 				<div class="compareTable-option">
 				    <div class="compareTable-optionLabel">

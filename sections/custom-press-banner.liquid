@@ -1,11 +1,9 @@
 <link rel="stylesheet" href="{{ 'component-press-banner.css' | asset_url }}" media="print" onload="this.media='all'">
 <noscript>{{ 'component-press-banner.css' | asset_url | stylesheet_tag }}</noscript>
-
-{% liquid 
+{%- liquid 
     assign mg_top_desktop = section.settings.mg_top_desktop | append: 'px' 
     assign mg_top_tablet = section.settings.mg_top_tablet | append: 'px' 
     assign mg_top_mobile = section.settings.mg_top_mobile | append: 'px' 
-
     assign mg_bottom_desktop = section.settings.mg_bottom_desktop | append: 'px' 
     assign mg_bottom_tablet = section.settings.mg_bottom_tablet | append: 'px' 
     assign mg_bottom_mobile = section.settings.mg_bottom_mobile | append: 'px' 
@@ -13,7 +11,6 @@
     assign padding_full_width = section.settings.padding_full_width | append: 'px' 
 
     assign press_image = section.settings.press_image
-    
     assign press_image_width_ratio = section.settings.press_image_width_ratio
     assign press_image_width = section.settings.press_image_width | append: 'px'
     assign align_items = section.settings.align_items
@@ -60,161 +57,65 @@
 
     assign item_spacing = section.settings.item_spacing | append: 'px'
     assign content_max_width = section.settings.content_max_width | append: 'px'
-%}
-
-<div class="custom-image-banner-block section-block-{{section.id}}" id="custom-image-banner-{{section.id}}" data-bg="{{ bg_color_button }}">
+-%}
+<div class="custom-image-banner-block section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="custom-image-banner-{{section.id}}" data-bg="{{ bg_color_button }}">
   <div class="{% if container == 'fullwidth' %}container-full{% elsif container == '1170' %}container-1170{% elsif container == '1320' %}container-1320{% elsif container == '1770' %}container-1770{% else %}container{% endif %}">
     <div class="press-banner-block-wrapper" style="--item-gap: {{ item_spacing }}; --align-items: {{ align_items }};">
-        <div class="section-block-left"
-            style="
-                --left-width: {{ press_image_width_ratio | append: '%' }};
-            "
-        >
-            <div class="section-block-banner-image">
-                <div class="img-box">
-                    {% if press_image != blank %}
-                        <a {% if button_link == blank %}role="link" aria-disabled="true"{% else %}href="{{ button_link }}"{% endif %} class="image-zoom adaptive_height" style="padding-top: {{ 1 | divided_by: press_image.aspect_ratio | times: 100 }}%; --image-width: {{ press_image_width }}">
-                            <img {% render 'lazyload',preview_img: press_image %} />    
+        <div class="section-block-left" style="--left-width: {{ press_image_width_ratio | append: '%' }};">
+            <div class="section-block-banner-image" style="--image-width: {{ press_image_width }};">
+                <div class="img-box {% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }} o-hidden{% endif %}">
+                    {%- if press_image != blank -%}
+                        <a {% if button_link == blank %}role="link" aria-disabled="true"{% else %}href="{{ button_link }}"{% endif %} class="image image-zoom adaptive_height" style="padding-top: {% unless press_image.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: press_image.aspect_ratio | times: 120 }}%;{% else %}{{ 1 | divided_by: press_image.aspect_ratio | times: 100 }}%;{% endunless %} --image-width: {{ press_image_width }}">
+                            <img {% render 'lazyload',preview_img: press_image %}{% unless press_image.presentation.focal_point == '50.0% 50.0%' %} style="object-position: {{ press_image.presentation.focal_point }}"{% endunless %} />    
                             {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
                         </a>
-                    {% else %}
-                        <a href="javascript:void(0)" class="image-zoom">
-                            <div class="not_img" style="--height_not_img: 375px">320 x 375px</div>
-                        </a>
-                    {% endif %}
+                    {%- else -%}
+                        <div class="image-zoom"><div class="not_img" style="--height_not_img: 375px">320 x 375px</div></div>
+                    {%- endif -%}
                 </div>
             </div>
         </div>
-        <div class="section-block-right"    
-            style="
-                --right-width: {{ 100 | minus: press_image_width_ratio | append: '%' }};
-            "
-        >
-            {% if sub_title != blank or title != blank or des != blank or button_text != blank %}
+        <div class="section-block-right" style="--right-width: {{ 100 | minus: press_image_width_ratio | append: '%' }};">
+            {%- if sub_title != blank or title != blank or des != blank or button_text != blank -%}
                 <div class="halo-block-content text-{{ title_align }}" style="--max-width: {{ content_max_width }}">   
-                    {% if sub_title != blank and sub_title_position == 'sub_title_above' %}
-                        <h4 class="sub-title"
-                            style="
-                                --sub-title-color: {% if color_sub_title != blank %}{{ color_sub_title }}{% endif %};
-                                --sub-title-fs: {{ font_size_sub_title }};
-                                --sub-title-fs-mb: {{ font_size_sub_title_mb }};
-                                --sub-title-fw: {{ font_weight_sub_title }};
-                                --sub-title-mg: {{ margin_bottom_sub_title }};
-                            "
-                        >
-                            <span class="text">
-                                {{ sub_title }}
-                            </span>
-                        </h4>
-                    {% endif %}
-                    {% if title != blank %}
-                        <h3 class="title"
-                            style="
-                            --title-color: {% if title_color != blank %}{{ title_color }}{% endif %};
-                            --title-fs: {{ title_font_size }};
-                            --title-fs-mb: {{ title_font_size_mb }};
-                            --title-fw: {{ title_font_weight }};
-                            --title-mg: {{ mg_bottom_title }};
-                        "
-                        >
-                            <span>
-                            {{ title }}
-                            </span>
-                        </h3>
-                    {% endif %}
-                    {% if sub_title != blank and sub_title_position == 'sub_title_below' %}
-                        <h4 class="subtitle"
-                            style="
-                                --sub-title-color: {% if color_sub_title != blank %}{{ color_sub_title }}{% endif %};
-                                --sub-title-fs: {{ font_size_sub_title }};
-                                --sub-title-fs-mb: {{ font_size_sub_title_mb }};
-                                --sub-title-mg: {{ margin_bottom_sub_title }};
-                                --sub-title-fw: {{ font_weight_sub_title }};
-                            "
-                        >
-                            <span class="text">
-                                {{ sub_title }}
-                            </span>
-                        </h4>
-                    {% endif %}
-                    {% if des != blank %}
-                        <div class="desc"
-                            style="
-                                --des-color: {% if des_color != blank %}{{ des_color }}{% endif %};
-                                --des-fs: {{ des_font_size }};
-                                --des-fs-mb: {{ des_font_size_mb }};
-                                --des-fw: {{ des_font_weight }};
-                                --des-mg: {{ mg_bottom_des }};
-                            "
-                        >
-                            {{ des }}
-                        </div>        
-                    {% endif %}
-                    {% if  button_text != blank %}
-                        <div class="press-actions">
-                            <a class="button" {% if button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ button_link }}"{% endif %}
-                                style="
-                                    --button-text-transform: {{ btn_text_transform }};
-                                    --button-fs: {{ fontsize_btn }};
-                                    --button-color: {% if color_button != blank %}{{ color_button }}{% endif %};
-                                    --button-border: {% if border_color_button != blank %}{{ border_color_button }}{% endif %};
-                                    --button-bg: {% if bg_gradient_color_button != blank %}{{ bg_gradient_color_button }}{% elsif bg_color_button != blank %}{{ bg_color_button }}{% endif %};
-                                    --button-hover-color: {% if color_button_hover != blank %}{{ color_button_hover }}{% endif %};
-                                    --button-hover-border: {% if border_color_button_hover != blank %}{{ border_color_button_hover }}{% endif %};
-                                    --button-hover-bg: {% if bg_gradient_color_button_hover != blank %}{{ bg_gradient_color_button_hover }}{% elsif bg_color_button_hover != blank %}{{ bg_color_button_hover }}{% endif %};
-                                    --button-width: {{ button_width }};
-                                    "
-                            >
-                                <span class="text">{{ button_text }}</span>
-                            </a>
+                    {%- if sub_title != blank and sub_title_position == 'sub_title_above' -%}
+                        <h4 class="sub-title{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 0;{% endif %} --sub-title-color: {% if color_sub_title != blank %}{{ color_sub_title }}{% endif %}; --sub-title-fs: {{ font_size_sub_title }}; --sub-title-fs-mb: {{ font_size_sub_title_mb }}; --sub-title-fw: {{ font_weight_sub_title }}; --sub-title-mg: {{ margin_bottom_sub_title }}; "><span class="text">{{ sub_title }}</span></h4>
+                    {%- endif -%}
+                    {%- if title != blank -%}
+                        <h3 class="title{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 1;{% endif %} --title-color: {% if title_color != blank %}{{ title_color }}{% endif %}; --title-fs: {{ title_font_size }}; --title-fs-mb: {{ title_font_size_mb }}; --title-fw: {{ title_font_weight }}; --title-mg: {{ mg_bottom_title }}; "><span>{{ title }}</span></h3>
+                    {%- endif -%}
+                    {%- if sub_title != blank and sub_title_position == 'sub_title_below' -%}
+                        <h4 class="subtitle{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 0;{% endif %} --sub-title-color: {% if color_sub_title != blank %}{{ color_sub_title }}{% endif %}; --sub-title-fs: {{ font_size_sub_title }}; --sub-title-fs-mb: {{ font_size_sub_title_mb }}; --sub-title-mg: {{ margin_bottom_sub_title }}; --sub-title-fw: {{ font_weight_sub_title }}; "><span class="text">{{ sub_title }}</span></h4>
+                    {%- endif -%}
+                    {%- if des != blank -%}
+                        <div class="desc{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 2;{% endif %} --des-color: {% if des_color != blank %}{{ des_color }}{% endif %}; --des-fs: {{ des_font_size }}; --des-fs-mb: {{ des_font_size_mb }}; --des-fw: {{ des_font_weight }}; --des-mg: {{ mg_bottom_des }}; ">{{ des }}</div>
+                    {%- endif -%}
+                    {%- if  button_text != blank -%}
+                        <div class="press-actions{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %}style="--animation-order: 3;"{% endif %}>
+                            <a class="button"{% if button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ button_link }}"{% endif %} style="--button-text-transform: {{ btn_text_transform }}; --button-fs: {{ fontsize_btn }}; --button-color: {% if color_button != blank %}{{ color_button }}{% endif %}; --button-border: {% if border_color_button != blank %}{{ border_color_button }}{% endif %}; --button-bg: {% if bg_gradient_color_button != blank %}{{ bg_gradient_color_button }}{% elsif bg_color_button != blank %}{{ bg_color_button }}{% endif %}; --button-hover-color: {% if color_button_hover != blank %}{{ color_button_hover }}{% endif %}; --button-hover-border: {% if border_color_button_hover != blank %}{{ border_color_button_hover }}{% endif %}; --button-hover-bg: {% if bg_gradient_color_button_hover != blank %}{{ bg_gradient_color_button_hover }}{% elsif bg_color_button_hover != blank %}{{ bg_color_button_hover }}{% endif %}; --button-width: {{ button_width }}; "><span class="text">{{ button_text }}</span></a>
                         </div>
-                    {% endif %}
+                    {%- endif -%}
                 </div>
-            {% endif %}
+            {%- endif -%}
         </div>
     </div>
   </div>
 </div> 
 <style>
     .section-block-{{section.id}} {
-        {% if press_gradient != blank and press_gradient != 'rgba(0,0,0,0)' %}
+        {%- if press_gradient != blank and press_gradient != 'rgba(0,0,0,0)' -%}
             background: {{ press_gradient }};
-        {% elsif press_bg != blank and press_bg != 'rgba(0,0,0,0)' %}
+        {%- elsif press_bg != blank and press_bg != 'rgba(0,0,0,0)' -%}
             background-color: {{ press_bg }};
-        {% endif %}
+        {%- endif -%}
     }
-
-    @media (min-width: 1200px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_desktop }};
-            padding-bottom: {{ mg_bottom_desktop }};
-        }
-    }
-
-    @media (min-width: 1025px) {
-        {% if section.settings.container == 'fullwidth' %}
-            .section-block-{{section.id}} .container-full {
-                padding-left: {{ padding_full_width }};
-                padding-right: {{ padding_full_width }};
-            }
-        {% endif %}
-    }
-
-    @media (min-width: 768px) and (max-width: 1199px) {
-        .section-block-{{ section.id }} {
-            padding-top: {{ mg_top_tablet }};
-            padding-bottom: {{ mg_bottom_tablet }};
-        }
-    }
-
-    @media (max-width: 767px) {
-        .section-block-{{ section.id }} {
-            padding-top: {{ mg_top_mobile }};
-            padding-bottom: {{ mg_bottom_mobile }};
-        }
-    }
+    @media (min-width: 1200px) {.section-block-{{section.id}} {padding-top: {{ mg_top_desktop }}; padding-bottom: {{ mg_bottom_desktop }}; } }
+    {%- if section.settings.container == 'fullwidth' -%}
+        @media (min-width: 1025px) {.section-block-{{section.id}} .container-full {padding-left: {{ padding_full_width }}; padding-right: {{ padding_full_width }};}}
+    {%- endif -%}
+    @media (min-width: 768px) and (max-width: 1199px) {.section-block-{{ section.id }} {padding-top: {{ mg_top_tablet }}; padding-bottom: {{ mg_bottom_tablet }}; } }
+    @media (max-width: 767px) {.section-block-{{ section.id }} {padding-top: {{ mg_top_mobile }}; padding-bottom: {{ mg_bottom_mobile }}; } }
 </style>
-
 {% schema %}
 {
     "name": "t:sections.custom_press_banner.presets.name",
@@ -222,7 +123,7 @@
     "settings": [
     {
         "type": "header",
-        "content": "t:sections.layout.content"
+        "content": "t:settings_schema.general.name"
     },
     {
         "type": "select",
@@ -752,8 +653,32 @@
         "type" : "color_background",
         "id" : "press_gradient",
         "label": "t:settings_schema.colors.settings.colors_name.background_color_gradient"
-    }
-    ],
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-product.settings.general.animation"
+    },
+    {
+      "type": "select",
+      "id": "image_behavior",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:settings_schema.typography.settings.text_transform.options__1"
+        },
+        {
+          "value": "ambient",
+          "label": "t:sections.main-product.settings.general.image_behavior.option__1"
+        },
+        {
+          "value": "zoom-in",
+          "label": "t:sections.main-product.settings.general.image_behavior.option__3"
+        }
+      ],
+      "default": "none",
+      "info": "t:sections.main-product.settings.general.image_behavior.info",
+      "label": "t:sections.main-product.settings.general.image_behavior.label"
+    }],
     "presets": [
     {
         "name": "t:sections.custom_press_banner.presets.name"

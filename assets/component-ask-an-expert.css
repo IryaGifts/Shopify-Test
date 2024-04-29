@@ -116,6 +116,7 @@ body.ask-an-expert-show {
 body.ask-an-expert-show .background-overlay {
     opacity: 1;
     pointer-events: all;
+    z-index: 101;
 }
 
 body.ask-an-expert-show .halo-ask-an-expert-popup {
@@ -123,7 +124,11 @@ body.ask-an-expert-show .halo-ask-an-expert-popup {
     visibility: visible;
     pointer-events: auto;
     transform: translate3d(-50%, -50%, 0);
-    z-index: 102;
+    z-index: 103;
+}
+
+[data-form-message="ask"] {
+    padding: 2rem;
 }
 
 @media (max-width: 551px) {
@@ -138,5 +143,10 @@ body.ask-an-expert-show .halo-ask-an-expert-popup {
         padding: 30px 100px 30px;
         max-width: 770px;
         margin: 0 auto 30px;
+    }
+
+    [data-form-message="ask"] {
+        padding: 1rem 3rem 3rem;
+        margin-bottom: 0 !important;
     }
 }

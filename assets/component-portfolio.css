@@ -462,49 +462,6 @@ portfolio-item{
 	margin-top: 25px;
 }
 
-/* Animation */
-/*body:not(.safari).banner-animation-1 .portfolio-header-container {
-	visibility: hidden;
-}
-
-body:not(.safari).banner-animation-1 .portfolio-header-container.shouldShow {
-	visibility: visible;
-}
-
-body:not(.safari).banner-animation-1 .portfolio-header-container.has-bg-image {
-	opacity: 0;
-	transform: scale(1.15);
-	transition: transform 800ms cubic-bezier(.13,.55,.25,1), opacity 700ms cubic-bezier(.26,.54,.32,1);
-}
-
-body:not(.safari).banner-animation-1 .portfolio-header-container.has-bg-image.shouldShow {
-	opacity: 1;
-	transform: scale(1);
-}
-
-body:not(.safari).banner-animation-1 .portfolio-header-container.has-bg-image .breadcrumb-container,
-body:not(.safari).banner-animation-1 .portfolio-header-container.has-bg-image .page-header,
-body:not(.safari).banner-animation-1 .portfolio-header-container.has-bg-image .page-des {
-	opacity: 0;
-	transform: translateY(15px);
-	transition: transform 800ms cubic-bezier(.13,.55,.25,1);
-}
-
-body:not(.safari).banner-animation-1 .portfolio-header-container.has-bg-image .page-header {
-	transition-delay: 150ms;
-}
-
-body:not(.safari).banner-animation-1 .portfolio-header-container.has-bg-image .page-des {
-	transition-delay: 300ms;
-}
-
-body:not(.safari).banner-animation-1 .portfolio-header-container.has-bg-image.shouldShow .breadcrumb-container,
-body:not(.safari).banner-animation-1 .portfolio-header-container.has-bg-image.shouldShow .page-header,
-body:not(.safari).banner-animation-1 .portfolio-header-container.has-bg-image.shouldShow .page-des {
-	opacity: 1;
-	transform: translateY(0);
-}*/
-
 @media (max-width: 1024px) {
     .portfolio-content {
         position: relative;

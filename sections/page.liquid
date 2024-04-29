@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="{{ 'component-rte.css' | asset_url }}" media="print" onload="this.media='all'">
 <noscript>{{ 'component-rte.css' | asset_url | stylesheet_tag }}</noscript>
 
-<div class="page section-block-{{section.id}}">
+<div class="page section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
   <div class="{% if section.settings.container == 'fullwidth' %}container-full{% elsif section.settings.container == '1770' %}container-1770{% elsif section.settings.container == '1170' %}container-1170{% else %}container{% endif %}">
     <h2 class="page-title" style="--color-heading-style: {{ section.settings.heading_color }};
                       --fontsize-heading-style: {{ section.settings.heading_size | append: 'px' }};
@@ -89,7 +89,7 @@
     },
     {
         "type": "header",
-        "content": "t:sections.layout.content"
+        "content": "t:settings_schema.general.name"
     },
     {
         "type": "select",
@@ -230,6 +230,9 @@
     {
       "name": "t:sections.main-page.name"
     }
-  ]
+  ],
+  "disabled_on": {
+    "groups": ["header"]
+  }
 }
 {% endschema %}

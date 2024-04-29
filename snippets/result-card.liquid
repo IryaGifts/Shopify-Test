@@ -60,11 +60,7 @@
         </div>
         <div class="card-information">
             <div class="card-information__wrapper text-{{ settings.product_content_text_align }}">
-                <a class="card-title link-underline{% if settings.product_title_line_text != 'full' %} card-title-ellipsis{% endif %}" href="{{ item.url }}">
-                    <span class="text">
-                        {{ item.title | escape }}
-                    </span>
-                </a>
+                <h3 class="card__heading"><a class="card-title link-underline{% if settings.product_title_line_text != 'full' %} card-title-ellipsis{% endif %}" href="{{ item.url }}">{{ item.title | escape }}</a></h3>
             </div>
         </div>
     </div>

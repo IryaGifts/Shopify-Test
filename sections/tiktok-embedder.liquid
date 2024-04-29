@@ -121,7 +121,7 @@
     }
 </style>
     
-<div class="tiktok-embedder-section section-block-{{section.id}}" id="tiktok-embedder-section-{{section.id}}"
+<div class="tiktok-embedder-section section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="tiktok-embedder-section-{{section.id}}"
     style="
         --section-bg: {% if section_gradient != blank %}{{ section_gradient }}{% elsif section_bg != blank %}{{ section_bg }}{% endif %};
     "
@@ -129,8 +129,9 @@
   <div class="{% if container == 'fullwidth' %}container-full{% elsif container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% else %}container{% endif %}">
     <div class="section-content">
         {% if section_title != blank %}
-            <h3 class="title text-{{ text_align }} {% if section_title_enable_underline %}underlined underline-style-{{ section_title_underline_style }}{% endif %}"
+            <h3 class="title text-{{ text_align }} {% if section_title_enable_underline %}underlined underline-style-{{ section_title_underline_style }}{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                 style="
+                {% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 1;{% endif %}
                 --title-font-size: {{ section_title_font_size }};
                 --title-font-size-mb: {{ section_title_font_size_mb }}; 
                 --title-font-weight: {{ section_title_font_weight }};
@@ -147,8 +148,9 @@
             </h3>
         {% endif %}
         {% if section_description != blank %}
-            <div class="description text-{{ text_align }}"
+            <div class="description text-{{ text_align }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                 style="
+                    {% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 2;{% endif %}
                     --description-font-size: {{ section_description_font_size }};
                     --description-font-size-mb: {{ section_description_font_size_mb }};
                     --description-color: {% if section_description_color != blank %}{{ section_description_color }}{% endif %};
@@ -161,25 +163,31 @@
             </div>          
         {% endif %}     
         {% if button_text != blank %}
-            <a {% if button_link != blank %}href="{{ button_link }}"{% else %}role="link" aria-disabled="true" disabled="true"{% endif %}
-                    class="view-all text-{{ text_align }} {% if button_type == 'button' %}button{% else %}link{% endif %}" 
-                    style=" 
-                        --button-font-size: {{ button_font_size }};
-                        --button-text-color: {% if button_text_color != blank %}{{ button_text_color }}{% endif %};
-                        --button-border-color: {% if button_border_color != blank %}{{ button_border_color }}{% endif %};
-                        --button-text-color-hover: {% if button_text_color_hover != blank %}{{ button_text_color_hover }}{% endif %};
-                        --button-border-color-hover: {% if button_border_color_hover != blank %}{{ button_border_color_hover }}{% endif %};
-                        --button-text-transform: {{ button_text_transform }};
-                        --button-font-weight: {{ button_font_weight }};
-                        --button-margin-top: {{ button_margin_top }};
-                        {% if button_type == 'button' %}    
-                            --button-width: {{ button_width }};
-                            --button-background: {% if button_gradient_color != blank %}{{ button_gradient_color }}{% elsif button_background_color != blank %}{{ button_background_color }}{% endif %};
-                            --button-background-hover: {% if button_gradient_color_hover != blank %}{{ button_gradient_color_hover }}{% elsif button_background_color_hover != blank %}{{ button_background_color_hover }}{% endif %};
-                        {% endif %}
-                    ">      
-                {{ button_text }}
+            {% if settings.banner_animation == 'effect_fade_up' %}
+            <div class="scroll-trigger animate--slide-in" style="--animation-order: 3;">
+            {% endif %}
+                <a {% if button_link != blank %}href="{{ button_link }}"{% else %}role="link" aria-disabled="true" disabled="true"{% endif %}
+                        class="view-all text-{{ text_align }} {% if button_type == 'button' %}button{% else %}link{% endif %}" 
+                        style=" 
+                            --button-font-size: {{ button_font_size }};
+                            --button-text-color: {% if button_text_color != blank %}{{ button_text_color }}{% endif %};
+                            --button-border-color: {% if button_border_color != blank %}{{ button_border_color }}{% endif %};
+                            --button-text-color-hover: {% if button_text_color_hover != blank %}{{ button_text_color_hover }}{% endif %};
+                            --button-border-color-hover: {% if button_border_color_hover != blank %}{{ button_border_color_hover }}{% endif %};
+                            --button-text-transform: {{ button_text_transform }};
+                            --button-font-weight: {{ button_font_weight }};
+                            --button-margin-top: {{ button_margin_top }};
+                            {% if button_type == 'button' %}    
+                                --button-width: {{ button_width }};
+                                --button-background: {% if button_gradient_color != blank %}{{ button_gradient_color }}{% elsif button_background_color != blank %}{{ button_background_color }}{% endif %};
+                                --button-background-hover: {% if button_gradient_color_hover != blank %}{{ button_gradient_color_hover }}{% elsif button_background_color_hover != blank %}{{ button_background_color_hover }}{% endif %};
+                            {% endif %}
+                        ">      
+                    {{ button_text }}
                     </a>
+                {% if settings.banner_animation == 'effect_fade_up' %}
+                </div>
+                {% endif %}
         {% endif %} 
 
         {%- if swipe_on_mobile == 'slider' -%}
@@ -213,7 +221,7 @@
             <tiktok-videos-component class="section-video-wrapper halo-row column-{{ column_per_row }} {%- if swipe_on_mobile == 'slider' -%}slider slider--tablet{%- endif -%}{% if swipe_on_mobile == 'scroll' %} scroll-snap-mobile disable-srollbar{% endif %}" style=" --column-per-row: {{ column_per_row }}; --videos-top-margin: {{ videos_margin_top }}" data-column-per-row="{{ column_per_row }}">
                 {% for block in section.blocks %}
                     {% if block.type == 'tiktok_video' %}
-                        <div class="halo-item tiktok-video-column{% if swipe_on_mobile == 'slider' %} slider__slide{% endif %}">
+                        <div class="halo-item tiktok-video-column{% if swipe_on_mobile == 'slider' %} slider__slide{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} style="--animation-order: {{ forloop.index }};"{% endif %}>
                             {% if block.settings.tiktok_video_embede_code != blank %}
                                 <div class="tiktok-video-wrap" data-tiktok-video-wrapper>
                                     {{ block.settings.tiktok_video_embede_code }}
@@ -289,7 +297,7 @@
     "settings": [
         {
             "type": "header",
-            "content": "t:sections.layout.content"
+            "content": "t:settings_schema.general.name"
         },
         { 
             "type": "select",
@@ -1022,6 +1030,9 @@
     "presets": [    
     {
         "name": "t:sections.tiktok_embedder.name"
-    }]
+    }],
+    "disabled_on": {
+        "groups": ["header"]
+    }
 }
 {% endschema %}

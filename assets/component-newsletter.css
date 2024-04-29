@@ -274,7 +274,24 @@ body.newsletter-message-show .halo-newsletter-message-popup{
 
     #halo-newsletter-popup .overflow {
         padding-top: 75px;
-        padding-bottom: 76px;
+        /*padding-bottom: 76px;*/
+        padding-bottom: 26px;
+    }
+
+    #halo-newsletter-popup .overflow::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    #halo-newsletter-popup .overflow::-webkit-scrollbar-track {
+        background: #f4f4f4;
+    }
+
+    #halo-newsletter-popup .overflow::-webkit-scrollbar-thumb {
+        background: var(--color-background-30);
+    }
+
+    #halo-newsletter-popup .overflow::-webkit-scrollbar-thumb:hover {
+        background: var(--color-background-30);
     }
 
     body.newsletter-show .halo-newsletter-popup {

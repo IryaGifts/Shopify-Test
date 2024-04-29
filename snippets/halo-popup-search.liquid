@@ -2,9 +2,7 @@
     <div class="halo-popup-wrapper">
     	<div class="halo-popup-header customPopup-header">
             <div class="container">
-    		    <button type="button" class="halo-sidebar-popup" data-search-close-popup aria-label="{{ 'general.common.close' | t }}">
-                    {% render 'icon-close' %}
-                </button>
+    		    <button type="button" class="halo-sidebar-popup" data-search-close-popup aria-label="{{ 'general.common.close' | t }}">{% render 'icon-close' %}</button>
             </div>
     	</div>
 	    <div class="halo-popup-content custom-scrollbar">
@@ -51,7 +49,7 @@
                                     </div>  
                                 </form> 
                                 {%- if settings.show_search_trending or settings.show_search_product -%}
-                                    {%- render 'quick-searching-trending-products' -%}
+                                    {%- render 'quick-searching-trending-products', sectionId: 'popup-search-list-result' -%}
                                 {%- endif -%}
                                 {%- if settings.show_quick_search -%}
                                     {%- render 'predictive-search-results' -%}
@@ -60,7 +58,7 @@
                         </summary>
                         <div class="search-modal modal__content{% if settings.show_quick_search %} quickSearch{% endif %}" role="dialog" aria-modal="true" aria-label="{{ 'general.search.search' | t }}">
                             {%- if settings.show_quick_search -%}
-                                {% render 'halo-quick-search' %}
+                                {% render 'halo-quick-search', sectionId: 'quick-popup-search-list-result' %}
                             {%- endif -%}
                         </div>
                     </details>

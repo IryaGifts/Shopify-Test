@@ -228,3 +228,104 @@
         display: block;
     }
 }
+
+/* Recipient form */
+.productView-buttons .customer {
+    margin-bottom: 22px;
+}
+.recipient-form {
+  --recipient-checkbox-margin-top: 0.64rem;
+}
+
+.recipient-fields > div{
+  padding: 1rem 0 0 0;
+}
+
+.recipient-email-label {
+  display: none;
+}
+.recipient-form-field-label {
+    margin-top: 3px;
+    display: inline-block;
+}
+.js .recipient-email-label.required,
+.no-js .recipient-email-label.optional {
+  display: inline;
+}
+.recipient-form > input[type='checkbox']:checked ~ .recipient-fields {
+  display: block;
+  animation: animateMenuOpen var(--duration-default) ease;
+  margin-top: 10px
+}
+
+.recipient-checkbox {
+  flex-grow: 1;
+  font-size: 1.6rem;
+  display: flex;
+  word-break: break-word;
+  align-items: flex-start;
+  max-width: inherit;
+  position: relative;
+}
+
+.no-js .recipient-checkbox {
+  display: none;
+}
+
+.recipient-form > input[type='checkbox'] {
+  position: absolute;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin: var(--recipient-checkbox-margin-top) 0;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.recipient-fields__field {
+  margin: 0 0 1rem 0;
+}
+.recipient-fields__field .field{
+    display: block;
+}
+
+.recipient-fields .field__label {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 3.5rem);
+  overflow: hidden;
+}
+
+.js .recipient-fields {
+  display: none;
+}
+
+.recipient-form > input[type='checkbox']:checked ~ .recipient-fields {
+  display: block;
+  animation: animateMenuOpen var(--duration-default) ease;
+}
+.recipient-form > input[type='checkbox']:not(:checked, :disabled) ~ .recipient-fields ,
+.recipient-email-label {
+  display: none;
+}
+
+.js .recipient-email-label.required,
+.no-js .recipient-email-label.optional {
+  display: inline;
+}
+
+.recipient-form ul {
+  line-height: calc(1 + 0.6 / var(--font-body-scale));
+  padding-left: 4.4rem;
+  text-align: left;
+}
+
+.recipient-form ul a {
+  display: inline;
+}
+
+.recipient-form .error-message::first-letter {
+  text-transform: capitalize;
+}

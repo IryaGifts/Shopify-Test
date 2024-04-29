@@ -177,6 +177,7 @@ body.compare-color-show{
 body.compare-color-show .background-overlay{
     opacity: 1;
     pointer-events: all;
+    z-index: 101;
 }
 
 body.compare-color-show .halo-compare-color-popup.is-show {

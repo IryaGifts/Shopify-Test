@@ -193,6 +193,12 @@ quantity-quick-view-input.disabled {
     margin-top: 5px;
 }
 
+@media (max-width: 767px) {
+    .halo-quick-view-popup .halo-quickView .productView-action {
+        width: 100%;
+    }
+}
+
 @media (min-width: 992px) {
     .quickView .halo-quickView-right {
         position: sticky;

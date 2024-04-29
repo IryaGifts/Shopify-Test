@@ -1,13 +1,14 @@
 {{ 'vendor.js' | asset_url | script_tag }}
 {{ 'global.js' | asset_url | script_tag }}
 {{ 'lazysizes.min.js' | asset_url | script_tag }}
+<!-- {{ 'menu.js' | asset_url | script_tag }} -->
 
 {%- if settings.show_quick_search -%}
     <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 
-{%- if settings.banner_animation == 'effect_1' -%}
-    <script src="{{ 'banner-animation.js' | asset_url }}" defer="defer"></script>
+{%- if settings.banner_animation == 'effect_fade_up' -%}
+    <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 
 {% liquid
@@ -56,6 +57,7 @@
     window.mobile_menu = '{{ settings.mobile_menu }}';
     window.money_format = '{{ shop.money_format }}';
     window.shop_currency = '{{ shop.currency }}';
+    window.currencySymbol ="{{ cart.currency.symbol }}";
     window.show_multiple_currencies = {{ enable_multiple_currencies }};
     window.routes = {
         root: '{{  routes.cart_url | split: "/cart" | first }}',
@@ -77,6 +79,11 @@
         type: '{{ settings.after_add_to_cart }}',
         message: `{{ 'products.product.add_to_cart_success_message' | t : name : '[name]' }}`
     };
+    window.variant_image_group_quick_view = {{ settings.show_quick_view_variant_image_group }};
+    window.quick_view = {
+        show: {{ settings.show_quick_view }},
+        show_mb: {{ settings.show_quick_view_mb }}
+    };
     window.quick_shop = {
         show: {{ settings.show_quick_shop }},
         see_details: `{{ 'products.product.see_details' | t }}`,
@@ -92,6 +99,8 @@
         cartErrorMessage: `{{ 'sections.cart.cart_quantity_error_prefix' | t }}`,
         soldoutText: `{{ 'general.cart.soldout_text' | t }}`,
         alreadyText: `{{ 'general.cart.already_text' | t }}`,
+        items: `{{ 'sections.cart.items' | t }}`,
+        item: `{{ 'sections.cart.item' | t }}`,
     };
     window.variantStrings = {
         addToCart: `{{ 'products.product.add_to_cart' | t }}`,
@@ -105,7 +114,9 @@
         addToCart_message: `{{ 'products.product.add_to_cart_message' | t }}`,
         select: `{{ 'products.product.select_variant' | t }}`,
         preOrder: `{{ 'products.product.pre_order' | t }}`,
-        add: `{{ 'products.product.add.label__2' | t }}`
+        add: `{{ 'products.product.add.label__2' | t }}`,
+        unavailable_with_option: `{{ 'products.product.value_unavailable' | t: option_value: '[value]' }}`,
+        hide_variants_unavailable: {{ settings.hide_variants_unavailable }}
     };
     window.inventory_text = {
         hotStock: `{{ 'products.product.hot_stock' | t : inventory: '[inventory]' }}`,
@@ -160,7 +171,6 @@
             customer_message: "{{ 'ask_an_expert.general.customer_message' | t }}",
             type_radio1: "{{ settings.ask_an_expert_option_1 }}",
             type_radio2: "{{ settings.ask_an_expert_option_2 }}",
-            mail: "{{ settings.ask_an_expert_mail }}",
             subject: "{{ settings.ask_an_expert_subject }}",
             label: "{{ settings.ask_an_expert_label }}",
             success: "{{ 'ask_an_expert.general.success' | t }}",
@@ -191,7 +201,7 @@
         show_quick_view: {{ settings.show_quick_view_review }}
     };
     window.countdown = {
-        text: `{{ 'countdown.general.text' | t }}`,
+        text: `{{ settings.countdown_text }}`,
         day: `{{ 'countdown.general.day' | t }}`,
         hour: `{{ 'countdown.general.hour' | t }}`,
         min: `{{ 'countdown.general.min' | t }}`,
@@ -215,23 +225,28 @@
 
     {% if settings.style_arrows == '02' %}
         window.arrows = {
-            icon_next: `{{ '<button type="button" class="slick-next" aria-label="Next"><svg viewBox="0 0 50 50"><path d="M 11.957031 13.988281 C 11.699219 14.003906 11.457031 14.117188 11.28125 14.308594 L 1.015625 25 L 11.28125 35.691406 C 11.527344 35.953125 11.894531 36.0625 12.242188 35.976563 C 12.589844 35.890625 12.867188 35.625 12.964844 35.28125 C 13.066406 34.933594 12.972656 34.5625 12.71875 34.308594 L 4.746094 26 L 48 26 C 48.359375 26.003906 48.695313 25.816406 48.878906 25.503906 C 49.058594 25.191406 49.058594 24.808594 48.878906 24.496094 C 48.695313 24.183594 48.359375 23.996094 48 24 L 4.746094 24 L 12.71875 15.691406 C 13.011719 15.398438 13.09375 14.957031 12.921875 14.582031 C 12.753906 14.203125 12.371094 13.96875 11.957031 13.988281 Z"></path></svg></button>' }}`,
-            icon_prev: `{{ '<button type="button" class="slick-prev" aria-label="Previous"><svg viewBox="0 0 50 50"><path d="M 11.957031 13.988281 C 11.699219 14.003906 11.457031 14.117188 11.28125 14.308594 L 1.015625 25 L 11.28125 35.691406 C 11.527344 35.953125 11.894531 36.0625 12.242188 35.976563 C 12.589844 35.890625 12.867188 35.625 12.964844 35.28125 C 13.066406 34.933594 12.972656 34.5625 12.71875 34.308594 L 4.746094 26 L 48 26 C 48.359375 26.003906 48.695313 25.816406 48.878906 25.503906 C 49.058594 25.191406 49.058594 24.808594 48.878906 24.496094 C 48.695313 24.183594 48.359375 23.996094 48 24 L 4.746094 24 L 12.71875 15.691406 C 13.011719 15.398438 13.09375 14.957031 12.921875 14.582031 C 12.753906 14.203125 12.371094 13.96875 11.957031 13.988281 Z"></path></svg></button>' }}`
+            icon_next: `{{ '<button type="button" class="slick-next" aria-label="Next" role="button"><svg role="img" viewBox="0 0 50 50"><path d="M 11.957031 13.988281 C 11.699219 14.003906 11.457031 14.117188 11.28125 14.308594 L 1.015625 25 L 11.28125 35.691406 C 11.527344 35.953125 11.894531 36.0625 12.242188 35.976563 C 12.589844 35.890625 12.867188 35.625 12.964844 35.28125 C 13.066406 34.933594 12.972656 34.5625 12.71875 34.308594 L 4.746094 26 L 48 26 C 48.359375 26.003906 48.695313 25.816406 48.878906 25.503906 C 49.058594 25.191406 49.058594 24.808594 48.878906 24.496094 C 48.695313 24.183594 48.359375 23.996094 48 24 L 4.746094 24 L 12.71875 15.691406 C 13.011719 15.398438 13.09375 14.957031 12.921875 14.582031 C 12.753906 14.203125 12.371094 13.96875 11.957031 13.988281 Z"></path></svg></button>' }}`,
+            icon_prev: `{{ '<button type="button" class="slick-prev" aria-label="Previous" role="button"><svg role="img" viewBox="0 0 50 50"><path d="M 11.957031 13.988281 C 11.699219 14.003906 11.457031 14.117188 11.28125 14.308594 L 1.015625 25 L 11.28125 35.691406 C 11.527344 35.953125 11.894531 36.0625 12.242188 35.976563 C 12.589844 35.890625 12.867188 35.625 12.964844 35.28125 C 13.066406 34.933594 12.972656 34.5625 12.71875 34.308594 L 4.746094 26 L 48 26 C 48.359375 26.003906 48.695313 25.816406 48.878906 25.503906 C 49.058594 25.191406 49.058594 24.808594 48.878906 24.496094 C 48.695313 24.183594 48.359375 23.996094 48 24 L 4.746094 24 L 12.71875 15.691406 C 13.011719 15.398438 13.09375 14.957031 12.921875 14.582031 C 12.753906 14.203125 12.371094 13.96875 11.957031 13.988281 Z"></path></svg></button>' }}`
         }
     {% elsif settings.style_arrows == '03' %}
         window.arrows = {
-            icon_next: `{{ '<button type="button" class="slick-next" aria-label="Next"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z"></path></svg></button>' }}`,
-            icon_prev: `{{ '<button type="button" class="slick-prev" aria-label="Previous"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z"></path></svg></button>' }}`
+            icon_next: `{{ '<button type="button" class="slick-next" aria-label="Next" role="button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z"></path></svg></button>' }}`,
+            icon_prev: `{{ '<button type="button" class="slick-prev" aria-label="Previous" role="button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z"></path></svg></button>' }}`
         }
     {% elsif settings.style_arrows == '04' %}
         window.arrows = {
-            icon_next: `{{ '<button type="button" class="slick-next" aria-label="Next"><svg data-name="Layer 1" id="Layer_1" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><polygon points="150.46 478 129.86 456.5 339.11 256 129.86 55.49 150.46 34 382.14 256 150.46 478"/></svg></button>' }}`,
-            icon_prev: `{{ '<button type="button" class="slick-prev" aria-label="Previous"><svg data-name="Layer 1" id="Layer_1" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><polygon points="150.46 478 129.86 456.5 339.11 256 129.86 55.49 150.46 34 382.14 256 150.46 478"/></svg></button>' }}`
+            icon_next: `{{ '<button type="button" class="slick-next" aria-label="Next" role="button"><svg role="img" data-name="Layer 1" id="Layer_1" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><polygon points="150.46 478 129.86 456.5 339.11 256 129.86 55.49 150.46 34 382.14 256 150.46 478"/></svg></button>' }}`,
+            icon_prev: `{{ '<button type="button" class="slick-prev" aria-label="Previous" role="button"><svg role="img" data-name="Layer 1" id="Layer_1" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><polygon points="150.46 478 129.86 456.5 339.11 256 129.86 55.49 150.46 34 382.14 256 150.46 478"/></svg></button>' }}`
+        }
+    {% elsif settings.style_arrows == '05' %}
+        window.arrows = {
+            icon_next: `{{ '<button type="button" class="slick-next" aria-label="Next" role="button"><svg role="img" viewBox="0 0 280.66 62.99"><g id="Layer_1-2" data-name="Layer 1"><polygon points="280.66 55.65 225.01 0 219.82 5.19 270.27 55.65 0 55.65 0 62.99 280.66 62.99 280.66 55.65 280.66 55.65 280.66 55.65"/></g></svg></button>' }}`,
+            icon_prev: `{{ '<button type="button" class="slick-prev" aria-label="Previous" role="button"><svg role="img" viewBox="0 0 280.66 62.99"><g id="Layer_1-2" data-name="Layer 1"><polygon points="280.66 55.65 225.01 0 219.82 5.19 270.27 55.65 0 55.65 0 62.99 280.66 62.99 280.66 55.65 280.66 55.65 280.66 55.65"/></g></svg></button>' }}`
         }
     {% else %}
         window.arrows = {
-            icon_next: `{{ '<button type="button" class="slick-next" aria-label="Next"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M 7.75 1.34375 L 6.25 2.65625 L 14.65625 12 L 6.25 21.34375 L 7.75 22.65625 L 16.75 12.65625 L 17.34375 12 L 16.75 11.34375 Z"></path></svg></button>' }}`,
-            icon_prev: `{{ '<button type="button" class="slick-prev" aria-label="Previous"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M 7.75 1.34375 L 6.25 2.65625 L 14.65625 12 L 6.25 21.34375 L 7.75 22.65625 L 16.75 12.65625 L 17.34375 12 L 16.75 11.34375 Z"></path></svg></button>' }}`
+            icon_next: `{{ '<button type="button" class="slick-next" aria-label="Next" role="button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M 7.75 1.34375 L 6.25 2.65625 L 14.65625 12 L 6.25 21.34375 L 7.75 22.65625 L 16.75 12.65625 L 17.34375 12 L 16.75 11.34375 Z"></path></svg></button>' }}`,
+            icon_prev: `{{ '<button type="button" class="slick-prev" aria-label="Previous" role="button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M 7.75 1.34375 L 6.25 2.65625 L 14.65625 12 L 6.25 21.34375 L 7.75 22.65625 L 16.75 12.65625 L 17.34375 12 L 16.75 11.34375 Z"></path></svg></button>' }}`
         }
     {% endif %}
 
@@ -265,3 +280,10 @@
     const cookieAnnouncemenClosed = getCookie('announcement');
     window.announcementClosed = cookieAnnouncemenClosed === 'closed'
 </script>
+
+{%- if template contains 'collection' -%}
+    <script>
+      const currentCollection = "{{ collection.handle }}";
+      document.cookie = `currentCollection=${currentCollection}; path=/`;
+    </script>
+{%- endif -%}

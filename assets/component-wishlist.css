@@ -698,4 +698,8 @@
     .wishlist-footer.pagination-right .pagination__list {
         order: 2;
     }
+
+    .product-card-layout-01 .wishlist-container .productList .card .card-product .card-compare {
+        display: none;
+    }
 }

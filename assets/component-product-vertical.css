@@ -50,6 +50,10 @@
     .product-block-vertical .scroll-snap-mobile .halo-item{
         flex: 0 0 78%;
     }
+
+    .product-block-vertical .halo-row.column-3 .slider__slide, .product-block-vertical .halo-row.column-4 .slider__slide {
+        overflow: hidden;
+    }
 }
 
 @media (max-width: 767px){

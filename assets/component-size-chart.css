@@ -35,6 +35,7 @@ body.size-chart-show {
 body.size-chart-show .background-overlay {
     opacity: 1;
     pointer-events: all;
+    z-index: 101;
 }
 
 body.size-chart-show .halo-size-chart-popup.is-show {

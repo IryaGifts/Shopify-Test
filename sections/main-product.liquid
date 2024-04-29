@@ -35,7 +35,7 @@
     [
         {
             "type": "header",
-            "content": "t:sections.main-product.settings.header__1.content"
+            "content": "t:settings_schema.general.name"
         },
         {
             "type": "select",
@@ -953,7 +953,7 @@
         {
             "type": "text",
             "id": "bundle_discount_text",
-            "label": "t:sections.product-bundle.settings.discount.label__2",
+            "label": "t:sections.image-banner.blocks.image.settings.content.label__16",
             "default": "Get a [discount]% discount buying these products together",
             "info":"t:sections.product-bundle.settings.discount.info"
         },
@@ -1431,6 +1431,12 @@
                     "id": "show_sku",
                     "label": "t:sections.main-product.settings.info.label__2",
                     "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "show_barcode",
+                    "label": "t:sections.main-product.settings.info.label__5",
+                    "default": false
                 },
                 {
                     "type": "checkbox",
@@ -1943,6 +1949,13 @@
                     "label": "t:sections.main-product.settings.dynamic_checkout.label",
                     "info": "t:sections.main-product.settings.dynamic_checkout.info",
                     "default": true
+                },
+                {
+                  "type": "checkbox",
+                  "id": "show_gift_card_recipient",
+                  "default": false,
+                  "label": "t:sections.main-product.settings.general.show_gift_card_recipient.label",
+                  "info": "t:sections.main-product.settings.general.show_gift_card_recipient.info"
                 },
                 {
                     "type": "header",
@@ -2604,7 +2617,7 @@
             "settings": [
                 {
                     "type":"header",
-                    "content":"t:sections.main-sidebar.blocks.category.settings.header__1.content"
+                    "content":"t:settings_schema.general.name"
                 },
                 {
                     "type": "checkbox",
@@ -2615,7 +2628,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.category.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Categories"
                 },
                 {
@@ -2648,7 +2661,7 @@
             "settings": [
                 {
                     "type":"header",
-                    "content":"t:sections.main-sidebar.blocks.product_block.settings.header__1.content"
+                    "content":"t:settings_schema.general.name"
                 },
                 {
                     "type": "checkbox",
@@ -2659,7 +2672,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.product_block.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Featured Products"
                 },
                 {
@@ -2711,7 +2724,7 @@
             "settings": [
                 {
                     "type":"header",
-                    "content":"t:sections.main-sidebar.blocks.image.settings.header__1.content"
+                    "content":"t:settings_schema.general.name"
                 },
                 {
                     "type": "checkbox",
@@ -2722,7 +2735,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.image.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Image"
                 },
                 {
@@ -2751,7 +2764,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.category.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Further Info."
                 },
                 {
@@ -3080,7 +3093,7 @@
                 {
                     "type": "text",
                     "id": "complementary_product_title",
-                    "label": "t:sections.main-product.settings.complementary.heading",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Pairs well with"
                 },
                 {

@@ -90,13 +90,13 @@ class RecentlyViewed extends HTMLElement {
             }, 700)
         });
         
-        for (i = 0; i < this.icon.length; i++) {
+        for (let i = 0; i < this.icon.length; i++) {
             this.icon[i].addEventListener('click', this.popup.iconClick.bind(this));
         }
 
         document.body.addEventListener('click', this.onBodyClickEvent.bind(this));
         
-        for (i = 0; i < this.iconClose.length; i++) {
+        for (let i = 0; i < this.iconClose.length; i++) {
             this.iconClose[i].addEventListener('click', this.popup.closeDetails.bind(this));
         }
     }
@@ -180,6 +180,8 @@ class RecentlyViewed extends HTMLElement {
                                 ]
                             });
                         }
+
+                        if (productGrid.length == 0) recentlyGrid.addClass('not-product');
                         recentlyGrid.prepend('<div class="product-info"></div>');
                     }
                 }
@@ -195,17 +197,20 @@ class RecentlyViewed extends HTMLElement {
         event.preventDefault();
         event.stopPropagation();
 
+        if (document.body.classList.contains('ask-an-expert-show')){
+           document.querySelector('body').classList.remove('ask-an-expert-show');
+        }
         document.querySelector('body').classList.remove('recently-popup-mb-show');
         this.closeTab();
     }
     
 
     closeTab(){
-        for (i = 0; i < this.icon.length; i++) {
+        for (let i = 0; i < this.icon.length; i++) {
             this.icon[i].classList.remove('is-open');
         }
 
-        for (i = 0; i < this.tab.length; i++) {
+        for (let i = 0; i < this.tab.length; i++) {
             this.tab[i].classList.remove('is-visible');
         }
     }

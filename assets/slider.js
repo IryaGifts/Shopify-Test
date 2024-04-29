@@ -27,13 +27,14 @@ class SliderComponent extends HTMLElement {
         if (this.sliderItems.length === 0) return;
         this.slidesPerPage = Math.floor(this.slider.clientWidth / this.sliderItems[0].clientWidth);
         this.totalPages = this.sliderItems.length - this.slidesPerPage + 1;
+        if (this.pageCount) this.pageCount.innerText = this.slidesPerPage;
     }   
 
     update() {
         this.currentPage = Math.round(this.slider.scrollLeft / this.sliderItems[0].clientWidth * this.rtl_num);
         this.querySelector('.dots-item.active')?.classList.remove('active');
         this.querySelectorAll('.dots-item')[this.currentPage]?.classList.add('active');
-        if (this.pageCount) this.pageCount.innerText = this.currentPage + 1;
+        if (this.pageCount) this.pageCount.innerText = this.slidesPerPage + this.currentPage;
     }
 
     onButtonClick(event) {
@@ -74,7 +75,7 @@ class ProductSliderComponent extends SliderComponent {
         const resizeObserver = new ResizeObserver(entries => this.initPages());
         resizeObserver.observe(this.slider);
 
-        this.slider.addEventListener('DOMSubtreeModified', () => {
+        const observerSubtree = new MutationObserver(() => {
             this.slider = this.querySelector('.slider');
             this.sliderItems = this.querySelectorAll('.slider__slide').length ? this.querySelectorAll('.slider__slide') : this.querySelectorAll('.slider div.product');
             this.slider.addEventListener('scroll', this.update.bind(this));
@@ -83,6 +84,11 @@ class ProductSliderComponent extends SliderComponent {
             this.dotButton.forEach((button) => {
                 button.addEventListener('click', this.onDotClick.bind(this));
             });
+        });
+        
+        observerSubtree.observe(this.slider, {
+            subtree: true,
+            childList: true,
         });
 
         this.slider.addEventListener('scroll', this.update.bind(this));
@@ -105,7 +111,7 @@ class BannerSliderComponent extends SliderComponent {
         const resizeObserver = new ResizeObserver(entries => this.initPages());
         resizeObserver.observe(this.slider);
 
-        this.slider.addEventListener('DOMSubtreeModified', () => {
+        const observerSubtree = new MutationObserver(() => {
             this.slider = this.querySelector('.slider');
             this.sliderItems = this.querySelectorAll('.slider__slide');
             this.slider.addEventListener('scroll', this.update.bind(this));
@@ -114,6 +120,11 @@ class BannerSliderComponent extends SliderComponent {
             this.dotButton.forEach((button) => {
                 button.addEventListener('click', this.onDotClick.bind(this));
             });
+        });
+        
+        observerSubtree.observe(this.slider, {
+            subtree: true,
+            childList: true,
         });
         
         this.slider.addEventListener('scroll', this.update.bind(this));

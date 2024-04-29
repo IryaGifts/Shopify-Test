@@ -90,12 +90,12 @@
             }
         </script>
 
-        <product-bundle class="halo-block halo-product-bundle frequently-bought-together-block" data-product-bundle id="halo-product-bundle">
+        <product-bundle class="halo-block halo-product-bundle frequently-bought-together-block{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" data-product-bundle id="halo-product-bundle">
             <div class="container container-{{ container }}">
                 {%- if block_title != blank -%}
-                    <div class="halo-block-header">
+                    <div class="halo-block-header text-{{ block_title_align }}">
                         <h3 class="title text-{{ block_title_align }}">
-                            <span class="text">
+                            <span class="text text-{{ block_title_align }}">
                                 {{ block_title | escape }}
                             </span>
                         </h3>

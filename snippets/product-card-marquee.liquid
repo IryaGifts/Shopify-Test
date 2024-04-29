@@ -23,30 +23,16 @@
     -%}             
         
     {%- if product_marquee_text != blank -%}
-        <div class="card-marquee marquee-{{ product_marquee_type }}"
-            style="--product-marquee-background-color: {{ settings.product_marquee_background_color }};
-            --product-marquee-text-color: {{ settings.product_marquee_text_color }};
-            --product-marquee-text-size: {{ settings.product_marquee_text_size | append: 'px' }};
-            --product-marquee-text-mobile-size: {{ settings.product_marquee_text_mobile_size | append: 'px' }};
-            --product-marquee-text-weight: {{ settings.product_marquee_text_weight }};
-            --product-marquee-text-transform: {{ settings.product_marquee_text_transform }};
-            --product-marquee-text-style: {{ settings.product_marquee_text_style }};
-            --product-marquee-speed: {{ settings.product_marquee_speed }};
-            "
-        >   
+        <div class="card-marquee marquee-{{ product_marquee_type }}" style="--product-marquee-background-color: {{ settings.product_marquee_background_color }};--product-marquee-text-color: {{ settings.product_marquee_text_color }};--product-marquee-text-size: {{ settings.product_marquee_text_size | append: 'px' }};--product-marquee-text-mobile-size: {{ settings.product_marquee_text_mobile_size | append: 'px' }};--product-marquee-text-weight: {{ settings.product_marquee_text_weight }};--product-marquee-text-transform: {{ settings.product_marquee_text_transform }};--product-marquee-text-style: {{ settings.product_marquee_text_style }};--product-marquee-speed: {{ settings.product_marquee_speed }}">   
             <div class="marquee-box">
                 <div class="banner-marquee">
                     {%- for i in (1..10) -%}
-                            <span class="banner-marquee__item text">
-                                {{ product_marquee_text }}
-                            </span>
+                            <span class="banner-marquee__item text">{{ product_marquee_text }}</span>
                     {%- endfor -%}
                 </div>
                 <div class="banner-marquee">
                     {%- for i in (1..10) -%}
-                            <span class="banner-marquee__item text">
-                                {{ product_marquee_text }}
-                            </span>
+                            <span class="banner-marquee__item text">{{ product_marquee_text }}</span>
                     {%- endfor -%}
                 </div>
             </div>

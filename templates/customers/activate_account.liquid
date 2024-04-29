@@ -39,21 +39,23 @@
       </ul>
     {%- endif -%}
 
-    <div class="field">     
-      <input
-        type="password"
-        name="customer[password]"
-        id="password"
-        autocomplete="new-password"
-        placeholder="{{ 'customer.activate_account.password' | t }}"
-        {% if form.errors contains 'password' %}
-          aria-invalid="true"
-          aria-describedby="password-error"
-        {% endif %}
-      >
-      <label for="password">
-        {{ 'customer.activate_account.password' | t }}
+    <div class="form-field">
+      <label class="form-label" for="password">
+          {{ 'customer.login_page.password' | t }}
+          <em>*</em>
       </label>
+      <input
+          class="form-input form-input-placeholder"
+          type="password"
+          name="customer[password]"
+          id="password"
+          autocomplete="new-password"
+          placeholder="{{ 'customer.activate_account.password' | t }}"
+          {% if form.errors contains 'password' %}
+            aria-invalid="true"
+            aria-describedby="password-error"
+          {% endif %}
+      >
       {%- if form.errors contains 'password' -%}
         <small id="password-error" class="form__message">
           <svg aria-hidden="true" focusable="false" role="presentation">
@@ -64,21 +66,23 @@
       {%- endif -%}
     </div>
 
-    <div class="field">     
-      <input
-        type="password"
-        name="customer[password_confirmation]"
-        id="password_confirmation"
-        autocomplete="new-password"
-        placeholder="{{ 'customer.activate_account.password_confirm' | t }}"
-        {% if form.errors contains 'password' %}
-          aria-invalid="true"
-          aria-describedby="password_confirmation-error"
-        {% endif %}
-      >
-      <label for="password_confirmation">
-        {{ 'customer.activate_account.password_confirm' | t }}
+    <div class="form-field" style="margin-top: 15px;">
+      <label class="form-label" for="password_confirmation">
+          {{ 'customer.activate_account.password_confirm' | t }}
+          <em>*</em>
       </label>
+      <input
+          class="form-input form-input-placeholder"
+          type="password"
+          name="customer[password_confirmation]"
+          id="password_confirmation"
+          autocomplete="new-password"
+          placeholder="{{ 'customer.activate_account.password_confirm' | t }}"
+          {% if form.errors contains 'password' %}
+            aria-invalid="true"
+            aria-describedby="password_confirmation-error"
+          {% endif %}
+      >
       {%- if form.errors contains 'password_confirmation' -%}
         <small id="password_confirmation-error" class="form__message">
           <svg aria-hidden="true" focusable="false" role="presentation">
@@ -89,10 +93,10 @@
       {%- endif -%}
     </div>
 
-    <button>
+    <button class="button button--primary">
       {{ 'customer.activate_account.submit' | t }}
     </button>
-    <button name="decline">
+    <button name="decline" class="button button-2" style="margin-left: 0;margin-top: 30px;">
       {{ 'customer.activate_account.cancel' | t }}
     </button>
   {%- endform -%}

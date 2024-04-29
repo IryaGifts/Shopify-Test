@@ -100,6 +100,7 @@
 
 .intro-text-desktop {
     display: block;
+    margin-right: 5px;
 }
 
 .link-text-desktop {
@@ -173,7 +174,7 @@
     fill: white;
 }
 
-#notification-popup[data-show-popup="true"] {
+body.show_popup_notification #notification-popup {
     opacity: 1;
     transform: translate(-50%, -50%);
     pointer-events: auto;
@@ -251,12 +252,12 @@
     fill: currentColor;
 }
 
-body:has(#notification-popup[data-show-popup="true"]) {
+body.show_popup_notification #notification-popup {
     overflow: hidden;
     padding-inline-end: 10px;
 }
 
-body:has(#notification-popup[data-show-popup="true"]) .background-overlay {
+body.show_popup_notification .background-overlay {
     opacity: 1;
     pointer-events: auto;
 }
@@ -308,6 +309,7 @@ body:has(#notification-popup[data-show-popup="true"]) .background-overlay {
         opacity: 0; 
         --translate-y: -20px;
         pointer-events: none;
+        animation: vertical-floating 1.5s ease-out 1;
     }
 
     .sticky-notification .close-btn {
@@ -356,7 +358,7 @@ body:has(#notification-popup[data-show-popup="true"]) .background-overlay {
         padding: 5px 10px 15px;
     }
 
-    #notification-popup[data-show-popup="true"] {
+    body.show_popup_notification #notification-popup {
         opacity: 1;
         transform: translate(0);
         pointer-events: auto;

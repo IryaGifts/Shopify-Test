@@ -3,18 +3,18 @@
 {%- liquid
   assign autoVideo = section.settings.autoplay
 -%}
-<div class="video-section section-block-{{section.id}}" 
+<div class="video-section section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" 
     data-loader-script="{%- if autoVideo -%}{{ 'autoplay-video.js' | asset_url }}{%- else -%}{{ 'deferred-media.js' | asset_url }}{%- endif -%}">
   <div class="{% if section.settings.container == 'fullwidth' %}container-full{% elsif section.settings.container == '1770' %}container-1770{% elsif section.settings.container == '1170' %}container-1170{% else %}container{% endif %}">
       {% if section.settings.video_block_title != blank %}
           <div class="halo-block-header text-{{ section.settings.title_align }}">
-              <h3 class="title" style="--margin-bottom-title: {{ section.settings.mg_bottom_title | append: 'px' }}">
+              <h3 class="title{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--margin-bottom-title: {{ section.settings.mg_bottom_title | append: 'px' }}">
                   <span class="text">
                   {{ section.settings.video_block_title }}
                   </span>
               </h3>
               {% if section.settings.video_block_des != blank %}
-                  <div class="subtext-video rte">
+                  <div class="subtext-video rte{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                       {{ section.settings.video_block_des }}
                   </div>        
               {% endif %}
@@ -49,7 +49,7 @@
           </a>
         </div>
       </noscript>
-      <deferred-media class="video-section__media deferred-media no-js-hidden" data-media-id="{{ section.settings.video_url.id }}"
+      <deferred-media class="video-section__media deferred-media no-js-hidden{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" data-media-id="{{ section.settings.video_url.id }}"
         {% if section.settings.cover_image != blank %} style="padding-bottom: {{ section.settings.video_height }}%;"{% endif %}
       >
         <button
@@ -199,7 +199,7 @@
   "settings": [
     {
         "type": "header",
-        "content": "t:sections.layout.content"
+        "content": "t:settings_schema.general.name"
     },
     {
         "type": "select",

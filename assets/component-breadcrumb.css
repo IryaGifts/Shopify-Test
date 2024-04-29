@@ -98,6 +98,17 @@ breadcrumb-component {
 .hide-on-mobile {
     display: block;
 }
+
+.breadcrumb-collection {
+    overflow: hidden;
+    white-space: nowrap;
+    display: inline-block; 
+}
+
+.breadcrumb-collection.animate--text {
+    animation: widthAnimation 2s ease-in-out forwards;
+}
+
 @media (max-width: 1024px) {
     .moreItem-breadcrumb {
         margin: 0 10px;
@@ -298,8 +309,12 @@ breadcrumb-component {
         margin-right: 0;
     }
 
-    .breadcrumb-container.style--line_clamp_1 .breadcrumb {
+    .template-product .breadcrumb-container.style--line_clamp_1 .breadcrumb {
         padding-left: 10px;
+    }
+
+    .breadcrumb-container.style--line_clamp_1 .breadcrumb {
+        padding-left: 20px;
     }
 
     .container-1770 > .breadcrumb-container.style--line_clamp_1 {
@@ -353,6 +368,14 @@ breadcrumb-component {
     /* Page Product Gallery */
     .product-gallery .productView {
         padding-bottom: 50px;
+    }
+
+    .breadcrumb-collection {
+        overflow: visible;
+    }
+    
+    .breadcrumb-collection.animate--text {
+        animation: none;
     }
 }
 

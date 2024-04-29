@@ -53,6 +53,7 @@
 .product-card-layout-03 .card-quickview .quickview-button{
 	text-transform: uppercase;
 	font-weight: var(--font-weight-bold);
+	width: 100%;
 }
 
 .product-card-layout-03 .wrapper-item-size{
@@ -134,6 +135,10 @@
 
 	.product-card-layout-03 .card-action .variants-popup{
 		width: 100%;
+	}
+
+	.product-card-layout-03 .product-item.quickshop-popup-show .card-action .variants-popup {
+		animation: fadeUp var(--duration-default) ease forwards;
 	}
 }
 

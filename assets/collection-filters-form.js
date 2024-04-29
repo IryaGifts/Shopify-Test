@@ -32,6 +32,8 @@ class CollectionFiltersForm extends HTMLElement {
         sessionStorage.setItem('filterDisplayType', filterDisplayType)
         
         sessionStorage.setItem('productGridId', JSON.stringify(document.getElementById('main-collection-product-grid').dataset.id))
+
+        CollectionFiltersForm.convertCurrency();
     }
 
     static initListShowMore(sidebarBlocks) {
@@ -68,6 +70,10 @@ class CollectionFiltersForm extends HTMLElement {
         if(showMoreButtons) {
             showMoreButtons.forEach( (button) => button.addEventListener('click', CollectionFiltersForm.toggleShowMore));
         }
+
+        setTimeout(() => {
+            $('.card .swatch-label.is-active').trigger('click');
+        }, 200);
     }
 
     static toggleShowMore(event) {
@@ -109,7 +115,7 @@ class CollectionFiltersForm extends HTMLElement {
             storedBlockData.showingMore = true
         }
         storedBlockData.extendedHeight = maxExpandedHeight
-        sessionStorage.setItem('heightData', JSON.stringify(storedExpandedAndCollapsedHeight))
+        sessionStorage.setItem('heightData', JSON.stringify(storedExpandedAndCollapsedHeight));
     }
 
     static renderRemainingFilters(sidebarBlocks) {
@@ -140,7 +146,7 @@ class CollectionFiltersForm extends HTMLElement {
                 htmlElement.classList.remove('show-more')
                 showMoreContent.textContent = window.show_more_btn_text.show_all
             }
-        })  
+        }) 
     }
 
     static renderPriceFilter(priceFilterBlock) {
@@ -208,6 +214,7 @@ class CollectionFiltersForm extends HTMLElement {
 
         // document.getElementById('CollectionProductGrid').querySelector('.collection').classList.add('is-loading');
         document.body.classList.add('has-halo-loader');
+
         
         sections.forEach((section) => {
             const url = `${window.location.pathname}?section_id=${section.section}&${searchParams}`;
@@ -321,7 +328,7 @@ class CollectionFiltersForm extends HTMLElement {
 
         if(window.compare.show){
             this.setLocalStorageProductForCompare({
-                link: $('a[data-compare-link]'),
+                link: $('[data-compare-link]'),
                 onComplete: null
             });
         }
@@ -343,6 +350,28 @@ class CollectionFiltersForm extends HTMLElement {
         if (document.querySelector('.collection-masonry')) {
             document.getElementById('CollectionProductGrid').querySelector('.collection .halo-row--masonry').classList.add('is-show');
             CollectionFiltersForm.resizeAllGridItems();
+        }
+
+        if (this.checkNeedToConvertCurrency()) {
+            Currency.convertAll(window.shop_currency, $('#currencies .active').attr('data-currency'), 'span.money', 'money_format');
+        }
+
+        $('.productListing .card .swatch-label.is-active').trigger('click');
+    }
+
+    static checkNeedToConvertCurrency() {
+        var currencyItem = $('.dropdown-item[data-currency]');
+        if (currencyItem.length) {
+            return (window.show_multiple_currencies && Currency.currentCurrency != shopCurrency) || window.show_auto_currency;
+        } else {
+            return;
+        }
+    }
+
+    static convertCurrency() {
+        if (this.checkNeedToConvertCurrency()) {
+            let currencyCode = document.getElementById('currencies')?.querySelector('.active')?.getAttribute('data-currency');
+            Currency.convertAll(window.shop_currency, currencyCode, '.format-money-input', 'money_format');
         }
     }
 
@@ -591,8 +620,8 @@ class CollectionFiltersForm extends HTMLElement {
         }
 
         const formData = new FormData(form);
-        const searchParams = new URLSearchParams(formData).toString();
-
+        let searchParams = new URLSearchParams(formData).toString();
+        searchParams = this.onConvertPrice(searchParams);
         CollectionFiltersForm.renderPage(searchParams, event);
     }
 
@@ -600,7 +629,8 @@ class CollectionFiltersForm extends HTMLElement {
         event.preventDefault();
         if(!event.target.classList.contains('filter__price')){
             const formData = new FormData(event.target.closest('form'));
-            const searchParams = new URLSearchParams(formData).toString();
+            let searchParams = new URLSearchParams(formData).toString();
+            searchParams = this.onConvertPrice(searchParams);
             CollectionFiltersForm.renderPage(searchParams, event);
         }
     }
@@ -620,6 +650,42 @@ class CollectionFiltersForm extends HTMLElement {
         CollectionFiltersForm.toggleActiveFacets();
         const url = event.currentTarget.href.indexOf('?') == -1 ? '' : event.currentTarget.href.slice(event.currentTarget.href.indexOf('?') + 1);
         CollectionFiltersForm.renderPage(url);
+    }
+
+    onConvertPrice(searchParams) {
+        const moneyMax = this.querySelector('.money--max');
+
+        if (moneyMax) {
+            const $searchParams = searchParams.split('&');
+            const currentMax = Number(moneyMax.dataset.currentMax);
+            const defaultMax = Number(moneyMax.dataset.defaultMax);
+            let ratio = 1, params = '';
+
+            if (currentMax != defaultMax && !isNaN(currentMax) && !isNaN(defaultMax)) {
+                ratio = defaultMax/currentMax;
+
+                $searchParams.forEach(element => {
+                    const attr = element.split('=')[0];
+                    const val = element.split('=')[1];
+                    switch(attr) {
+                        case 'filter.v.price.gte':
+                            let min = Math.round(val*ratio);
+                            params == '' ? params = `filter.v.price.gte=${min}` : params = `${params}&filter.v.price.gte=${min}`;
+                            break;
+                        case 'filter.v.price.lte':
+                            let max = Math.round(val*ratio);
+                            params == '' ? params = `filter.v.price.lte=${max}` : params = `${params}&filter.v.price.lte=${max}`;
+                            break;
+                        default:
+                            params == '' ? params = element : params = `${params}&${element}`;
+                    }
+                });
+
+                searchParams = params;
+            }
+        }
+
+        return searchParams;
     }
 }
 
@@ -682,15 +748,10 @@ class PriceRange extends HTMLElement {
                     [slide1, slide2] = [slide2, slide1];
                 }
 
-                // if (slide1 > slide2) {
-                //     slide1 = slide2
-                //     rangeS[0].value = slide1 
-                //     rangeS[1].value = slide2
-                // } 
-
                 numberS[0].value = slide1;
                 numberS[1].value = slide2;
                 this.updateDisplay(numberS[0].value, numberS[1].value);
+                this.updatePrice(slide1, slide2);
             }
         });
 
@@ -700,8 +761,6 @@ class PriceRange extends HTMLElement {
                     checkValue1 = number1 != number1,
                     number2 = parseFloat(numberS[1].value),
                     checkValue2 = number2 != number2;
-
-             
 
                 if(!checkValue1){
                     rangeS[0].value = number1;
@@ -713,8 +772,10 @@ class PriceRange extends HTMLElement {
 
                 if (number1 > number2) {
                     this.updateDisplay(number2, number1);
+                    this.updatePrice(number2, number1);
                 } else {
                     this.updateDisplay(number1, number2);
+                    this.updatePrice(number1, number2);
                 }
             }
         });
@@ -731,6 +792,14 @@ class PriceRange extends HTMLElement {
 
         priceSlideRangeContainer.style.setProperty('--left-space', leftSpace)
         priceSlideRangeContainer.style.setProperty('--right-space', rightSpace)
+    }
+
+    updatePrice(min, max) {
+        const $currentMin = document.querySelector('.money--current-min');
+        const $currentMax = document.querySelector('.money--current-max');
+
+        if ($currentMin) $currentMin.innerHTML = min;
+        if ($currentMax) $currentMax.innerHTML = max;
     }
 }
 

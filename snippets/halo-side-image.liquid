@@ -9,9 +9,7 @@
             <div class="sidebarBlock-headingWrapper">
         {%- endif -%}
             {%- if heading != blank -%}
-                <h3 class="sidebarBlock-heading{% if show_collapse %}{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}{% endif %}">
-                    {{ heading | escape }}
-                </h3>
+                <h2 class="sidebarBlock-heading{% if show_collapse %}{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}{% endif %}">{{ heading | escape }}</h2>
             {%- endif -%}
         {%- if show_collapse -%}
             </div>
@@ -25,7 +23,8 @@
                         <div class="image">
                     {%- endif -%}
                         {%- if image != blank -%}
-                            <img srcset="{{ image | img_url: 'master' }} 1x, {{ image | img_url: 'master', scale: 2 }} 2x" src="{{ image | img_url: 'master' }}" alt="{{ image.alt | default: shop.name | escape }}" loading="lazy">
+                            {%- assign height = image.width | divided_by: image.aspect_ratio | round -%}
+                            {{ image | image_url: width: 375 | image_tag: width: image.width, height: height, sizes: "100vw", widths: '165, 210, 288, 375' }}
                         {%- else -%}
                             {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
                         {%- endif -%}

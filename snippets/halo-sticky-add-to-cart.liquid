@@ -14,7 +14,7 @@
                 -%}
                 <div class="sticky-left">
                     <div class="sticky-image" data-image-sticky-add-to-cart>
-                        <img srcset="{{ image | img_url: '1200x' }}" src="{{ image | img_url: '1200x' }}" alt="{{ image.alt | default: shop.name | escape }}" sizes="auto" loading="lazy">
+                        <img srcset="{{ image | img_url: '1200x' }}" src="{{ image | img_url: '1200x' }}" alt="{{ image.alt | default: shop.name | escape }}" sizes="1200px" loading="lazy">
                     </div>
                     {% if sticky_atc_layout == '1' %}
                         <div class="sticky-info">
@@ -30,10 +30,12 @@
                             {% if sticky_atc_layout == '1' %}
                                 {% assign compare_price = current_variant.compare_at_price | money %}
                                 {% assign subtotal = current_variant.price | money %}
-                                <div class="sticky-price{% if compare_price != blank %} has-compare-price{% endif %}">
-                                    {% if compare_price != blank %}
-                                    <s class="money-compare-price">{{ compare_price }}</s>
-                                    {% endif %}
+                                <div class="sticky-price{% unless compare_price == subtotal %}{% if compare_price != blank %} has-compare-price{% endif %}{% endunless %}">
+                                    {% unless compare_price == subtotal %}
+                                        {% if compare_price != blank %}
+                                            <s class="money-compare-price" data-compare-price="{{ current_variant.compare_at_price }}">{{ compare_price }}</s>
+                                        {% endif %}
+                                    {% endunless %}
                                     <span class="money-subtotal">{{ subtotal }}</span>
                                 </div>
                             {% endif %}
@@ -242,10 +244,12 @@
                     {%- if sticky_atc_layout == '1' -%}
                         {% assign compare_price = current_variant.compare_at_price | money %}
                         {% assign subtotal = current_variant.price | money %}
-                        <div class="sticky-price{% if compare_price != blank %} has-compare-price{% endif %}">
-                            {% if compare_price != blank %}
-                              <s class="money-compare-price">{{ compare_price }}</s>
-                            {% endif %}
+                        <div class="sticky-price{% unless compare_price == subtotal %}{% if compare_price != blank %} has-compare-price{% endif %}{% endunless %}">
+                            {% unless compare_price == subtotal %}
+                                {% if compare_price != blank %}
+                                    <s class="money-compare-price" data-compare-price="{{ current_variant.compare_at_price }}">{{ compare_price }}</s>
+                                {% endif %}
+                            {% endunless %}
                             <span class="money-subtotal">{{ subtotal }}</span>
                         </div>
                     {%- endif -%}

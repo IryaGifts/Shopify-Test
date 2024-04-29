@@ -90,20 +90,6 @@
     color: var(--button-text-color-hover);
 }
 
-body:not(.safari).banner-animation-1 .instagram-grid-section .instagram-item {
-    overflow: hidden;
-}
-
-body:not(.safari).banner-animation-1 .instagram-grid-section .instagram-item a {
-    display: block;
-    transform: scale(1.15);
-    transition: transform 1s ease-out;
-}
-
-body:not(.safari).banner-animation-1 .instagram-grid-section .instagram-item.shouldShow a {
-    transform: scale(1);
-}
-
 @media screen and (max-width: 1400px) {
     .instagram-grid-section .section-wrapper {
         gap: 75px;

@@ -18,6 +18,14 @@ class AZTable extends HTMLElement {
                 group.classList.add('hide')
             }
         })
+
+        this.activeBrand();
+    }
+
+    activeBrand() {
+        const hash = window.location.hash.slice(1),
+            brand = document.querySelector(`[data-href="${hash}"]`);
+        if (hash != undefined && hash != '' && !brand.closest('li').matches('.disable')) brand.click();
     }
 
     onClickHandler(event) {
@@ -48,8 +56,6 @@ class AZTable extends HTMLElement {
         } else {
             this.azWrapper.classList.add('active-all');
         }
-
-
     }
 }
 

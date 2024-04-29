@@ -27,7 +27,9 @@ class FAQs extends HTMLElement {
             });
         }
 
-        document.body.addEventListener('click', this.onBodyClickEvent.bind(this));
+        if(!document.body.classList.contains('template-index')){
+            document.body.addEventListener('click', this.onBodyClickEvent.bind(this));
+        }
     }
 
     onClickFilterHandler(){

@@ -9,6 +9,7 @@ window.compareColor = function() {
             this.sortTable = document.getElementById('sortTableList');
 
             $(document).on('click', '[data-open-compare-color-popup]', (event) => {
+                this.loadNode();
                 this.setOpenPopup(event);
             });
 
@@ -20,16 +21,43 @@ window.compareColor = function() {
                 this.onChangeHandler(event);
             }, 0);
 
-            this.querySelector('ul').addEventListener('input', this.debouncedOnChange.bind(this));
+            this.querySelector('ul') ? this.querySelector('ul').addEventListener('input', this.debouncedOnChange.bind(this)) : document.querySelector('.productView-compareColor')?.classList.add('hidden');
 
             document.body.addEventListener('click', this.onBodyClickEvent.bind(this));
+        }
 
-            if (window.innerWidth >= 1025 && this.sortTable) {
-                new Sortable(this.sortTable, {
-                    animation: 150
-                });
-            } else {
-                this.onRemoveHandler();
+        loadNode() {
+            if (this.matches('.node-loaded')) return;
+            this.classList.add('node-loaded');
+
+            const urlStyleCC = this.dataset.urlStyleCompareColor;
+            if (urlStyleCC != '') {
+                const loadStyleSheet = document.createElement("link");
+                loadStyleSheet.rel = 'stylesheet';
+                loadStyleSheet.type = 'text/css';
+                loadStyleSheet.href = urlStyleCC;
+                this.parentNode.insertBefore(loadStyleSheet, this);
+            }
+
+            if (document.body.matches('.template-product')) {
+                const urlScriptCC = this.dataset.urlScriptCompareColor;
+                
+                if (urlScriptCC != '' && !document.body.matches('.sortable-loader')) {
+                    document.body.classList.add('sortable-loader');
+                    const loadScript = document.createElement("script");
+                    loadScript.src = urlScriptCC;
+                    document.body.appendChild(loadScript);
+                }
+    
+                setTimeout(() => {
+                    if (window.innerWidth >= 1025 && this.sortTable) {
+                        new Sortable(this.sortTable, {
+                            animation: 150
+                        });
+                    } else {
+                        this.onRemoveHandler();
+                    }
+                }, 200)
             }
         }
 

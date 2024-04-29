@@ -8,14 +8,10 @@
             <div class="sidebarBlock-headingWrapper">
         {%- endif -%}
             {%- if heading != blank -%}
-                <h3 class="sidebarBlock-heading{% if show_collapse %}{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}{% endif %}">
-                    {{ heading | escape }}
-                </h3>
+                <h2 class="sidebarBlock-heading{% if show_collapse %}{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}{% endif %}">{{ heading | escape }}</h2>
             {%- else -%}
                 {%- if show_collapse -%}
-                    <h3 class="sidebarBlock-heading{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}">
-                        BLock Heading
-                    </h3>
+                    <h2 class="sidebarBlock-heading{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}">BLock Heading</h2>
                 {%- endif -%}
             {%- endif -%}
         {%- if show_collapse -%}
@@ -26,11 +22,7 @@
                 <div class="recentPosts-list {{number}}">
                     {%- for article in blog.articles limit: number -%}
                         <div class="recentPosts-list-item">
-                            <h6 class="title">
-                                <a href="{{ article.url }}" class="link link-underline" aria-label="link">
-                                    <span class="text">{{ article.title }}</span>
-                                </a>
-                            </h6>
+                            <h6 class="title"><a href="{{ article.url }}" class="link link-underline" aria-label="link"><span class="text">{{ article.title }}</span></a></h6>
                             <p class="date">{{ article.published_at | date: "%d %B %Y" }}</p>
                         </div>
                     {%- endfor -%}

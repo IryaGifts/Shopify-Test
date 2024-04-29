@@ -1,21 +1,21 @@
 {%- if settings.show_someone_purchase or settings.show_gdpr_cookie_consent -%}
 <div class="footbar-fixed">
 	<div class="footbar-fixed-right">
-        {% if settings.someone_purchase_position == 'right' %}
+        {%- if settings.someone_purchase_position == 'right' -%}
             {% render 'halo-someone-purchase' %}
-        {% endif %}
-        {% if settings.gdpr_cookie_consent_type == 'right' %}
+        {%- endif -%}
+        {%- if settings.gdpr_cookie_consent_type == 'right' -%}
             {% render 'halo-gdpr-cookie-consent' %}
-        {% endif %}
+        {%- endif -%}
     </div>
 	<div class="clearfix"></div>
-    <div class="footbar-fixed-left {% if settings.gdpr_cookie_consent_type == 'right' and settings.someone_purchase_position == 'left' %}cookie_someone_right{% endif %}">
-        {% if settings.someone_purchase_position == 'left' %}
+    <div class="footbar-fixed-left{% if settings.gdpr_cookie_consent_type == 'right' and settings.someone_purchase_position == 'left' %} cookie_someone_right{% endif %}">
+        {%- if settings.someone_purchase_position == 'left' -%}
             {% render 'halo-someone-purchase' %}
-        {% endif %}
-        {% if settings.gdpr_cookie_consent_type == 'left' %}
+        {%- endif -%}
+        {%- if settings.gdpr_cookie_consent_type == 'left' -%}
             {% render 'halo-gdpr-cookie-consent' %}
-        {% endif %}
+        {%- endif -%}
     </div>
 </div>
 {%- endif -%}
@@ -25,8 +25,6 @@
 {% render 'halo-lookbook-popup' %}
 
 {% render 'halo-lookbook-popup-mobile' %}
-
-{% render 'halo-popup-search' %}
 
 {% render 'halo-video-popup' %}
 
@@ -70,14 +68,18 @@
     {% render 'halo-term-condition-popup' %}
 {%- endif -%}
 
-{% if settings.quick_shop_type == '2' %}
+{%- if settings.quick_shop_type == '2' -%}
     {% render 'halo-popup-card-mobile' %}
-{% elsif  settings.quick_shop_type == '3' %}
+{%- elsif  settings.quick_shop_type == '3' -%}
     {% render 'halo-quickshop-popup' %}
-{% endif %}
+{%- endif -%}
 
-{% if settings.enable_sticky_notification or settings.enable_sticky_notification_mb %}
+{%- if settings.enable_sticky_notification or settings.enable_sticky_notification_mb -%}
     {% render 'sticky-notification' %}
-{% endif %} 
+{%- endif -%} 
 
 {% render 'halo-popup-warning' %}
+
+{%- if settings.show_scroll_down_section -%}
+    {% render 'halo-arrow-scroll-down' %}
+{%- endif -%}

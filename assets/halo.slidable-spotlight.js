@@ -25,13 +25,12 @@
                             speed: 500,     
                             infinite: true, 
                             centerMode: true,   
-                            centerPadding: '500px',
-                            responsive: [{  
+                            centerPadding: '26%',
+                            responsive: [{
                                 breakpoint: 1366,
                                 settings: {
                                     arrows: false,
-                                    dots: true,
-                                    centerPadding: '200px',
+                                    dots: true
                                 }
                             },
                             {
@@ -39,10 +38,9 @@
                                 settings: {
                                     arrows: false,
                                     dots: true,
-                                    centerPadding: '50px',
-                                }   
-                            }
-                            ]
+                                    centerPadding: '30px'
+                                }
+                            }]
                         }); 
                     };
                 });
@@ -50,4 +48,8 @@
         }
 	}
 	halo.initSlidableSpotlight();
+    if ($('body').hasClass('cursor-fixed__show')){
+        window.sharedFunctionsAnimation.onEnterButton();
+        window.sharedFunctionsAnimation.onLeaveButton();
+    }
 })(jQuery);

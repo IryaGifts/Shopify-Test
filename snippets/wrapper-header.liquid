@@ -1,30 +1,24 @@
-{% section 'announcement-bar' %}
-{%- case settings.header_layout -%}
-	{%- when '01' -%}
-		{% section 'header' %}
-	{%- when '02' -%}
-		{% section 'header-02' %}
-	{%- when '03' -%}
-		{% section 'header-03' %}
-	{%- when '04' -%}
-		{% section 'header-04' %}
-	{%- when '05' -%}
-		{% section 'header-05' %}
-	{%- when '06' -%}
-		{% section 'header-06' %}
-	{%- when '07' -%}
-		{% section 'header-07' %}
-	{%- when '08' -%}
-		{% section 'header-08' %}
-	{%- when '09' -%}
-		{% section 'header-09' %}
-	{%- when '10' -%}
-		{% section 'header-10' %}
-	{%- when '11' -%}
-		{% section 'header-11' %}
-	{%- when '12' -%}
-		{% section 'header-12' %}
-{%- endcase -%}
+{%- if request.page_type == 'index' -%}
+    <h1 class="hidden">{{ shop.name }}</h1>
+    {% assign potential_action_target = request.origin | append: routes.search_url | append: "?q={search_term_string}" %}
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "name": {{ shop.name | json }},
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": {{ potential_action_target | json }},
+                "query-input": "required name=search_term_string"
+            },
+            "url": {{ request.origin | append: page.url | json }}
+        }
+    </script>
+{%- endif -%}
+
+{%- if template.suffix == 'ajax_mega_menu' -%}
+    {% section 'header-navigation-plain' %}
+{%- endif -%}
 
 {%- if settings.mobile_menu != 'default' -%}
 	{% section 'halo-navigation-mobile' %}
@@ -32,10 +26,12 @@
 	{% section 'halo-navigation-mobile-3' %}
 {%- endif -%}
 
-{% unless settings.enable_currencies %}
+{%- unless settings.enable_currencies -%}
     <script src='//cdn.shopify.com/s/javascripts/currencies.js' defer="defer"></script>
-    <script src="{{ 'jquery.currencies.min.js' | asset_url }}" defer="defer"></script>
-    <script type="text/javascript">
-        let shopCurrency="{{ shop.currency }}"
-    </script>
-{% endunless %}
+    {%- if settings.currency_format_enable -%}
+        <script src="{{ 'jquery.currencies-format.min.js' | asset_url }}" defer="defer"></script>
+    {%- else -%}
+        <script src="{{ 'jquery.currencies.min.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    <script type="text/javascript">let shopCurrency="{{ shop.currency }}"</script>
+{%- endunless -%}

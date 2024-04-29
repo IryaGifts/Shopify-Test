@@ -4,11 +4,6 @@
 <link rel="stylesheet" href="{{ 'component-contact-form.css' | asset_url }}" media="print" onload="this.media='all'">
 <noscript>{{ 'component-contact-form.css' | asset_url | stylesheet_tag }}</noscript>
 
-{%- if settings.banner_animation == 'effect_1' -%}
-    <link rel="stylesheet" href="{{ 'component-contact-form-banner-animation.css' | asset_url }}" media="print" onload="this.media='all'">
-    <noscript>{{ 'component-contact-form-banner-animation.css' | asset_url | stylesheet_tag }}</noscript>
-{%- endif -%}
-
 {%- liquid
     assign padding_top = section.settings.mg_top_desktop | append: 'px'
     assign padding_bottom = section.settings.mg_bottom_desktop | append: 'px'
@@ -63,150 +58,148 @@
     endif
 -%}
 
-{% if settings.banner_animation == 'effect_1' %}<animated-component>{% endif %}
-    <div data-section-id="{{ section.id }}" data-section-type="contact" id="ContactSection-{{ section.id }}" data-section="{{ section.id }}">
-        <div class="contact-container {% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%} container-full{% else %}container{% endif %}" data-animate="{{ settings.banner_animation }}">
+<div data-section-id="{{ section.id }}" data-section-type="contact" id="ContactSection-{{ section.id }}" data-section="{{ section.id }}">
+    <div class="contact-container {% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%} container-full{% else %}container{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+        {% if bg_image != blank %}
+            <div class="image-container{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+        {% endif %}
+            {%- if show_breadcrumb -%}
+                {% render 'breadcrumb', alignment: breadcrumb_alignment %}
+            {%- endif -%}
             {% if bg_image != blank %}
-                <div class="image-container">
+                <div class="contact-text-content">
             {% endif %}
-                {%- if show_breadcrumb -%}
-                    {% render 'breadcrumb', alignment: breadcrumb_alignment %}
+                {%- if show_page_title -%}
+                    <h1 class="page-header text-{{ page_title_alignment }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+                        {{ page.title | escape }}
+                    </h1>
                 {%- endif -%}
-                {% if bg_image != blank %}
-                    <div class="contact-text-content">
-                {% endif %}
-                    {%- if show_page_title -%}
-                        <h1 class="page-header text-{{ page_title_alignment }}">
-                            {{ page.title | escape }}
-                        </h1>
-                    {%- endif -%}
-                    {%- if contact_form_text != blank -%}
-                        <div class="contact-text text-{{ content_alignment }}">
-                            {{ contact_form_text }}
+                {%- if contact_form_text != blank -%}
+                    <div class="contact-text text-{{ content_alignment }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+                        {{ contact_form_text }}
+                    </div>
+                {%- endif %}
+            {% if bg_image != blank %}
+                </div>
+            {% endif %}
+        {% if bg_image != blank %}
+            </div>
+        {% endif %}
+    </div>
+    {% if linklists[section.settings.menu].links.size > 0 %}
+        <div class="contact-navigation-container {% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%} container-full{% else %}container{% endif %} scroll-snap-mobile{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+            <ul class="contact-page-nav disable-srollbar">
+                {% for link in linklists[section.settings.menu].links %}
+                    <li class="item {% if link.active %}active{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+                        <a href="{{ link.url }}">{{ link.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <style>
+            {% liquid
+                assign menu_bar_background = section.settings.menu_bar_background
+                assign menu_bar_border = section.settings.menu_bar_border
+                assign menu_item_background = section.settings.menu_item_background
+                assign menu_item_text_color = section.settings.menu_item_text_color
+                assign menu_item_background_color_h = section.settings.menu_item_background_color_h
+                assign menu_item_text_color_h = section.settings.menu_item_text_color_h
+            %}
+
+            .contact-navigation-container {
+                --menu_bar_background: {{ menu_bar_background }};
+                --menu_bar_border: {{ menu_bar_border }};
+            }
+
+            .contact-page-nav .item {
+                --menu_item_background: {{ menu_item_background }};
+            }
+
+            .contact-page-nav .item:hover {
+                --menu_item_background_color_h: {{ menu_item_background_color_h }};
+            }
+
+            .contact-page-nav .item a {
+                --menu_item_text_color: {{ menu_item_text_color }};
+            }
+
+            .contact-page-nav .item a:hover {
+                --menu_item_text_color_h: {{ menu_item_text_color_h }};
+            }
+
+            .contact-page-nav .item::after {
+                --menu_item_text_color_h: {{ menu_item_text_color_h }};
+                --menu_item_text_color: {{ menu_item_text_color }};
+            }
+        </style>
+    {% endif %}
+    <div class="contact-content-container {% if form_container == '1170'%}container-1170{% elsif form_container == '1770'%}container-1770{% elsif form_container == 'fullwidth' %}container-full{% else %}container{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+        <div class="page-content contact-content">
+            <div class="contact contact-2">
+                {%- if contact_form_title != blank -%}
+                    <h2 class="contact-main-title text-{{ contact_form_title_alignment }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+                        {{ contact_form_title | escape }}
+                    </h2>
+                {%- endif %}
+                <div class="contact-item{% if show_contact_info %}{% if has_contact_info %} contact-itemLeft{% endif %}{% endif %}">
+                    {% if contact_form_heading != blank %}
+                        <h3 class="contact-form-heading page-subheader{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+                            {{ contact_form_heading }}
+                        </h3>
+                    {% endif %}
+                    {% if contact_form_description != blank %}
+                        <p class="contact-form-description contact-text{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">{{ contact_form_description }}</p>
+                    {% endif %}
+                    {% render 'contact-form',
+                        section: section
+                    %}
+                </div>
+                {%- if show_contact_info -%}
+                    {%- if has_contact_info -%}
+                        <div class="contact-item contact-itemRight">
+                            {%- if contact_info_title != blank -%}
+                                <h2 class="page-subheader contact-title{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+                                    {{ contact_info_title | escape }}
+                                </h2>
+                            {%- endif %}
+                            {%- if contact_info_text != blank -%}
+                                <div class="contact-text{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+                                    {{ contact_info_text | escape }}
+                                </div>
+                            {%- endif %}
+                            {%- if btn_text != blank -%}
+                                <{% if btn_link != blank %}a href={{ btn_link.url }} {%else%}button{%endif%} class="contact-btn button{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+                                    {{ btn_text | escape }}
+                                </{% if btn_link != blank %}a{%else%}button{%endif%}>
+                            {% endif %}
+                            {%- if contact_info_address != blank or contact_info_content_1 != blank or contact_info_content_2 != blank -%}
+                                <div class="contact-info{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+                                    {%- if contact_info_content_1 != blank -%}
+                                        <div class="contact-store">
+                                            {{ contact_info_content_1 }}
+                                        </div>
+                                    {%- endif -%}
+                                    {%- if contact_info_address != blank -%}
+                                        <div class="contact-address">
+                                            <address>
+                                                {{ contact_info_address }}
+                                            </address>
+                                        </div>
+                                    {%- endif -%}
+                                    {%- if contact_info_content_2 != blank -%}
+                                        <div class="contact-store">
+                                            {{ contact_info_content_2 }}
+                                        </div>
+                                    {%- endif -%}
+                                </div>
+                            {%- endif %}
                         </div>
                     {%- endif %}
-                {% if bg_image != blank %}
-                    </div>
-                {% endif %}
-            {% if bg_image != blank %}
-                </div>
-            {% endif %}
-        </div>
-        {% if linklists[section.settings.menu].links.size > 0 %}
-            <div class="contact-navigation-container {% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%} container-full{% else %}container{% endif %} scroll-snap-mobile">
-                <ul class="contact-page-nav disable-srollbar">
-                    {% for link in linklists[section.settings.menu].links %}
-                        <li class="item {% if link.active %}active{% endif %}">
-                            <a href="{{ link.url }}">{{ link.title }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-            <style>
-                {% liquid
-                    assign menu_bar_background = section.settings.menu_bar_background
-                    assign menu_bar_border = section.settings.menu_bar_border
-                    assign menu_item_background = section.settings.menu_item_background
-                    assign menu_item_text_color = section.settings.menu_item_text_color
-                    assign menu_item_background_color_h = section.settings.menu_item_background_color_h
-                    assign menu_item_text_color_h = section.settings.menu_item_text_color_h
-                %}
-
-                .contact-navigation-container {
-                    --menu_bar_background: {{ menu_bar_background }};
-                    --menu_bar_border: {{ menu_bar_border }};
-                }
-
-                .contact-page-nav .item {
-                    --menu_item_background: {{ menu_item_background }};
-                }
-
-                .contact-page-nav .item:hover {
-                    --menu_item_background_color_h: {{ menu_item_background_color_h }};
-                }
-
-                .contact-page-nav .item a {
-                    --menu_item_text_color: {{ menu_item_text_color }};
-                }
-
-                .contact-page-nav .item a:hover {
-                    --menu_item_text_color_h: {{ menu_item_text_color_h }};
-                }
-
-                .contact-page-nav .item::after {
-                    --menu_item_text_color_h: {{ menu_item_text_color_h }};
-                    --menu_item_text_color: {{ menu_item_text_color }};
-                }
-            </style>
-        {% endif %}
-        <div class="contact-content-container {% if form_container == '1170'%}container-1170{% elsif form_container == '1770'%}container-1770{% elsif form_container == 'fullwidth' %}container-full{% else %}container{% endif %}">
-            <div class="page-content contact-content">
-                <div class="contact contact-2">
-                    {%- if contact_form_title != blank -%}
-                        <h2 class="contact-main-title text-{{ contact_form_title_alignment }}">
-                            {{ contact_form_title | escape }}
-                        </h2>
-                    {%- endif %}
-                    <div class="contact-item{% if show_contact_info %}{% if has_contact_info %} contact-itemLeft{% endif %}{% endif %}">
-                        {% if contact_form_heading != blank %}
-                            <h3 class="contact-form-heading page-subheader">
-                                {{ contact_form_heading }}
-                            </h3>
-                        {% endif %}
-                        {% if contact_form_description != blank %}
-                            <p class="contact-form-description contact-text">{{ contact_form_description }}</p>
-                        {% endif %}
-                        {% render 'contact-form',
-                            section: section
-                        %}
-                    </div>
-                    {%- if show_contact_info -%}
-                        {%- if has_contact_info -%}
-                            <div class="contact-item contact-itemRight">
-                                {%- if contact_info_title != blank -%}
-                                    <h2 class="page-subheader contact-title">
-                                        {{ contact_info_title | escape }}
-                                    </h2>
-                                {%- endif %}
-                                {%- if contact_info_text != blank -%}
-                                    <div class="contact-text">
-                                        {{ contact_info_text | escape }}
-                                    </div>
-                                {%- endif %}
-                                {%- if btn_text != blank -%}
-                                    <{% if btn_link != blank %}a href={{ btn_link.url }} {%else%}button{%endif%} class="contact-btn button">
-                                        {{ btn_text | escape }}
-                                    </{% if btn_link != blank %}a{%else%}button{%endif%}>
-                                {% endif %}
-                                {%- if contact_info_address != blank or contact_info_content_1 != blank or contact_info_content_2 != blank -%}
-                                    <div class="contact-info">
-                                        {%- if contact_info_content_1 != blank -%}
-                                            <div class="contact-store">
-                                                {{ contact_info_content_1 }}
-                                            </div>
-                                        {%- endif -%}
-                                        {%- if contact_info_address != blank -%}
-                                            <div class="contact-address">
-                                                <address>
-                                                    {{ contact_info_address }}
-                                                </address>
-                                            </div>
-                                        {%- endif -%}
-                                        {%- if contact_info_content_2 != blank -%}
-                                            <div class="contact-store">
-                                                {{ contact_info_content_2 }}
-                                            </div>
-                                        {%- endif -%}
-                                    </div>
-                                {%- endif %}
-                            </div>
-                        {%- endif %}
-                    {%- endif -%}
-                </div>
+                {%- endif -%}
             </div>
         </div>
     </div>
-{% if settings.banner_animation == 'effect_1' %}</animated-component>{% endif %}
+</div>
 
 <style type="text/css" media="screen">
     #ContactSection-{{ section.id }}{
@@ -378,7 +371,7 @@
         "settings": [
             {
                 "type": "header",
-                "content": "t:sections.main_contact.settings.header__1"
+                "content": "t:settings_schema.general.name"
             },
             {
                 "type": "checkbox",
@@ -440,7 +433,7 @@
             {
                 "type": "textarea",
                 "id": "contact_form_text",
-                "label": "t:sections.main_contact.settings.contact_form.label__2"
+                "label": "t:sections.image-banner.blocks.image.settings.content.label__16"
             },
             {
                 "type": "color",

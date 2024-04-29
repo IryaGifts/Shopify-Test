@@ -511,6 +511,7 @@
     border: 1px solid var(--btn-2-border-hover);
     background: var(--btn-2-bg-hover);
     color: var(--btn-2-color-hover);
+    background-origin: border-box;
 }
 
 .spr-review-header-title {

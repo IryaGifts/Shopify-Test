@@ -8,6 +8,7 @@
     display: block;
     width: auto;
     margin: 0 auto;
+    height: auto;
 }
 
 .before-you-leave-banner{
@@ -145,6 +146,13 @@
 
 .before-you-leave-content-product .product{
     margin-bottom: 33px;
+}
+
+.before-you-leave-content-product .product .card {  
+  font-size: 0  
+}   
+.before-you-leave-content-product .product .card-button{    
+  font-size: var(--font-body-size); 
 }
 
 .before-you-leave-content-product .slick-arrow{

@@ -1,7 +1,6 @@
 <link rel="stylesheet" href="{{ 'component-puzzled-image-banner.css' | asset_url }}" media="print" onload="this.media='all'">
 <noscript>{{ 'component-puzzled-image-banner.css' | asset_url | stylesheet_tag }}</noscript>
-
-{% liquid 
+{%- liquid 
     assign mg_top_desktop = section.settings.mg_top_desktop | append: 'px' 
     assign mg_top_tablet = section.settings.mg_top_tablet | append: 'px' 
     assign mg_top_mobile = section.settings.mg_top_mobile | append: 'px' 
@@ -77,268 +76,117 @@
     assign image_link_4_font_size_mb = section.settings.image_link_4_font_size_mb | append: 'px'
     assign image_link_4_font_weight = section.settings.image_link_4_font_weight 
     assign image_link_4_color = section.settings.image_link_4_color
-%}
-
-<div class="puzzled-image-banner section-block-{{section.id}}" id="puzzled-image-banner-{{section.id}}">
+-%}
+<div class="puzzled-image-banner section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="puzzled-image-banner-{{section.id}}">
   <div class="{% if container == 'fullwidth' %}container-full{% elsif container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% else %}container{% endif %}">
-    {% if section_heading != blank %}
-        <h2 class="section-heading title text-center"
-            style="
-                --heading-font-size: {{ section_heading_font_size }};
-                --heading-font-size-mb: {{ section_heading_font_size_mb }};
-                --heading-font-weight: {{ section_heading_font_weight }};
-                --heading-color: {{ section_heading_color }};
-                --heading-margin-bottom: {{ section_heading_margin_bottom }};
-            "
-        >
-            {{ section_heading }}
-        </h2>
-    {% endif %}
+    {%- if section_heading != blank -%}
+        <h2 class="section-heading title text-center{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--heading-font-size: {{ section_heading_font_size }};--heading-font-size-mb: {{ section_heading_font_size_mb }};--heading-font-weight: {{ section_heading_font_weight }};--heading-color: {{ section_heading_color }};--heading-margin-bottom: {{ section_heading_margin_bottom }}">{{ section_heading }}</h2>
+    {%- endif -%}
     <div class="puzzled-image-banner-wrapper">
         <div class="content-block content-block-left">
-            <image-to-flip class="section-block-banner-image">
-                <div class="img-box">
-                    {% if image_1 != blank %}
-                        <a title="{{ image_1.alt | default: shop.name | escape }}" {% if image_link_1 != blank %}href="{{ image_link_1 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom adaptive_height" style="padding-top: {{ 1 | divided_by: image_1.aspect_ratio | times: 100 }}%; --image-width: {{ image_1_width }}">
-                            <img {% render 'lazyload',preview_img: image_1 %} />    
-                            {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
-                        </a>
-                    {% else %}
-                        <a {% if image_link_1 != blank %}href="{{ image_link_1 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom">
-                            <div class="not_img" style="--height_not_img: 1070px;">865px x 1070px</div>
-                        </a>
-                    {% endif %}
+            <image-to-flip class="section-block-banner-image{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} style="--animation-order: 1;"{% endif %}>
+                <div class="img-box{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }} o-hidden{% endif %}">
+                    {%- if image_1 != blank -%}
+                        <a title="{{ image_1.alt | default: shop.name | escape }}" {% if image_link_1 != blank %}href="{{ image_link_1 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom adaptive_height image" style="padding-top: {% unless image_1.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: image_1.aspect_ratio | times: 120 | append: '%' }}{% else %}{{ 1 | divided_by: image_1.aspect_ratio | times: 100 | append: '%' }}{% endunless %}"><img {% render 'lazyload',preview_img: image_1 %}{% unless image_1.presentation.focal_point == '50.0% 50.0%' %} style="object-position: {{ image_1.presentation.focal_point }}"{% endunless %} />{%- if settings.enable_lazyload -%}<span class="data-lazy-loading"></span>{%-endif -%}</a>
+                    {%- else -%}
+                        <a {% if image_link_1 != blank %}href="{{ image_link_1 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom"><div class="not_img" style="--height_not_img: 1070px;">865px x 1070px</div></a>
+                    {%- endif -%}
                 </div>      
-                {% if image_text_1 != blank or image_link_1 != blank %}
+                {%- if image_text_1 != blank or image_link_1 != blank -%}
                     <div class="block-image-content text-center">
-                        {% if image_text_1 != blank %}
-                            <h2 class="title image-title"
-                                style="
-                                    --image-title-font-size: {{ image_text_1_font_size }};
-                                    --image-title-font-size-mb: {{ image_text_1_font_size_mb }};
-                                    --image-title-font-weight: {{ image_text_1_font_weight }};
-                                    --image-title-color: {% if image_text_1_color != blank %}{{ image_text_1_color }}{% endif %};
-                                "
-                            >
-                                {{ image_text_1 }}
-                            </h2>
-                        {% endif %}
-                        {% if image_link_text_1 != blank %}
-                            <{% if image_link_1 != blank %}a href="{{ image_link_1 }}"{% else %}button type="button"{% endif %} 
-                                class="link text-underline image-link"
-                                style="
-                                    --link-color: {% if image_link_1_color != blank %}{{ image_link_1_color }}{% endif %};
-                                    --link-font-size: {{ image_link_1_font_size }};
-                                    --link-font-size-mb: {{ image_link_1_font_size_mb }};
-                                    --link-font-weight: {{ image_link_1_font_weight }};
-                                "
-                            >
-                                <span class="text">{{ image_link_text_1 }} </span>
-                            </{% if image_link_1 != blank %}a{% else %}button{% endif %}>
-                        {% endif %}
+                        {%- if image_text_1 != blank -%}
+                            <h2 class="title image-title" style="--image-title-font-size: {{ image_text_1_font_size }};--image-title-font-size-mb: {{ image_text_1_font_size_mb }};--image-title-font-weight: {{ image_text_1_font_weight }};--image-title-color: {% if image_text_1_color != blank %}{{ image_text_1_color }}{% endif %}">{{ image_text_1 }}</h2>
+                        {%- endif -%}
+                        {%- if image_link_text_1 != blank -%}
+                            <{% if image_link_1 != blank %}a href="{{ image_link_1 }}"{% else %}button type="button"{% endif %} class="link text-underline image-link" style="--link-color: {% if image_link_1_color != blank %}{{ image_link_1_color }}{% endif %};--link-font-size: {{ image_link_1_font_size }};--link-font-size-mb: {{ image_link_1_font_size_mb }}; --link-font-weight: {{ image_link_1_font_weight }}"><span class="text">{{ image_link_text_1 }} </span></{% if image_link_1 != blank %}a{% else %}button{% endif %}>
+                        {%- endif -%}
                     </div>
-                {% endif %}
+                {%- endif -%}
             </image-to-flip>
-            <image-to-flip class="section-block-banner-image">
-                <div class="img-box">
-                    {% if image_2 != blank %}
-                        <a title="{{ image_2.alt | default: shop.name | escape }}" {% if image_link_2 != blank %}href="{{ image_link_2 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom adaptive_height" style="padding-top: {{ 1 | divided_by: image_2.aspect_ratio | times: 100 }}%; --image-width: {{ image_2_width }}">
-                            <img {% render 'lazyload',preview_img: image_2 %} />    
-                            {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
-                        </a>    
-                    {% else %}
-                        <a {% if image_link_2 != blank %}href="{{ image_link_2 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom">
-                            <div class="not_img" style="--height_not_img: 1070px;">865px x 1070px</div>
-                        </a>
-                    {% endif %}
+            <image-to-flip class="section-block-banner-image{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} style="--animation-order: 2;"{% endif %}>
+                <div class="img-box{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }} o-hidden{% endif %}">
+                    {%- if image_2 != blank -%}
+                        <a title="{{ image_2.alt | default: shop.name | escape }}" {% if image_link_2 != blank %}href="{{ image_link_2 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom adaptive_height image" style="padding-top: {% unless image_2.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: image_2.aspect_ratio | times: 120 | append: '%' }}{% else %}{{ 1 | divided_by: image_2.aspect_ratio | times: 100 | append: '%' }}{% endunless %}"><img {% render 'lazyload',preview_img: image_2 %}{% unless image_2.presentation.focal_point == '50.0% 50.0%' %} style="object-position: {{ image_2.presentation.focal_point }}"{% endunless %} />{% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}</a>
+                    {%- else -%}
+                        <a {% if image_link_2 != blank %}href="{{ image_link_2 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom"><div class="not_img" style="--height_not_img: 1070px;">865px x 1070px</div></a>
+                    {%- endif -%}
                 </div>   
-                {% if image_text_2 != blank or image_link_2 != blank %}
+                {%- if image_text_2 != blank or image_link_2 != blank -%}
                     <div class="block-image-content text-center">
-                        {% if image_text_2 != blank %}
-                            <h2 class="title image-title"
-                                style="
-                                    --image-title-font-size: {{ image_text_2_font_size }};
-                                    --image-title-font-size-mb: {{ image_text_2_font_size_mb }};
-                                    --image-title-font-weight: {{ image_text_2_font_weight }};
-                                    --image-title-color: {% if image_text_2_color != blank %}{{ image_text_2_color }}{% endif %};
-                                "
-                            >
-                                {{ image_text_2 }}
-                            </h2>
-                        {% endif %}
-                        {% if image_link_text_2 != blank %}
-                            <{% if image_link_2 != blank %}a href="{{ image_link_2 }}"{% else %}button type="button"{% endif %} 
-                                class="link text-underline image-link"
-                                style="
-                                    --link-color: {% if image_link_2_color != blank %}{{ image_link_2_color }}{% endif %};
-                                    --link-font-size: {{ image_link_2_font_size }};
-                                    --link-font-size-mb: {{ image_link_2_font_size_mb }};
-                                    --link-font-weight: {{ image_link_2_font_weight }};
-                                "
-                            >
-                                <span class="text">{{ image_link_text_2 }} </span>
-                            </{% if image_link_2 != blank %}a{% else %}button{% endif %}>
-                        {% endif %}
+                        {%- if image_text_2 != blank -%}
+                            <h2 class="title image-title" style="--image-title-font-size: {{ image_text_2_font_size }};--image-title-font-size-mb: {{ image_text_2_font_size_mb }};--image-title-font-weight: {{ image_text_2_font_weight }};--image-title-color: {% if image_text_2_color != blank %}{{ image_text_2_color }}{% endif %}">{{ image_text_2 }}</h2>
+                        {%- endif -%}
+                        {%- if image_link_text_2 != blank -%}
+                            <{% if image_link_2 != blank %}a href="{{ image_link_2 }}"{% else %}button type="button"{% endif %} class="link text-underline image-link" style="--link-color: {% if image_link_2_color != blank %}{{ image_link_2_color }}{% endif %};--link-font-size: {{ image_link_2_font_size }};--link-font-size-mb: {{ image_link_2_font_size_mb }};--link-font-weight: {{ image_link_2_font_weight }}"><span class="text">{{ image_link_text_2 }} </span></{% if image_link_2 != blank %}a{% else %}button{% endif %}>
+                        {%- endif -%}
                     </div>
-                {% endif %}
+                {%- endif -%}
             </image-to-flip>
         </div>
         <div class="content-block content-block-right" style="--padding-right: {{  }};">
-            <image-to-flip class="section-block-banner-image">
-                <div class="img-box">
-                    {% if image_3 != blank %}
-                        <a title="{{ image_3.alt | default: shop.name | escape }}" {% if image_link_3 != blank %}href="{{ image_link_3 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom adaptive_height" style="padding-top: {{ 1 | divided_by: image_3.aspect_ratio | times: 100 }}%; --image-width: {{ image_3_width }}">
-                            <img {% render 'lazyload',preview_img: image_3 %} />    
-                            {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
-                        </a>
-                    {% else %}
-                        <a {% if image_link_3 != blank %}href="{{ image_link_3 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom">
-                            <div class="not_img" style="--height_not_img: 1070px;">865px x 1070px</div>
-                        </a>
-                    {% endif %}
+            <image-to-flip class="section-block-banner-image{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} style="--animation-order: 1;"{% endif %}>
+                <div class="img-box{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }} o-hidden{% endif %}">
+                    {%- if image_3 != blank -%}
+                        <a title="{{ image_3.alt | default: shop.name | escape }}" {% if image_link_3 != blank %}href="{{ image_link_3 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom adaptive_height image" style="padding-top: {% unless image_3.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: image_3.aspect_ratio | times: 120 | append: '%' }}{% else %}{{ 1 | divided_by: image_3.aspect_ratio | times: 100 | append: '%' }}{% endunless %}"><img {% render 'lazyload',preview_img: image_3 %}{% unless image_3.presentation.focal_point == '50.0% 50.0%' %} style="object-position: {{ image_3.presentation.focal_point }}"{% endunless %} />{% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}</a>
+                    {%- else -%}
+                        <a {% if image_link_3 != blank %}href="{{ image_link_3 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom"><div class="not_img" style="--height_not_img: 1070px;">865px x 1070px</div></a>
+                    {%- endif -%}
                 </div>   
-                {% if image_text_3 != blank or image_link_3 != blank %}
+                {%- if image_text_3 != blank or image_link_3 != blank -%}
                     <div class="block-image-content text-center">
-                        {% if image_text_3 != blank %}
-                            <h2 class="title image-title"
-                                style="
-                                    --image-title-font-size: {{ image_text_3_font_size }};
-                                    --image-title-font-size-mb: {{ image_text_3_font_size_mb }};
-                                    --image-title-font-weight: {{ image_text_3_font_weight }};
-                                    --image-title-color: {% if image_text_3_color != blank %}{{ image_text_3_color }}{% endif %};
-                                "
-                            >
-                                {{ image_text_3 }}
-                            </h2>
-                        {% endif %}
-                        {% if image_link_text_3 != blank %}
-                            <{% if image_link_3 != blank %}a href="{{ image_link_3 }}"{% else %}button type="button"{% endif %} 
-                                class="link text-underline image-link"
-                                style="
-                                    --link-color: {% if image_link_3_color != blank %}{{ image_link_3_color }}{% endif %};
-                                    --link-font-size: {{ image_link_3_font_size }};
-                                    --link-font-size-mb: {{ image_link_3_font_size_mb }};
-                                    --link-font-weight: {{ image_link_3_font_weight }};
-                                "
-                            >
-                                <span class="text">{{ image_link_text_3 }} </span>
-                            </{% if image_link_3 != blank %}a{% else %}button{% endif %}>
-                        {% endif %}
+                        {%- if image_text_3 != blank -%}
+                            <h2 class="title image-title" style="--image-title-font-size: {{ image_text_3_font_size }};--image-title-font-size-mb: {{ image_text_3_font_size_mb }};--image-title-font-weight: {{ image_text_3_font_weight }};--image-title-color: {% if image_text_3_color != blank %}{{ image_text_3_color }}{% endif %}">{{ image_text_3 }}</h2>
+                        {%- endif -%}
+                        {%- if image_link_text_3 != blank -%}
+                            <{% if image_link_3 != blank %}a href="{{ image_link_3 }}"{% else %}button type="button"{% endif %} class="link text-underline image-link" style="--link-color: {% if image_link_3_color != blank %}{{ image_link_3_color }}{% endif %};--link-font-size: {{ image_link_3_font_size }};--link-font-size-mb: {{ image_link_3_font_size_mb }};--link-font-weight: {{ image_link_3_font_weight }}"><span class="text">{{ image_link_text_3 }} </span></{% if image_link_3 != blank %}a{% else %}button{% endif %}>
+                        {%- endif -%}
                     </div>
-                {% endif %}
+                {%- endif -%}
             </image-to-flip>
-            <image-to-flip class="section-block-banner-image">
-                <div class="img-box">
-                    {% if image_4 != blank %}
-                        <a title="{{ image_4.alt | default: shop.name | escape }}" {% if image_link_4 != blank %}href="{{ image_link_4 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom adaptive_height" style="padding-top: {{ 1 | divided_by: image_4.aspect_ratio | times: 100 }}%; --image-width: {{ image_4_width }}">
-                            <img {% render 'lazyload',preview_img: image_4 %} />    
-                            {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
-                        </a>
-                    {% else %}
-                        <a {% if image_link_4 != blank %}href="{{ image_link_4 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom">
-                            <div class="not_img" style="--height_not_img: 1070px;">865px x 1070px</div>
-                        </a>
-                    {% endif %}
-                </div>      
-                {% if image_text_4 != blank or image_link_4 != blank %}
+            <image-to-flip class="section-block-banner-image{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} style="--animation-order: 2;"{% endif %}>
+                <div class="img-box{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }} o-hidden{% endif %}">
+                    {%- if image_4 != blank -%}
+                        <a title="{{ image_4.alt | default: shop.name | escape }}" {% if image_link_4 != blank %}href="{{ image_link_4 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom adaptive_height image" style="padding-top: {% unless image_4.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: image_4.aspect_ratio | times: 120 | append: '%' }}{% else %}{{ 1 | divided_by: image_4.aspect_ratio | times: 100 | append: '%' }}{% endunless %}"><img {% render 'lazyload',preview_img: image_4 %}{% unless image_4.presentation.focal_point == '50.0% 50.0%' %} style="object-position: {{ image_4.presentation.focal_point }}"{% endunless %} />{% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}</a>
+                    {%- else -%}
+                        <a {% if image_link_4 != blank %}href="{{ image_link_4 }}"{% else %}role="link" aria-disabled="true"{% endif %} class="image-zoom"><div class="not_img" style="--height_not_img: 1070px;">865px x 1070px</div></a>
+                    {%- endif -%}
+                </div>     
+                {%- if image_text_4 != blank or image_link_4 != blank -%}
                     <div class="block-image-content text-center">
-                        {% if image_text_4 != blank %}
-                            <h2 class="title image-title"
-                                style="
-                                    --image-title-font-size: {{ image_text_4_font_size }};
-                                    --image-title-font-size-mb: {{ image_text_4_font_size_mb }};
-                                    --image-title-font-weight: {{ image_text_4_font_weight }};
-                                    --image-title-color: {% if image_text_4_color != blank %}{{ image_text_4_color }}{% endif %};
-                                "
-                            >
-                                {{ image_text_4 }}
-                            </h2>
-                        {% endif %} 
-                        {% if image_link_text_4 != blank %}
-                            <{% if image_link_4 != blank %}a href="{{ image_link_4 }}"{% else %}button type="button"{% endif %} 
-                                class="link text-underline image-link"
-                                style="
-                                    --link-color: {% if image_link_4_color != blank %}{{ image_link_4_color }}{% endif %};
-                                    --link-font-size: {{ image_link_4_font_size }};
-                                    --link-font-size-mb: {{ image_link_4_font_size_mb }};
-                                    --link-font-weight: {{ image_link_4_font_weight }};
-                                "
-                            >
-                                <span class="text">{{ image_link_text_4 }} </span>
-                            </{% if image_link_4 != blank %}a{% else %}button{% endif %}>
-                        {% endif %}
+                        {%- if image_text_4 != blank -%}
+                            <h2 class="title image-title" style="--image-title-font-size: {{ image_text_4_font_size }};--image-title-font-size-mb: {{ image_text_4_font_size_mb }};--image-title-font-weight: {{ image_text_4_font_weight }};--image-title-color: {% if image_text_4_color != blank %}{{ image_text_4_color }}{% endif %}">{{ image_text_4 }}</h2>
+                        {%- endif -%} 
+                        {%- if image_link_text_4 != blank -%}
+                            <{% if image_link_4 != blank %}a href="{{ image_link_4 }}"{% else %}button type="button"{% endif %} class="link text-underline image-link" style="--link-color: {% if image_link_4_color != blank %}{{ image_link_4_color }}{% endif %};--link-font-size: {{ image_link_4_font_size }};--link-font-size-mb: {{ image_link_4_font_size_mb }};--link-font-weight: {{ image_link_4_font_weight }}"><span class="text">{{ image_link_text_4 }} </span></{% if image_link_4 != blank %}a{% else %}button{% endif %}>
+                        {%- endif -%}
                     </div>
-                {% endif %}
+                {%- endif -%}
             </image-to-flip>
-            {% if section_view_all != blank %}
-                <{% if section_view_all_link != blank %}a href="{{ section_view_all_link }}"{% else %}button type="button"{% endif %}
-                    class="view-all section-view-all text-center mobile-hidden"
-                    style="
-                        --view-all-font-size: {{ section_view_all_font_size }};
-                        --view-all-font-weight: {{ section_view_all_font_weight }};
-                        --view-all-color: {{ section_view_all_color }};
-                        --view-all-margin-top: {{ section_view_all_margin_top }};
-                    "
-                >
-                    <span class="text">{{ section_view_all }}</span>
-                </{% if section_view_all_link != blank %}a{% else %}button{% endif %}>
-            {% endif %}
+            {%- if section_view_all != blank -%}
+                <{% if section_view_all_link != blank %}a href="{{ section_view_all_link }}"{% else %}button type="button"{% endif %} class="view-all section-view-all text-center mobile-hidden{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--view-all-font-size: {{ section_view_all_font_size }};--view-all-font-weight: {{ section_view_all_font_weight }};--view-all-color: {{ section_view_all_color }};--view-all-margin-top: {{ section_view_all_margin_top }}"><span class="text">{{ section_view_all }}</span></{% if section_view_all_link != blank %}a{% else %}button{% endif %}>
+            {%- endif -%}
         </div>
     </div>
-    {% if section_view_all != blank %}
-        <{% if section_view_all_link != blank %}a href="{{ section_view_all_link }}"{% else %}button type="button"{% endif %}
-            class="view-all section-view-all text-center mobile-shown"
-            style="
-                --view-all-font-size: {{ section_view_all_font_size }};
-                --view-all-font-weight: {{ section_view_all_font_weight }};
-                --view-all-color: {{ section_view_all_color }};
-                --view-all-margin-top: {{ section_view_all_margin_top }};
-            "
-        >
-            <span class="text">{{ section_view_all }}</span>
-        </{% if section_view_all_link != blank %}a{% else %}button{% endif %}>
-    {% endif %}
+    {%- if section_view_all != blank -%}
+        <{% if section_view_all_link != blank %}a href="{{ section_view_all_link }}"{% else %}button type="button"{% endif %} class="view-all section-view-all text-center mobile-shown{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--view-all-font-size: {{ section_view_all_font_size }};--view-all-font-weight: {{ section_view_all_font_weight }};--view-all-color: {{ section_view_all_color }};--view-all-margin-top: {{ section_view_all_margin_top }}"><span class="text">{{ section_view_all }}</span></{% if section_view_all_link != blank %}a{% else %}button{% endif %}>
+    {%- endif -%}
   </div>
 </div> 
 <style>
-    @media (min-width: 1200px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_desktop }};
-            padding-bottom: {{ mg_bottom_desktop }};
-        }
-    }
-
-    @media (min-width: 1025px) {
-        {% if section.settings.container == 'fullwidth' %}
-            .section-block-{{section.id}} .container-full {
-                padding-left: {{ padding_full_width }};
-                padding-right: {{ padding_full_width }};
-            }
-        {% endif %}
-    }
-
-    @media (min-width: 768px) and (max-width: 1199px) {
-        .section-block-{{ section.id }} {
-            padding-top: {{ mg_top_tablet }};
-            padding-bottom: {{ mg_bottom_tablet }};
-        }
-    }
-
-    @media (max-width: 767px) {
-        .section-block-{{ section.id }} {
-            padding-top: {{ mg_top_mobile }};
-            padding-bottom: {{ mg_bottom_mobile }};
-        }
-    }
+    @media (min-width: 1200px) {.section-block-{{section.id}} {padding-top: {{ mg_top_desktop }};padding-bottom: {{ mg_bottom_desktop }}}}   
+    {%- if section.settings.container == 'fullwidth' -%}
+        @media (min-width: 1025px) {.section-block-{{section.id}} .container-full {padding-left: {{ padding_full_width }};padding-right: {{ padding_full_width }}}}
+    {%- endif -%}
+    @media (min-width: 768px) and (max-width: 1199px) {.section-block-{{ section.id }} {padding-top: {{ mg_top_tablet }};padding-bottom: {{ mg_bottom_tablet }}}}
+    @media (max-width: 767px) {.section-block-{{ section.id }} {padding-top: {{ mg_top_mobile }};padding-bottom: {{ mg_bottom_mobile }}}}
 </style>
-
 {% schema %}
 {
     "name": "t:sections.puzzled_image_banner.name",
     "settings": [
     {
         "type": "header",
-        "content": "t:sections.layout.content"
+        "content": "t:settings_schema.general.name"
     },
     { 
         "type": "select",
@@ -450,7 +298,7 @@
     {
         "type": "text",
         "id": "section_heading",
-        "label": "t:sections.slide-show.blocks.image.slider_content.heading",
+        "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
         "default": "Shop the collections"
     },
     {
@@ -1157,11 +1005,39 @@
         "max": 150,
         "step": 5, 
         "unit": "px" 
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-product.settings.general.animation"
+    },
+    {
+      "type": "select",
+      "id": "image_behavior",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:settings_schema.typography.settings.text_transform.options__1"
+        },
+        {
+          "value": "ambient",
+          "label": "t:sections.main-product.settings.general.image_behavior.option__1"
+        },
+        {
+          "value": "zoom-in",
+          "label": "t:sections.main-product.settings.general.image_behavior.option__3"
+        }
+      ],
+      "default": "none",
+      "info": "t:sections.main-product.settings.general.image_behavior.info",
+      "label": "t:sections.main-product.settings.general.image_behavior.label"
     }
     ],
     "presets": [
     {
         "name": "t:sections.puzzled_image_banner.name"
-    }]
+    }],
+    "disabled_on": {
+        "groups": ["header"]
+    }
 }
 {% endschema %}

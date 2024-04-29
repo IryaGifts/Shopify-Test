@@ -3,6 +3,7 @@ class CustomerLanguageCurrency extends HTMLElement {
         super();
 
         this.auth = this;
+        this.header = this.closest('.section-header-navigation');
 
 
         if(document.querySelector('[data-open-lang-currency-sidebar]')){
@@ -24,15 +25,18 @@ class CustomerLanguageCurrency extends HTMLElement {
     setOpenSidebar(event){
         event.preventDefault();
         event.stopPropagation();
-
         document.body.classList.add('lang-currency-sidebar-show');
+        this.header.style.zIndex = '101';
     }
 
     setCloseSidebar(event){
         event.preventDefault();
         event.stopPropagation();
-
         document.body.classList.remove('lang-currency-sidebar-show');
+        setTimeout(() => {
+            const index = this.header.dataset.index;
+            this.header.style.zIndex = index;
+        }, 500)
     }
 
     onBodyClickEvent(event){

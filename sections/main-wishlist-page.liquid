@@ -26,17 +26,17 @@
 -%}
 
 <div data-section-id="{{ section.id }}" data-section-type="wishlist" id="WishlistSection-{{ section.id }}" data-section="{{ section.id }}">
-    <div class="wishlist-container {% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%} container-full{% else %}container{% endif %}">
+    <div class="wishlist-container {% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%} container-full{% else %}container{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
         {%- if show_breadcrumb -%}
             {% render 'breadcrumb', alignment: breadcrumb_alignment %}
         {%- endif -%}
         {%- if show_page_title -%}
-            <h1 class="page-header text-{{ page_title_alignment }}">
+            <h1 class="page-header text-{{ page_title_alignment }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                 {{ page.title | escape }}
             </h1>
         {%- endif -%}
         <div class="halo-page-content halo-wishlist-content">
-            <div class="wishlist-table-wrapper">
+            <div class="wishlist-table-wrapper{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                 <div class="product-listing" data-wishlist-container> 
                     <wishlist-view class="wishlist-items-container" data-default-desktop-col="{{ default_layout_desktop }}">
                         <div class="toolbar">
@@ -56,7 +56,7 @@
                     </wishlist-view>   
                 </div>  
             </div>  
-            <div class="wishlist-footer pagination-right" data-wishlist-footer>
+            <div class="wishlist-footer pagination-right{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" data-wishlist-footer>
                 <a class="wishlist-share link link-underline" href="mailto:?subject= {{ page.title | strip_html }}&amp;body=" data-wishlist-share>
                     <div class="mail-icon-container">
                         {% render 'icon-mail' %}
@@ -71,7 +71,7 @@
     </div>
 </div>
 
-<template id="product-wishlist-template">
+<template id="product-wishlist-template{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
     <div class="wishlist-row" data-wishlist-added="" data-product-id='' data-wishlist-row>
         <div class="wishlist-rowItem wishlist-image text-left">
             <div class="item">
@@ -284,18 +284,23 @@
                 this.gridViewContainer.appendChild(productHTML);
                 productHTML.dataset.productHandle = handle;
 
-                const item = this.wishlistContainer.querySelector(`[data-wishlist][data-wishlist-handle=${handle}]`);
-                item.classList.add('wishlist-added');
-                item.querySelector('.text').textContent = window.wishlist.added;
-                item.classList.add('is-in-grid');
-                productHTML.dataset.wishlistAdded = `wishlist-${item.dataset.productId}`;
-                item.addEventListener('click', e => {
-                    e.target.closest('.product').remove();
-                })
-                
-                if (index >= 3) {
-                    item.closest('.product').display = 'none';
+                const item = this.wishlistContainer.querySelector(`[data-wishlist][data-wishlist-handle="${handle}"]`);
+
+                if (item != null) {
+                    item.classList.add('wishlist-added');
+                    item.querySelector('.text').textContent = window.wishlist.added;
+                    item.classList.add('is-in-grid');
+                    productHTML.dataset.wishlistAdded = `wishlist-${item.dataset.productId}`;
+                    item.addEventListener('click', e => {
+                        e.target.closest('.product').remove();
+                    })
+                    
+                    if (index >= 3) {
+                        item.closest('.product').display = 'none';
+                    }
                 }
+
+                
             } catch (err) {
                 console.error(err);
                 showWarning(err.message);
@@ -433,11 +438,11 @@
             let href = 'mailto:?subject= Wish List&body=';
 
             addedItems.forEach((item, index) => {
-                const price = item.querySelector('.price__sale .price__last .price-item').textContent || item.querySelector('.price__regular .price__last .price-item').textContent;
-                const title = item.querySelector('[data-product-title]').dataset.productTitle;
-                const url = item.querySelector('[data-product-url]').dataset.productUrl;
+                const price = item.querySelector('.price__sale .price__last .price-item')?.textContent || item.querySelector('.price__regular .price__last .price-item')?.textContent;
+                const title = item.querySelector('[data-product-title]')?.dataset.productTitle;
+                const url = item.querySelector('[data-product-url]')?.dataset.productUrl;
 
-                href += encodeURIComponent(title + '\nPrice: ' + price.replace(regex, '') + '\nLink: ' + window.location.protocol + '//' + window.location.hostname + url +'\n\n');
+                href += encodeURIComponent(title + '\nPrice: ' + price?.replace(regex, '') + '\nLink: ' + window.location.protocol + '//' + window.location.hostname + url +'\n\n');
             })
 
             shareLinkElement.href = href;
@@ -447,11 +452,13 @@
             if (!document.body.classList.contains('product-card-layout-06')) return;
 
             const cardAction = document.querySelector('.card .card-action.card-grid__hidden');
-            cardAction.classList.remove('card-grid__hidden');
-            const padding = cardAction.scrollHeight;
 
-            document.querySelector('[data-wishlist-items-grid-display]').style.setProperty('--card-06-padding', padding + 'px');
-            cardAction.classList.add('card-grid__hidden');
+            if (cardAction != undefined) {
+                cardAction.classList.remove('card-grid__hidden');
+                const padding = cardAction.scrollHeight;
+                document.querySelector('[data-wishlist-items-grid-display]').style.setProperty('--card-06-padding', padding + 'px');
+                cardAction.classList.add('card-grid__hidden');
+            }
         }
     }
     

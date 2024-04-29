@@ -135,7 +135,8 @@ body.open-mobile-sidebar .halo-grid-content {
 	/* End Sidebar Animation */
   .template-list-collections .sidebar-toogle {
     border: none;
-    display: inline-block;
+    display: flex;
+    gap: 3px;
     width: 75px;
     text-align: left;
     margin-bottom: 25px;

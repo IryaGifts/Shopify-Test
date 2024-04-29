@@ -6,12 +6,15 @@
             policyBlock.each(function () {
                 var self = $(this),
                     rows = parseInt(self.data('row')),
+                    centerMode = self.data('center'),
                     row_tablet = (rows > 1 ? parseInt(rows - 1) : 1);
 
                 if (self.not('.slick-initialized')) {
                     self.slick({
+                        centerMode: centerMode,
+                        centerPadding: '25%',
                         slidesToShow: rows,
-                        slidesToScroll: 1,
+                        slidesToScroll: rows,
                         autoplay: false,
                         dots: true,
                         speed: 800,
@@ -19,28 +22,35 @@
                         nextArrow: window.arrows.icon_next,
                         prevArrow: window.arrows.icon_prev,
                         rtl: window.rtl_slick,
+                        infinite: true,
                         responsive: [{
                                 breakpoint: 1200,
                                 settings: {
+                                    centerMode: false,
                                     arrows: false,
                                     dots: true,
-                                    slidesToShow: row_tablet
+                                    slidesToShow: row_tablet,
+                                    slidesToScroll: row_tablet
                                 }
                             },
                             {
                                 breakpoint: 992,
                                 settings: {
+                                    centerMode: false,
                                     arrows: false,
                                     dots: true,
-                                    slidesToShow: 1
+                                    slidesToShow: 1,
+                                    slidesToScroll: 1
                                 }
                             },
                             {
                                 breakpoint: 768,
                                 settings: {
+                                    centerMode: false,
                                     arrows: false,
                                     dots: true,
-                                    slidesToShow: 1
+                                    slidesToShow: 1,
+                                    slidesToScroll: 1
                                 }
                             }
                         ]
@@ -50,4 +60,8 @@
         }
     }
     halo.initReviewSlider();
+    if ($('body').hasClass('cursor-fixed__show')){
+        window.sharedFunctionsAnimation.onEnterButton();
+        window.sharedFunctionsAnimation.onLeaveButton();
+    }
 })(jQuery);

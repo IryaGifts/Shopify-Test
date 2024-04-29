@@ -798,6 +798,7 @@
     .bundle-product-list .slick-arrow svg {
         width: 22px;
         height: 22px;
+        fill: var(--color-text);
     }
 }
 

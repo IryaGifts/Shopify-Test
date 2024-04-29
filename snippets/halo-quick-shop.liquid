@@ -14,14 +14,21 @@
     assign show_subtotal = false
 -%}
 
-{% if variantCount > 0 and product.has_only_default_variant != true %}
+{%- if variantCount > 0 and product.has_only_default_variant != true -%}
   <script>
-    window.quick_view_inven_array_ {{ product.id }} = {
-      {% for variant in product.variants %}
-        '{{ variant.id }}' : '{{ variant.inventory_quantity }}',{% endfor %}
+    window.quick_view_inven_array_{{ product.id }} = {
+      {%- for variant in product.variants -%}
+        '{{ variant.id }}': '{{ variant.inventory_quantity }}',
+      {%- endfor -%}
+    };
+
+    window.quick_shop_policy_array_{{ product.id }} = {
+      {%- for variant in product.variants -%}
+        '{{ variant.id }}': '{{ variant.inventory_policy }}',
+      {%- endfor -%}
     };
   </script>
-{% endif %}
+{%- endif -%}
 <script>
   window.quick_view_subtotal = {
     show: {{ show_subtotal }},
@@ -50,12 +57,12 @@
                     data-media-id="{{ media.id }}"
                     {% if product.featured_media %}
                     {% if media_size == 'adapt' %}
-                    style="padding-bottom: 137%;"
+                    style="padding-bottom: {{ 1 | divided_by: featured_media_aspect_ratio | times: 100 }}%;"
                     {% elsif media_size == 'square' %}
                     style="padding-bottom: 100%;"
                     {% elsif media_size == 'portrait' %}
                     {% if portrait_aspect_ratio != blank %}
-                    style="padding-bottom: 137%;"
+                    style="padding-bottom: {{ portrait_aspect_ratio }};"
                     {% endif %}
                     {% endif %}
                     {% endif %}>
@@ -492,9 +499,9 @@
                     -%}
           {% if product.metafields.c_f.short_description %}
             {%- liquid
-                            assign desc = product.metafields.c_f.short_description
-                            assign word_number = 100000
-                        -%}
+              assign desc = product.metafields.c_f.short_description
+              assign word_number = 100000
+            -%}
           {% else %}
             {% assign word_number = 50 %}
           {% endif %}
@@ -506,7 +513,7 @@
               data-countdown-id="{{ product.id }}"
               data-countdown="{{ countdown_time }}">
               <span class="text animated-loading">
-                <span>{{ 'countdown.general.text' | t }}</span>
+                <span>{{ settings.countdown_text }}</span>
               </span>
               <span class="num animated-loading">
                 <span>151<span>D</span>
@@ -543,7 +550,7 @@
                 data-countdown-id="{{ product.id }}"
                 data-countdown="{{ countdown_time }}">
                 <span class="text animated-loading">
-                  <span>{{ 'countdown.general.text' | t }}</span>
+                  <span>{{ settings.countdown_text }}</span>
                 </span>
                 <span class="num animated-loading">
                   <span>151<span>D</span>
@@ -571,7 +578,7 @@
                 data-countdown-id="{{ product.id }}"
                 data-countdown="{{ countdown_type }}">
                 <span class="text animated-loading">
-                  <span>{{ 'countdown.general.text' | t }}</span>
+                  <span>{{ settings.countdown_text }}</span>
                 </span>
                 <span class="num animated-loading">
                   <span>151<span>D</span>
@@ -618,15 +625,14 @@
                   data-url="{{ product.url }}">
                   {%- for option in product.options_with_values -%}
                     {%- liquid
-                                            assign is_swatch = false
-                                            assign option_name = option.name | downcase
-                                            if product_swatch_option contains option_name
-                                                assign is_swatch = true
-                                            endif
-                                            assign swatch_type = settings.swatch_type
-                                            assign option_index = forloop.index0
-                                            assign file_extension = 'png'
-                                        -%}
+                      assign is_swatch = false
+                      assign option_name = option.name | downcase
+                      if product_swatch_option contains option_name
+                          assign is_swatch = true
+                      endif
+                      assign swatch_type = settings.swatch_type
+                      assign option_index = forloop.index0
+                    -%}
                     <fieldset
                       class="js product-form__input{% if is_swatch %} product-form__swatch{% endif %} clearfix"
                       data-product-attribute="set-rectangle"
@@ -642,10 +648,10 @@
                         {%- assign value = variant.options[option_index] -%}
                         {%- unless values contains value -%}
                           {%- liquid
-                                                        assign values = values | join: ';'
-                                                        assign values = values | append: ';' | append: value
-                                                        assign values = values | split: ';'
-                                                    -%}
+                            assign values = values | join: ';'
+                            assign values = values | append: ';' | append: value
+                            assign values = values | split: ';'
+                          -%}
                           <input
                             class="product-form__radio"
                             type="radio"
@@ -654,13 +660,41 @@
                             value="{{ value | escape }}"
                             {% if option.selected_value == value %}checked{% endif %}>
                           {%- if is_swatch -%}
+                            {%- liquid
+                              assign enable_variant_image = false
+                              case swatch_type
+                                when 'variant_image'
+                                  assign background_image = variant.image.src | product_img_url: '40x'
+                                  if variant.image
+                                      assign enable_variant_image = true
+                                  endif
+                                when 'color'
+                                  assign background_image = value | handle | append: '.png' | file_url
+                                  assign enable_variant_image = true
+                                when 'metafields'
+                                  assign variant_color = variant.metafields.custom.variant_color
+                                  assign color_codes = false
+  
+                                  if variant_color
+                                    assign enable_variant_image = true
+                                  
+                                    if variant_color contains '#' or variant_color contains 'rgb' or variant_color contains 'hsl'
+                                        assign color_codes = true
+                                        assign background_color = variant_color
+                                    else
+                                        assign background_image = variant_color | append: '.png' | file_url
+                                    endif
+                                  elsif variant.image
+                                    assign enable_variant_image = true
+                                    assign background_image = variant.image.src | product_img_url: '40x'
+                                  endif
+                              endcase
+                            -%}
                             <label class="product-form__label {% if variant.available %} available{% else %} soldout{% endif %}" for="option-quick-view-{{ product.id }}-{{ option.name }}-{{ forloop.index0 }}">
-                              <span class="pattern" style="background-color: {{ value | split: ' ' | last | handle }};
-                                                                                                        {%- if swatch_type == 'variant_image' and variant.image %}
-                                                                                                        background-image: url({{ variant.image.src | product_img_url: '40x'}});
-                                                                                                        {% else %}
-                                                                                                        background-image: url({{ value | handle | append: '.' | append: file_extension | file_url }})
-                                                                                                        {% endif %}"></span>
+                              <span
+                                class="pattern"
+                                style="background-color: {{ value | split: ' ' | last | handle }};{% if enable_variant_image %}{% if swatch_type == 'metafields' %}{% if color_codes %} background: {{ background_color }}{% else %} background: url({{ background_image }}); background-size: cover;{% endif %}{% else %} background-image: url({{ background_image }});{% endif %}{% endif %}"
+                              ></span>
                             </label>
                           {%- else -%}
                             <label class="product-form__label{% if variant.available %} available{% else %} soldout{% endif %}" for="option-quick-view-{{ product.id }}-{{ option.name }}-{{ forloop.index0 }}">

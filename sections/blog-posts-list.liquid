@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="{{ 'component-blog-posts-list.css' | asset_url }}" media="print" onload="this.media='all'">
 <noscript>{{ 'component-blog-posts-list.css' | asset_url | stylesheet_tag }}</noscript>
-
 {%- liquid
     assign mg_top_desktop = section.settings.mg_top_desktop | append: 'px' 
     assign mg_top_tablet = section.settings.mg_top_tablet | append: 'px' 
@@ -35,118 +34,47 @@
     assign link_view_all = section.settings.link_view_all 
     assign color_view_all = section.settings.color_view_all 
 -%}
-
 <style>
-    @media (min-width: 1200px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_desktop }};
-            padding-bottom: {{ mg_bottom_desktop }};
-        }
-    }
-
-    @media (min-width: 1025px) {
-        {% if section.settings.container == 'fullwidth' %}
-            .section-block-{{section.id}} .container-full {
-                padding-left: {{ padding_full_width }};
-                padding-right: {{ padding_full_width }};
-            }
-        {% endif %}
-    }
-
-    @media (min-width: 768px) and (max-width: 1199px) {
-        .section-block-{{ section.id }} {
-            padding-top: {{ mg_top_tablet }};
-            padding-bottom: {{ mg_bottom_tablet }};
-        }
-    }
-
-    @media (max-width: 767px) {
-        .section-block-{{ section.id }} {
-            padding-top: {{ mg_top_mobile }};
-            padding-bottom: {{ mg_bottom_mobile }};
-        }
-    }
+    @media (min-width: 1200px) {.section-block-{{section.id}} {padding-top: {{ mg_top_desktop }};padding-bottom: {{ mg_bottom_desktop }}}}
+    {%- if section.settings.container == 'fullwidth' -%}
+        @media (min-width: 1025px) {.section-block-{{section.id}} .container-full {padding-left: {{ padding_full_width }};padding-right: {{ padding_full_width }}}}
+    {%- endif -%}
+    @media (min-width: 768px) and (max-width: 1199px) {.section-block-{{ section.id }} {padding-top: {{ mg_top_tablet }};padding-bottom: {{ mg_bottom_tablet }}}}
+    @media (max-width: 767px) {.section-block-{{ section.id }} {padding-top: {{ mg_top_mobile }};padding-bottom: {{ mg_bottom_mobile }}}}
 </style>
-
 <script src="{{ 'blog-posts-list.js' | asset_url }}" defer="defer"></script>
-    
-<div class="blog-posts-list section-block-{{section.id}}" id="blog-posts-list-{{section.id}}">
+<div class="blog-posts-list section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="blog-posts-list-{{section.id}}">
   <div class="{% if container == 'fullwidth' %}container-full{% elsif container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% else %}container{% endif %}">
-    {% if featured_blog_title != blank %}
+    {%- if featured_blog_title != blank -%}
         <div class="halo-block-header text-center">   
-            <h3 class="title">
-                <span class="text">
-                    {{ featured_blog_title }}
-                </span>
-            </h3>
+            <h3 class="title{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"><span class="text">{{ featured_blog_title }}</span></h3>
         </div>
-    {% endif %}
+    {%- endif -%}
     {%- assign blog = blogs[section.settings.blog_posts] -%}
-
-    <div class="halo-block-content"
-        style="
-            --blog-title-margin-bottom: {{ margin_bottom_title }}; 
-            --blog-info-margin-bottom: {{ margin_bottom_info }};
-            --blog-description-margin-bottom: {{ margin_bottom_des }};
-        "
-    >
-        <div class="content-block main-blog-view"
-            style="
-                --button-text-color: {% if show_more_button_text_color != blank %}{{ show_more_button_text_color }}{% endif %};
-                --button-border-color: {% if show_more_button_border_color != blank %}{{ show_more_button_border_color }}{% endif %};
-                --button-background-color: {% if show_more_button_background_color != blank %}{{ show_more_button_background_color }}{% endif %};
-                --button-text-color-hover: {% if show_more_button_text_color_hover != blank %}{{ show_more_button_text_color_hover }}{% endif %};
-                --button-border-color-hover: {% if show_more_button_border_color_hover != blank %}{{ show_more_button_border_color_hover }}{% endif %};
-                --button-background-color-hover: {% if show_more_button_background_color_hover != blank %}{{ show_more_button_background_color_hover }}{% endif %};
-            "   
-        >   
-            <div class="blog-post-main-item" data-main-view data-article-id="{{ blog.articles[0].id }}"> 
-                {% render 'article-card-main-view', 
-                    article: blog.articles[0],
-                    limit_content_des: limit_content_des,
-                %}  
+    <div class="halo-block-content" style="--blog-title-margin-bottom: {{ margin_bottom_title }};--blog-info-margin-bottom: {{ margin_bottom_info }};--blog-description-margin-bottom: {{ margin_bottom_des }}">
+        <div class="content-block main-blog-view" style="--button-text-color: {% if show_more_button_text_color != blank %}{{ show_more_button_text_color }}{% endif %};--button-border-color: {% if show_more_button_border_color != blank %}{{ show_more_button_border_color }}{% endif %};--button-background-color: {% if show_more_button_background_color != blank %}{{ show_more_button_background_color }}{% endif %};--button-text-color-hover: {% if show_more_button_text_color_hover != blank %}{{ show_more_button_text_color_hover }}{% endif %};--button-border-color-hover: {% if show_more_button_border_color_hover != blank %}{{ show_more_button_border_color_hover }}{% endif %};--button-background-color-hover: {% if show_more_button_background_color_hover != blank %}{{ show_more_button_background_color_hover }}{% endif %}">   
+            <div class="blog-post-main-item" data-main-view data-article-id="{{ blog.articles[0].id }}">
+                {% render 'article-card-main-view', article: blog.articles[0], limit_content_des: limit_content_des %}  
             </div>
         </div>  
         <div class="content-block blogs-list">
-            {% for article in blog.articles limit: post_limit %}
-                {% if forloop.first == false %}
-                  <div class="blog-post-item" id="block-{{article.id}}" data-list-item data-article-id="{{ article.id }}">
-                      {% render 'article-card-list-item',
-                          article: article,
-                          limit_content_des: limit_content_des
-                      %}  
+            {%- for article in blog.articles limit: post_limit -%}
+                {%- if forloop.first == false -%}
+                  <div class="blog-post-item{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="block-{{article.id}}" data-list-item data-article-id="{{ article.id }}"{% if settings.banner_animation == 'effect_fade_up' %} data-cascade style="--animation-order: {{ forloop.index }};"{% endif %}>
+                      {% render 'article-card-list-item', article: article, limit_content_des: limit_content_des %}  
                   </div>
-                {% endif %}
-            {% endfor %}
-            {% if view_all != blank %} 
-                <{% if link_view_all != blank %}a href="{{ link_view_all }}"{% else %}div{% endif %}
-                    class="link view-all-link text-left hide-on-mobile {% if enable_border_view_all %}is-underlined{% endif %}"
-                    style="
-                        --font-weight: {{ font_weight_view_all }};
-                        --margin-top: {{ mg_top_view }};  
-                        --color: {{ color_view_all }};
-                    "   
-                >
-                    <span class="text">{{ view_all }}</span>
-                </{% if link_view_all != blank %}a{% else %}div {% endif %}>
-            {% endif %}
+                {%- endif -%}
+            {%- endfor -%}
+            {%- if view_all != blank -%} 
+                <{% if link_view_all != blank %}a href="{{ link_view_all }}"{% else %}div{% endif %} class="link view-all-link text-left hide-on-mobile{% if enable_border_view_all %} is-underlined{% endif %}" style="--font-weight: {{ font_weight_view_all }};--margin-top: {{ mg_top_view }};--color: {{ color_view_all }}"><span class="text">{{ view_all }}</span></{% if link_view_all != blank %}a{% else %}div {% endif %}>
+            {%- endif -%}
         </div>
-        {% if view_all != blank %} 
-              <{% if link_view_all != blank %}a href="{{ link_view_all }}"{% else %}div{% endif %}
-                  class="link view-all-link text-center hide-on-desktop {% if enable_border_view_all %}is-underlined{% endif %}"
-                  style="
-                      --font-weight: {{ font_weight_view_all }};
-                      --margin-top: {{ mg_top_view }};  
-                      --color: {{ color_view_all }};
-                  "   
-              >
-                  <span class="text">{{ view_all }}</span>
-              </{% if link_view_all != blank %}a{% else %}div {% endif %}>
-          {% endif %}
+        {%- if view_all != blank -%} 
+              <{% if link_view_all != blank %}a href="{{ link_view_all }}"{% else %}div{% endif %} class="link view-all-link text-center hide-on-desktop{% if enable_border_view_all %} is-underlined{% endif %}" style="--font-weight: {{ font_weight_view_all }};--margin-top: {{ mg_top_view }};--color: {{ color_view_all }}"><span class="text">{{ view_all }}</span></{% if link_view_all != blank %}a{% else %}div {% endif %}>
+        {%- endif -%}
     </div>
   </div>
 </div>
-
 {% schema %}
 {
     "name": "t:sections.blog_posts_list.name",
@@ -154,7 +82,7 @@
     "settings": [
         {
             "type": "header",
-            "content": "t:sections.layout.content"
+            "content": "t:settings_schema.general.name"
         },
         { 
             "type": "select",
@@ -435,6 +363,9 @@
     "presets": [
     {
         "name": "t:sections.blog_posts_list.name"
-    }]
+    }],
+    "disabled_on": {
+        "groups": ["header"]
+    }
 }
 {% endschema %}

@@ -30,12 +30,6 @@
     assign show_share = section.settings.show_share
     assign show_tags = section.settings.show_tags
     assign show_main_img = section.settings.show_main_img
-    if show_share
-        assign share_product_type = settings.share_article_type
-        if share_product_type == 'addthis'
-            assign share_product_script = settings.share_article_script
-        endif
-    endif
     assign title_font = section.settings.title_font
     assign title_font_size = section.settings.title_font_size | append: 'px'
     assign title_mobile_font_size = section.settings.title_mobile_font_size | append: 'px'
@@ -170,14 +164,15 @@
 </style>
 
 <article data-section-id="{{ section.id }}" data-section-type="article-template" id="ArticleSection-{{ section.id }}" data-section="{{ section.id }}" class="article-template" itemscope itemtype="http://schema.org/BlogPosting">
-    <div class="container container-{{ container }}">
+    <div class="container container-{{ container }} {{ blog.title | escape }}">
         {%- if show_breadcrumb -%}
             {% render 'breadcrumb',
-                alignment: breadcrumb_alignment
+                alignment: breadcrumb_alignment,
+                blog: blog
             %}
         {%- endif -%}
         {%- if show_sidebar -%}
-            <div class="header-with-sidebar">
+            <div class="header-with-sidebar{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
         {% endif %}
             {%- if show_page_title -%}
                 <h1 class="page-header text-{{ page_title_alignment }}">
@@ -205,7 +200,7 @@
                             {{ 'sections.sidebar.title' | t }}
                         </span>
                     </div>
-                    <div class="halo-sidebar-wrapper custom-scrollbar">
+                    <div class="halo-sidebar-wrapper custom-scrollbar{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                         {% render 'sidebar',
                             section: section,
                             show_collapse: show_collapse,
@@ -215,7 +210,7 @@
                 </div>
             {%- endif -%}
             <div class="page-content">
-              <div class="halo-article-content">
+              <div class="halo-article-content{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                   <div class="article-header">
                       <div class="article-heading text-left">
                           <h1 class="title">
@@ -262,7 +257,7 @@
                       {%- endif -%}
                   </div>
                   <div class="article-body">
-                      <div class="article-content halo-text-format">
+                      <div class="article-content halo-text-format{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                           {{ article.content }}
                       </div>
                       {%- for block in section.blocks -%}
@@ -296,7 +291,7 @@
                                 assign item_distance = block.settings.item_distance
                             -%}
 
-                            <div class="articleGallery-block articleGallery-{{section.id}}" id="articleGallery-{{section.id}}">
+                            <div class="articleGallery-block articleGallery-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="articleGallery-{{section.id}}">
                                 {% if image_gallery_title != blank %}
                                     <div class="halo-block-header text-left" style="
                                             --margin-bottom-title: {{ margin_bottom_title | append: 'px' }}">   
@@ -447,7 +442,7 @@
                                   assign fontsize_content = block.settings.fontsize_content
                                   assign margin_bottom = block.settings.margin_bottom
                               -%}
-                              <div class="articleBlockQuote"
+                              <div class="articleBlockQuote{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                                   style="--quote-margin-bottom: {{ margin_bottom | append: 'px' }}";
                               >
                                   <div class="articleBlockQuote-header"
@@ -479,7 +474,7 @@
                       {%- endfor -%}
                       {%- if show_tags -%}
                           {%- if article.tags.size > 0 -%}
-                              <div class="article-tag">
+                              <div class="article-tag{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                                   <div class="article-tag-row">
                                       <div class="tag-header">
                                           {% render 'icon-tag-solid' %}
@@ -499,19 +494,15 @@
                           {%- endif -%}
                       {%- endif -%}
                       {%- if show_share -%}
-                          <div class="article-social text-left">
-                              {% render 'halo-share',
-                                  product: article,
-                                  share_product_type: share_product_type,
-                                  share_product_script: share_product_script
-                              %}
+                          <div class="article-social text-left{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
+                              {% render 'halo-share', product: article %}
                           </div>
                       {%- endif -%}
                   </div>
               </div>
               {%- if show_next_prev -%}
                   {%- if blog.next_article or blog.previous_article -%}
-                      <div class="article__pagination">
+                      <div class="article__pagination{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                           <div class="article__pagination--item article__pagination--prev">
                               <a class="button button--secondary button--prev" href="{{ blog.previous_article }}" {% unless blog.previous_article %}disabled{% endunless %}>
                                   <span class="text"> {{ 'blogs.article.prev_post' | t }}</span>
@@ -526,7 +517,7 @@
                   {%- endif -%}
               {%- endif -%}
               {%- if blog.comments_enabled? -%}
-                  <div class="article-template__comment-wrapper background-secondary">
+                  <div class="article-template__comment-wrapper background-secondary{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                       <div id="comments" class="page-width page-width--narrow">
                           {%- if article.comments_count > 0 -%}
                               {%- assign anchorId = '#Comments-' | append: article.id -%}
@@ -711,7 +702,7 @@
     [
         {
             "type": "header",
-            "content": "t:sections.main-article.settings.header__1.content"
+            "content": "t:settings_schema.general.name"
         },
         {
             "type": "checkbox",
@@ -1354,7 +1345,7 @@
             "settings": [
                 {
                     "type":"header",
-                    "content":"t:sections.main-sidebar.blocks.category.settings.header__1.content"
+                    "content":"t:settings_schema.general.name"
                 },
                 {
                     "type": "checkbox",
@@ -1365,7 +1356,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.category.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Categories"
                 },
                 {
@@ -1402,7 +1393,7 @@
             "settings": [
                 {
                     "type":"header",
-                    "content":"t:sections.main-sidebar.blocks.recent-post.settings.header__1.content"
+                    "content":"t:settings_schema.general.name"
                 },
                 {
                     "type": "checkbox",
@@ -1413,7 +1404,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.recent-post.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Recent Post"
                 },
                 {
@@ -1433,7 +1424,7 @@
             "settings": [
                 {
                     "type":"header",
-                    "content":"t:sections.main-sidebar.blocks.recent-tags.settings.header__1.content"
+                    "content":"t:settings_schema.general.name"
                 },
                 {
                     "type": "checkbox",
@@ -1450,7 +1441,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.recent-tags.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Blog Tags"
                 },
                 {
@@ -1470,7 +1461,7 @@
             "settings": [
                 {
                     "type":"header",
-                    "content":"t:sections.main-sidebar.blocks.product_block.settings.header__1.content"
+                    "content":"t:settings_schema.general.name"
                 },
                 {
                     "type": "checkbox",
@@ -1520,7 +1511,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.product_block.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Featured Products"
                 },
                 {
@@ -1572,7 +1563,7 @@
             "settings": [
                 {
                     "type":"header",
-                    "content":"t:sections.main-sidebar.blocks.image.settings.header__1.content"
+                    "content":"t:settings_schema.general.name"
                 },
                 {
                     "type": "checkbox",
@@ -1583,7 +1574,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.image.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Image"
                 },
                 {
@@ -1612,7 +1603,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.text.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Custom Block"
                 },
                 {

@@ -334,7 +334,7 @@
     border-radius: 50%;
     opacity: .3;
     background-color: var(--color-global);
-    animation: zoom-animation 1.4s ease-in-out infinite;
+    /*animation: zoom-animation 1.4s ease-in-out infinite;*/
 }
 
 .productView-stickyCart.show-sticky{

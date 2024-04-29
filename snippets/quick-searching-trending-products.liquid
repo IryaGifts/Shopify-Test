@@ -6,26 +6,16 @@
                     {%- if settings.search_trending_title != blank -%}
                         <h3 class="search-block-title text-left">
                             <span class="text">{{ settings.search_trending_title | escape }}</span>
-                            {% unless settings.header_layout == '02' or settings.header_layout == '07' or settings.header_layout == '10' %}
-                                <button type="button" class="header-search-popup-close" aria-label="{{ 'general.common.close' | t }}">
-                                    {% render 'icon-close' %}
-                                </button>
-                            {% endunless %}
+                            <button type="button" class="header-search-popup-close d-none button-effect" aria-label="{{ 'general.common.close' | t }}">{% render 'icon-close', class: 'd-none' %}</button>
                         </h3>
                     {%- endif -%}
                     <ul class="list-item list-unstyled clearfix">
                         {%- for i in (1..15) -%}
-                            {% capture cap_seach_trending_item %}seach_trending_item_{{ i }}{% endcapture %}
+                            {%- capture cap_seach_trending_item -%}seach_trending_item_{{ i }}{%- endcapture -%}
                             {%- assign seach_trending_item = settings[cap_seach_trending_item] -%}
-    
                             {%- if seach_trending_item != blank -%}
-                                {% assign handle = seach_trending_item | split: '|' | first | strip | handleize %}
-                                <li class="item">
-                                    <a href="{{ routes.search_url }}?q={{ handle }}*&amp;type=product" class="link">
-                                        {% render 'icon-search' %}
-                                        <span class="text">{{ seach_trending_item | escape }}</span>
-                                    </a>
-                                </li>
+                                {%- assign handle = seach_trending_item | split: '|' | first | strip | handleize -%}
+                                <li class="item"><a href="{{ routes.search_url }}?q={{ handle }}*&amp;type=product" class="link">{% render 'icon-search' %}<span class="text">{{ seach_trending_item | escape }}</span></a></li>
                             {%- endif -%}
                         {%- endfor -%}
                     </ul>
@@ -34,68 +24,66 @@
             {%- if settings.show_search_product -%}
                 <div class="search-block quickSearchProduct">
                     {%- if settings.search_product_title != blank -%}
-                        <h3 class="search-block-title text-left">
-                            <span class="text">{{ settings.search_product_title | escape }}</span>
-                        </h3>
+                        <h3 class="search-block-title text-left"><span class="text">{{ settings.search_product_title | escape }}</span></h3>
                     {%- endif -%}
                     <div class="search-block-content">
                         <div class="halo-block">
-                            {% assign limit = settings.search_product_to_show %}
+                            {%- assign limit = settings.search_product_to_show -%}
                             <div class="products-grid column-{{ settings.search_product_per_row }} disable-srollbar">
-                                {% for product in collections[settings.search_product_collection].products limit: limit %}
+                                {%- for product in collections[settings.search_product_collection].products limit: limit -%}
                                     <div class="product">
-                                        {% if settings.product_card_layout == '02' %}
+                                        {%- if settings.product_card_layout == '02' -%}
                                             {% render 'product-card-02',
                                                 product_card_product: product,
                                                 portrait_aspect_ratio: '125',
                                                 serial: forloop.index,
-                                                sectionId: 'list-result'
+                                                sectionId: sectionId
                                             %}
-                                        {% elsif settings.product_card_layout == '03' %}
+                                        {%- elsif settings.product_card_layout == '03' -%}
                                             {% render 'product-card-03',
                                                 product_card_product: product,
                                                 portrait_aspect_ratio: '125',
                                                 serial: forloop.index,
-                                                sectionId: 'list-result'
+                                                sectionId: sectionId
                                             %}
-                                        {% elsif settings.product_card_layout == '04' %}
+                                        {%- elsif settings.product_card_layout == '04' -%}
                                             {% render 'product-card-04',
                                                 product_card_product: product,
                                                 portrait_aspect_ratio: '125',
                                                 serial: forloop.index,
-                                                sectionId: 'list-result'
+                                                sectionId: sectionId
                                             %}
-                                        {% elsif settings.product_card_layout == '05' %}
+                                        {%- elsif settings.product_card_layout == '05' -%}
                                             {% render 'product-card-05',
                                                 product_card_product: product,
                                                 portrait_aspect_ratio: '125',
                                                 serial: forloop.index,
-                                                sectionId: 'list-result'
+                                                sectionId: sectionId
                                             %}
-                                        {% elsif settings.product_card_layout == '06' %}
+                                        {%- elsif settings.product_card_layout == '06' -%}
                                             {% render 'product-card-06',
                                                 product_card_product: product,
                                                 portrait_aspect_ratio: '125',
                                                 serial: forloop.index,
-                                                sectionId: 'list-result'
+                                                sectionId: sectionId
                                             %}
-                                        {% elsif settings.product_card_layout == '07' %}
+                                        {%- elsif settings.product_card_layout == '07' -%}
                                             {% render 'product-card-07',
                                                 product_card_product: product,
                                                 portrait_aspect_ratio: '125',
                                                 serial: forloop.index,
-                                                sectionId: 'list-result'
+                                                sectionId: sectionId
                                             %}
-                                        {% else %}
+                                        {%- else -%}
                                             {% render 'product-card',
                                                 product_card_product: product,
                                                 portrait_aspect_ratio: '125',
                                                 serial: forloop.index,
-                                                sectionId: 'list-result'
+                                                sectionId: sectionId
                                             %}
-                                        {% endif %}
+                                        {%- endif -%}
                                     </div>
-                                {% else %}
+                                {%- else -%}
                                     {%- for product in (1..limit) -%}
                                         <div class="product">
                                             {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
@@ -104,7 +92,7 @@
                                             %}
                                         </div>
                                     {%- endfor -%}
-                                {% endfor %}
+                                {%- endfor -%}
                             </div>
                         </div>
                     </div>

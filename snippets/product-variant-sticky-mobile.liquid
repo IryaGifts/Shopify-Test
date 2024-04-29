@@ -16,7 +16,6 @@
                             endif
                             assign swatch_type = settings.swatch_type
                             assign option_index = forloop.index0
-                            assign file_extension = 'png'
                         -%}
                         <fieldset class="js product-form__input mobile{% if is_swatch %} product-form__swatch{% endif %} clearfix" data-product-attribute="set-rectangle" data-option-index="{{ forloop.index0 }}">
                             <legend class="form__label">
@@ -36,23 +35,49 @@
                                     -%}
                                     <input class="product-form__radio mobile" type="radio" id="option-{{ product.id }}-{{ option.name }}-{{ forloop.index0 }}-mobile"
                                         name="{{ option.name }}-mobile"
-                                        value="{{ value | replace: '"', 'Special_Double_Quote' | replace: '/', 'Special_Slash' | escape }}"
+                                        value="{{ value | escape }}"
                                         {% if option.selected_value == value %}checked{% endif %}
-                                         data-variant-id="{{ variant.id }}"
+                                        data-variant-id="{{ variant.id }}"
                                     >
                                     {%- if is_swatch -%}
+                                        {%- liquid
+                                            assign enable_variant_image = false
+                                            case swatch_type
+                                                when 'variant_image'
+                                                    assign background_image = variant.image.src | product_img_url: '40x'
+                                                    if variant.image
+                                                        assign enable_variant_image = true
+                                                    endif
+                                                when 'color'
+                                                    assign background_image = value | handle | append: '.png' | file_url
+                                                    assign enable_variant_image = true
+                                                when 'metafields'
+                                                    assign variant_color = variant.metafields.custom.variant_color
+                                                    assign color_codes = false
+                    
+                                                    if variant_color
+                                                        assign enable_variant_image = true
+                                                    
+                                                        if variant_color contains '#' or variant_color contains 'rgb' or variant_color contains 'hsl'
+                                                            assign color_codes = true
+                                                            assign background_color = variant_color
+                                                        else
+                                                            assign background_image = variant_color | append: '.png' | file_url
+                                                        endif
+                                                    elsif variant.image
+                                                        assign enable_variant_image = true
+                                                        assign background_image = variant.image.src | product_img_url: '40x'
+                                                    endif
+                                            endcase
+                                        -%}
                                         <label class="product-form__label mobile{% if variant.available %} available{% else %} soldout{% endif %}" name="{{ option.name }}-mobile" for="option-{{ product.id }}-{{ option.name }}-{{ forloop.index0 }}-mobile" data-variant-id="{{ variant.id }}">
-                                            <span class="pattern" 
-                                                style="{% if swatch_type == 'variant_image' and variant.image %}
-                                                        background-image: url({{ variant.image.src | product_img_url: '40x'}});
-                                                        {% else %}
-                                                        background-color: {{ value | split: ' ' | last | handle }};
-                                                        background-image: url({{ value | handle | append: '.' | append: file_extension | file_url }})
-                                                        {% endif %}">
-                                            </span>
-                                            {% if swatch_type == 'variant_image' %}
+                                            <span
+                                                class="pattern"
+                                                style="background-color: {{ value | split: ' ' | last | handle }};{% if enable_variant_image %}{% if swatch_type == 'metafields' %}{% if color_codes %} background: {{ background_color }}{% else %} background: url({{ background_image }}); background-size: cover;{% endif %}{% else %} background-image: url({{ background_image }});{% endif %}{% endif %}"
+                                            ></span>
+                                            {% if swatch_type == 'variant_image' and variant.image %}
                                                 <span class="expand">
-                                                    <img srcset="{{ variant.image.src | product_img_url: '75x'}}" src="{{ variant.image.src | product_img_url: '75x'}}" sizes="auto" loading="lazy">
+                                                    <img srcset="{{ variant.image.src | product_img_url: '75x'}}" src="{{ variant.image.src | product_img_url: '75x'}}" sizes="75px" loading="lazy">
                                                 </span>
                                             {% endif %}
                                         </label>
@@ -85,7 +110,7 @@
                                     name="options[{{ option.name | escape }}]"
                                 >
                                     {%- for value in option.values -%}
-                                        <option value="{{ value | replace: '"', 'Special_Double_Quote' | replace: '/', 'Special_Slash' | escape }}" {% if option.selected_value == value %}selected="selected"{% endif %}>
+                                        <option value="{{ value | escape }}" {% if option.selected_value == value %}selected="selected"{% endif %}>
                                             {{ value }}
                                         </option>
                                     {%- endfor -%}

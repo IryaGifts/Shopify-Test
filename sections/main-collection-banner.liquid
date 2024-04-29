@@ -1,5 +1,4 @@
 {{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
-
 {%- liquid
     assign padding_top = section.settings.mg_top_desktop | append: 'px'
     assign padding_bottom = section.settings.mg_bottom_desktop | append: 'px'
@@ -82,8 +81,8 @@
     {%- if layout == '1'-%}
         {%- if image_block.size > 0 -%}
             {%- if image_block_type == 'full' -%}
-                <div class="collection-header" style="{% if collection_description_bg_gradient != blank%}--desc-bg: {{ collection_description_bg_gradient }}{% elsif collection_description_bg != blank %}--desc-bg: {{ collection_description_bg }}{% endif %}">
-                    {% render 'collection-banner',
+                <div class="collection-header{% if collection_description_position == 'absolute' %} collection-content--absolute{% endif %}{% if show_sub_collection %} collection-header--hasSub{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if collection_description_bg_gradient != blank%}--desc-bg: {{ collection_description_bg_gradient }}{% elsif collection_description_bg != blank %}--desc-bg: {{ collection_description_bg }}{% endif %}">
+                    {% render 'collection-banner', 
                         collection: collection,
                         show_image_parallax: show_image_parallax,
                         show_bg_overlay: show_bg_overlay,
@@ -144,7 +143,7 @@
                 </div>
             {%- elsif description_block.size > 0 -%}
                 {%- if collection_description_position == 'absolute' -%}
-                    <div class="collection-header collection-header-2" style="{% if collection_description_bg_gradient != blank%}--desc-bg: {{ collection_description_bg_gradient }}{% elsif collection_description_bg != blank %}--desc-bg: {{ collection_description_bg }}{% endif %}">
+                    <div class="collection-header collection-header-2{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if collection_description_bg_gradient != blank%}--desc-bg: {{ collection_description_bg_gradient }}{% elsif collection_description_bg != blank %}--desc-bg: {{ collection_description_bg }}{% endif %}">
                         {% render 'collection-description',
                             collection: collection,
                             position: collection_description_position,
@@ -197,7 +196,7 @@
             {%- endif -%}
         {%- elsif description_block.size > 0 -%}
             {%- if collection_description_position == 'absolute' -%}
-                <div class="collection-header collection-header-2" style="{% if collection_description_bg_gradient != blank%}--desc-bg: {{ collection_description_bg_gradient }}{% elsif collection_description_bg != blank %}--desc-bg: {{ collection_description_bg }}{% endif %}">
+                <div class="collection-header collection-header-2{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if collection_description_bg_gradient != blank%}--desc-bg: {{ collection_description_bg_gradient }}{% elsif collection_description_bg != blank %}--desc-bg: {{ collection_description_bg }}{% endif %}">
                     {% render 'collection-description',
                         collection: collection,
                         position: collection_description_position,
@@ -249,15 +248,10 @@
             {%- endif -%}
         {%- endif -%}
     {%- endif -%}
-    <div class="collection-header {% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%}container-full{% else %}container{% endif %}" style="{% if collection_description_bg_gradient != blank%}--desc-bg: {{ collection_description_bg_gradient }}{% elsif collection_description_bg != blank %}--desc-bg: {{ collection_description_bg }}{% endif %}; --desc-color: {{ collection_description_color }};">
+    <div class="collection-header {% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%}container-full{% else %}container{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if collection_description_bg_gradient != blank%}--desc-bg: {{ collection_description_bg_gradient }}{% elsif collection_description_bg != blank %}--desc-bg: {{ collection_description_bg }}{% endif %}; --desc-color: {{ collection_description_color }};">
         {%- unless layout == '1' and collection_description_position == 'absolute' -%}
             {%- if show_breadcrumb -%}
-                <div class="collection-breadcrumb text-{{ breadcrumb_alignment }}"
-                    style="--breadcrumb-color-mb: {{ breadcrumb_color_mb }}; --breadcrumb-color: {{ breadcrumb_color }};                            
-                        --breadcrumb-bg: {% if breadcrumb_gradient != blank and breadcrumb_gradient != 'rgba(0,0,0,0)' %}{{ breadcrumb_gradient }}{% elsif breadcrumb_bg != blank and breadcrumb_bg != 'rgba(0,0,0,0)' %}{{ breadcrumb_bg }}{% endif %};
-                        --breadcrumb-bg-mb: {% if breadcrumb_gradient_mb != blank and breadcrumb_gradient_mb != 'rgba(0,0,0,0)' %}{{ breadcrumb_gradient_mb }}{% elsif breadcrumb_bg_mb != blank and breadcrumb_bg_mb != 'rgba(0,0,0,0)' %}{{ breadcrumb_bg_mb }}{% endif %};
-                    "
-                >
+                <div class="collection-breadcrumb text-{{ breadcrumb_alignment }}" style="--breadcrumb-color-mb: {{ breadcrumb_color_mb }}; --breadcrumb-color: {{ breadcrumb_color }};--breadcrumb-bg: {% if breadcrumb_gradient != blank and breadcrumb_gradient != 'rgba(0,0,0,0)' %}{{ breadcrumb_gradient }}{% elsif breadcrumb_bg != blank and breadcrumb_bg != 'rgba(0,0,0,0)' %}{{ breadcrumb_bg }}{% endif %};--breadcrumb-bg-mb: {% if breadcrumb_gradient_mb != blank and breadcrumb_gradient_mb != 'rgba(0,0,0,0)' %}{{ breadcrumb_gradient_mb }}{% elsif breadcrumb_bg_mb != blank and breadcrumb_bg_mb != 'rgba(0,0,0,0)' %}{{ breadcrumb_bg_mb }}{% endif %}">
                     {% render 'breadcrumb' %}
                 </div>
             {%- endif -%}
@@ -266,9 +260,7 @@
         {%- unless layout == '1' -%}
             {%- if collection_description_position == 'absolute' -%}
                 {%- if show_page_title -%}
-                    <h1 class="page-header text-{{ page_title_alignment }}">
-                        {{ collection.title | escape }}
-                    </h1>
+                    <h1 class="page-header text-{{ page_title_alignment }}">{{ collection.title | escape }}</h1>
                 {%- endif -%}
             {%- endif -%}
         {%- endunless -%}  
@@ -331,66 +323,35 @@
         </div>
     </div>
 </div>
-
 <style type="text/css" media="screen">
-    #HeaderCollectionSection-{{ section.id }}{
-        padding-top: {{ padding_top }};
-        padding-bottom: {{ padding_bottom }};
-    }
+    #HeaderCollectionSection-{{ section.id }}{padding-top: {{ padding_top }};padding-bottom: {{ padding_bottom }}}
     
-    {% if show_bg_overlay %}
-        {% if bg_overlay != 'rgba(0,0,0,0)' and bg_overlay != blank %}
-            #HeaderCollectionSection-{{ section.id }} .collection-banner--overlay .image:before{
-                background-color: {{ bg_overlay | color_modify: 'alpha', 0.3 }};
-            }
-        {% endif %}
-    {% endif %}
+{%- if show_bg_overlay -%}
+    {%- if bg_overlay != 'rgba(0,0,0,0)' and bg_overlay != blank -%}
+    #HeaderCollectionSection-{{ section.id }} .collection-banner--overlay .image:before{background-color: {{ bg_overlay | color_modify: 'alpha', 0.3 }}}
+    {%- endif -%}
+{%- endif -%}
 
-    #HeaderCollectionSection-{{ section.id }} .collection-description{
-        max-width: {{ maxwidth_collection_description | append: '%' }};
-        {% if collection_description_align == 'right' %}
-          float: right;
-        {% endif %}  
+    #HeaderCollectionSection-{{ section.id }} .collection-description{max-width: {{ maxwidth_collection_description | append: '%' }};
+        {%- if collection_description_align == 'right' -%}
+          float: right
+        {%- endif -%}  
     }
-
-    @media (max-width: 1024px) {
-        #HeaderCollectionSection-{{ section.id }}{
-            padding-top: {{ padding_top_tablet }};
-            padding-bottom: {{ padding_bottom_tablet }};
-        }
-
-        #HeaderCollectionSection-{{ section.id }} > .collection-header{
-            padding-left: 15px;
-            padding-right: 15px;
-        }
-    }
-
-    @media (max-width: 550px) {
-        #HeaderCollectionSection-{{ section.id }}{
-            padding-top: {{ padding_top_mobile }};
-            padding-bottom: {{ padding_bottom_mobile }};
-        }
-    }
+    @media (max-width: 1024px) {#HeaderCollectionSection-{{ section.id }}{padding-top: {{ padding_top_tablet }};padding-bottom: {{ padding_bottom_tablet }}}#HeaderCollectionSection-{{ section.id }} > .collection-header{padding-left: 15px;padding-right: 15px}}
+    @media (max-width: 550px) {#HeaderCollectionSection-{{ section.id }}{padding-top: {{ padding_top_mobile }};padding-bottom: {{ padding_bottom_mobile }}}}
 </style>
-
 {%- if description_block.size > 0 -%}
     {%- if show_read_more_read_less -%}
         <script type="text/javascript">
-            window.read_description = {
-                more: `{{ 'sections.collection_template.read_more' | t }}`,
-                less: `{{ 'sections.collection_template.read_less' | t }}`
-            };
-
+            window.read_description = {more: `{{ 'sections.collection_template.read_more' | t }}`, less: `{{ 'sections.collection_template.read_less' | t }}` };
             function readDescriptionToggle() {
                 if (document.querySelector('.read-description')){
                     document.querySelector('.read-description').addEventListener('click', (event) => {
                         event.preventDefault();
                         event.stopPropagation();
-
                         var toggleButton = event.currentTarget,
                             toggleButtonText = event.currentTarget.querySelector('.text'),
                             content = event.target.closest('.collection-description');
-
                         if(toggleButton.classList.contains('less')){
                             toggleButton.classList.remove('less');
                             toggleButton.classList.add('more');
@@ -405,7 +366,6 @@
                     });
                 }
             }
-
             readDescriptionToggle();
         </script>
     {%- endif -%}
@@ -418,7 +378,7 @@
         [
             {
                 "type": "header",
-                "content": "t:sections.main-header-collection.settings.header__1.content"
+                "content": "t:settings_schema.general.name"
             },
             {
                 "type": "checkbox",
@@ -631,7 +591,7 @@
                     },
                     {
                         "type": "header",
-                        "content": "t:sections.main-header-collection.blocks.image.settings.header__1.content"
+                        "content": "t:settings_schema.general.name"
                     },
                     {
                         "id": "show_image_parallax",

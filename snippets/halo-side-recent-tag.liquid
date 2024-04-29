@@ -9,19 +9,15 @@
             <div class="sidebarBlock-headingWrapper">
         {%- endif -%}
             {%- if heading != blank -%}
-                <h3 class="sidebarBlock-heading{% if show_collapse %}{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}{% endif %}">
-                    {{ heading | escape }}
-                </h3>
+                <h2 class="sidebarBlock-heading{% if show_collapse %}{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}{% endif %}">{{ heading | escape }}</h2>
             {%- else -%}
                 {%- if show_collapse -%}
-                    <h3 class="sidebarBlock-heading{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}">
-                        BLock Heading
-                    </h3>
+                    <h2 class="sidebarBlock-heading{% if sidebar_collapse == 'expand' %} is-clicked{% endif %}">BLock Heading</h2>
                 {%- endif -%}
             {%- endif -%}
         {%- if show_collapse -%}
             </div>
-            <div class="sidebarBlock-contentWrapper" {% if sidebar_collapse == 'expand' %} style="display: block;"{% endif %}>
+            <div class="sidebarBlock-contentWrapper" {% if sidebar_collapse == 'expand' %}style="display: block"{% endif %}>
         {%- endif -%}
             <div class="sidebarBlock-content">
                 <ul class="recentTags-list list-unstyled">
@@ -34,11 +30,7 @@
                                 endif
                             endfor
                         -%}
-                        <li class="tags-list-item">
-                            <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="link">
-                                <span class="text">{{ tag }}{% if show_tag_count %} ({{ tagCount }}){% endif %}</span>
-                            </a>
-                        </li>
+                        <li class="tags-list-item"><a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="link"><span class="text">{{ tag }}{% if show_tag_count %} ({{ tagCount }}){% endif %}</span></a></li>
                     {%- endfor -%}
                 </ul>
             </div>

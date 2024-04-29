@@ -24,7 +24,7 @@ window.shareProduct = function() {
             const url = this.elements.urlInput.getAttribute('data-url');
 
             this.getPosition();
-            this.setProductInfoTop(this.getProductInfoPosition());
+            // this.setProductInfoTop(this.getProductInfoPosition());
 
             this.elements.successMessage.classList.add('hidden');
             this.elements.urlInput.setAttribute('value', url);
@@ -61,7 +61,7 @@ window.shareProduct = function() {
             this.elements.urlInput.classList.remove('is-copy');
             this.elements.content.classList.remove('is-open');
             document.querySelector('body').classList.remove('modal-share-open')
-            this.setProductInfoTop(0);
+            // this.setProductInfoTop(0);
         }
 
         getPosition() {

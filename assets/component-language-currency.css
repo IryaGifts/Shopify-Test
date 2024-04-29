@@ -3,11 +3,6 @@ body.lang-currency-sidebar-show{
 	/*height: 100%;*/
 }
 
-body.lang-currency-sidebar-show .background-overlay{
-	opacity: 1;
-    pointer-events: all;
-}
-
 body.lang-currency-sidebar-show .halo-language-currency-sidebar{
     transform: translate3d(0,0,0);
     opacity: 1;

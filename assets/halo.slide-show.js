@@ -2,7 +2,6 @@
 	var halo = {
 	    initSlideshow: function () {
             var slickSlideshow = $('[data-init-slideshow]');
-
             if (slickSlideshow.length) {
                 slickSlideshow.each(function () {
                     var self = $(this),
@@ -125,17 +124,28 @@
                             $('.slick-current .fluid-width-video-wrapper .video').css('display', 'block');
                             slick = $(slick.$slider);
                             playPauseVideo(slick,"play");
-                            if( $("video").prop('muted') ) {
-                                $("video").prop('muted', true);
-                            } else {
-                                $("video").prop('muted', true);
-                            }
+                            // if( $("video").prop('muted') ) {
+                            //     $("video").prop('muted', true);
+                            // } else {
+                            //     $("video").prop('muted', true);
+                            // }
                         });
                     };
 
                     if (self.not('.slick-initialized')) {
+                        if (self.data('dots') == 'none') {
+                          var dots = false;
+                        } else {
+                          var dots = true;
+                        }
+                        if (self.data('dots') == 'number') {
+                          var arrowsMobile = true;
+                          var customPaging = (self, i) => {let index = i + 1;var count = self.slideCount;return '<a class="dot" aria-label="'+index+'/'+count+'">'+index+'/'+count+'</a>';}
+                        } else {
+                          var arrowsMobile = false;
+                        }
                         self.slick({
-                            dots: self.data('dots'),
+                            dots: dots,
                             slidesToScroll: 1,
                             verticalSwiping: false,
                             fade: self.data('fade'),
@@ -146,19 +156,22 @@
                             arrows: self.data('arrows'),
                             nextArrow: window.arrows.icon_next,
                             prevArrow: window.arrows.icon_prev,
+                            customPaging: customPaging,
                             rtl: window.rtl_slick,
                             speed: self.data('speed') || 500,
                             responsive: [{
                                 breakpoint: 1280,
                                 settings: {
-                                    arrows: false,
-                                    dots: true,
+                                    arrows: arrowsMobile,
+                                    customPaging: customPaging,
+                                    dots: true
                                 }
                             },
                             {
                                 breakpoint: 768,
                                 settings: {
-                                    arrows: false,
+                                    arrows: arrowsMobile,
+                                    customPaging: customPaging,
                                     dots: true
                                 }
                             }
@@ -170,4 +183,8 @@
         }
 	}
 	halo.initSlideshow();
+  if ($('body').hasClass('cursor-fixed__show')){
+    window.sharedFunctionsAnimation.onEnterButton();
+    window.sharedFunctionsAnimation.onLeaveButton();
+  }
 })(jQuery);

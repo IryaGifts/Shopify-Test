@@ -4,17 +4,13 @@
     assign section_bg_color = section.settings.section_bg_color
     assign section_bg_gradient = section.settings.section_bg_gradient
     assign section_bg_image = section.settings.section_bg_image
-    
     assign mg_top_desktop = section.settings.mg_top_desktop
     assign mg_top_tablet = section.settings.mg_top_tablet
     assign mg_top_mobile = section.settings.mg_top_mobile
-
     assign mg_bottom_desktop = section.settings.mg_bottom_desktop
     assign mg_bottom_tablet = section.settings.mg_bottom_tablet
     assign mg_bottom_mobile = section.settings.mg_bottom_mobile
-
     assign padding_full_width = section.settings.padding_full_width
-    
     assign section_title = section.settings.title
     assign section_title_color = section.settings.title_color
     assign section_title_fs = section.settings.title_fs | append: 'px'
@@ -22,40 +18,26 @@
     assign section_title_fw = section.settings.title_fw
     assign section_title_mg_bottom = section.settings.title_mg_bottom | append: 'px'
     assign section_title_mg_bottom_mb = section.settings.title_mg_bottom_mb | append: 'px'
-
     assign position_horizontal_slick_arrow = section.settings.position_horizontal_slick_arrow
 -%} 
-
-<div class="slidable-spotlight section-block-{{section.id}}" id="slidable-spotlight-{{section.id}}"data-loader-script="{{ 'halo.slidable-spotlight.js' | asset_url }}">
+<div class="slidable-spotlight section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="slidable-spotlight-{{section.id}}"data-loader-script="{{ 'halo.slidable-spotlight.js' | asset_url }}">
     <div class="{% if section.settings.container == 'fullwidth' %}container-full{% elsif section.settings.container == '1170' %}container-1170{% elsif section.settings.container == '1770' %}container-1770{% else %}container{% endif %}">
-        {% if section_title != blank %}
+        {%- if section_title != blank -%}
             <div class="halo-block-header">
-                <h2
-                    class="slidable-spotlight-title text-center"
-                    style="
-                        --color: {% if section_title_color != blank and section_title_color != 'rgba(0,0,0,0)' %}{{ section_title_color }}{% endif %};
-                        --font-size: {{ section_title_fs }};
-                        --font-size-mb: {{ section_title_fs_mb }};
-                        --font-weight: {{ section_title_fw }};
-                        --margin-bottom: {{ section_title_mg_bottom }}; 
-                        --margin-bottom-mb: {{ section_title_mg_bottom_mb }};
-                    "
-                >{{ section_title }}</h2>
+                <h2 class="slidable-spotlight-title text-center{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--color: {% if section_title_color != blank and section_title_color != 'rgba(0,0,0,0)' %}{{ section_title_color }}{% endif %};--font-size: {{ section_title_fs }};--font-size-mb: {{ section_title_fs_mb }};--font-weight: {{ section_title_fw }};--margin-bottom: {{ section_title_mg_bottom }};--margin-bottom-mb: {{ section_title_mg_bottom_mb }}">{{ section_title }}</h2>
             </div>  
-        {% endif %}
-        <div class="halo-block-content slidable-spotlight-slider" data-slidable-spotlight style="--arrow-side-position: {{ position_horizontal_slick_arrow }};">
-            {% for block in section.blocks %}
-                {% if block.type == 'image' %}
-                    {% liquid
+        {%- endif -%}
+        <div class="halo-block-content slidable-spotlight-slider{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" data-slidable-spotlight style="{% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 2;{% endif %}--arrow-side-position: {{ position_horizontal_slick_arrow }};">
+            {%- for block in section.blocks -%}
+                {%- if block.type == 'image' -%}
+                    {%- liquid
                         assign image = block.settings.image
                         assign link = block.settings.link
-    
                         assign title = block.settings.title  
                         assign title_color = block.settings.title_color  
                         assign title_fs = block.settings.title_fs | append: 'px'
                         assign title_fs_mb = block.settings.title_fs_mb | append: 'px'
-                        assign title_fw = block.settings.title_fw  
-    
+                        assign title_fw = block.settings.title_fw
                         assign button_text = block.settings.button_text
                         assign button_text_color = block.settings.button_text_color
                         assign button_border_color = block.settings.button_border_color
@@ -66,100 +48,47 @@
                         assign button_bg_color_hover = block.settings.button_bg_color_hover
                         assign button_gradient_hover = block.settings.button_gradient_hover
                         assign button_width = block.settings.button_width
-                    %}
+                    -%}
                     <div class="halo-item slidable-spotlight-slide">
-                        {% if image != blank %}
-                            <a class="adaptive_height image-zoom" {% if link != blank %}  href="{{ link }}" {% else %}role="link" aria-hidden="true"{% endif %}style="padding-top: {{ 1 | divided_by: image.aspect_ratio | times: 100 }}%"> 
-                                <img srcset="{{ image | img_url: 'master' }} 1x, {{ image | img_url: 'master', scale: 2 }} 2x" {% unless settings.enable_lazyload %}src="{{ image | img_url: 'master' }}"{% endunless %} alt="{{ image.alt | default: shop.name | escape }}" loading="lazy" 
-                                {% if settings.enable_lazyload %}class="lazyload"{% endif %}>
-                                {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
+                        {%- if image != blank -%}
+                            <a class="adaptive_height {% unless settings.animations_hover_elements == '3d-lift' or settings.animations_hover_elements == 'vertical-lift' %}image-zoom{% endunless %}"{% if link != blank %} href="{{ link }}"{% else %} role="link" aria-hidden="true"{% endif %} style="padding-top: {{ 1 | divided_by: image.aspect_ratio | times: 100 }}%"> 
+                                <img srcset="{{ image | img_url: 'master' }}" {% unless settings.enable_lazyload %}src="{{ image | img_url: 'master' }}"{% endunless %} alt="{{ image.alt | default: shop.name | escape }}" loading="lazy"{% if settings.enable_lazyload %} class="lazyload"{% endif %}>
+                                {%- if settings.enable_lazyload -%}<span class="data-lazy-loading"></span>{%- endif -%}
                             </a>
-                        {% else %}
-                            <div class="halo-item">
-                                <div class="not_img" style="--height_not_img: 230px">230 x 230px</div>
+                        {%- else -%}
+                            <div class="halo-item"><div class="not_img" style="--height_not_img: 230px">230 x 230px</div></div>
+                        {%- endif -%}
+                        {%- if title != blank -%}
+                            <h3 class="title text-center" style="--color: {% if title_color != blank and title_color != "rgba(0,0,0,0)" %}{{ title_color }}{% endif %};--font-size: {{ title_fs }};--font-size-mb: {{ title_fs_mb }};--font-weight: {{ title_fw }}">{{ title }}</h3>
+                        {%- endif -%}
+                        {%- if button_text != blank -%}
+                            {% if settings.animations_hover_elements == '3d-lift' %}
+                            <div class="button-animation">
+                            {% endif %}
+                                <{% if link != blank %}a href="{{ link }}"{% else %}button{% endif %} class="primary-button button slidable-spotlight-slide-button{% if settings.animations_hover_elements == '3d-lift' or settings.animations_hover_elements == 'vertical-lift' %} button-not-animation{% endif %}" style="--text-color: {% if button_text_color != blank and button_text_color != 'rgba(0,0,0,0)' %}{{ button_text_color }}{% endif %};--border-color: {% if button_border_color != blank and button_border_color != 'rgba(0,0,0,0)' %}{{ button_border_color }}{% endif %};--background-color: {% if button_gradient != blank and button_gradient != 'rgba(0,0,0,0)' %}{{ button_gradient }}{% elsif button_bg_color != blank and button_bg_color != 'rgba(0,0,0,0)' %}{{button_bg_color}}{% endif %};--text-color-hover: {% if button_text_color_hover != blank and button_text_color_hover != 'rgba(0,0,0,0)' %}{{ button_text_color_hover }}{% endif %};--border-color-hover: {% if button_border_color_hover != blank and button_border_color_hover != 'rgba(0,0,0,0)' %}{{ button_border_color_hover }}{% endif %};--background-color-hover: {% if button_gradient_hover != blank and button_gradient_hover != 'rgba(0,0,0,0)' %}{{ button_gradient_hover }}{% elsif button_bg_color_hover != blank and button_bg_color_hover != 'rgba(0,0,0,0)' %}{{button_bg_color_hover }}{% endif %};--button-width: {{ button_width | append: 'px' }}">{{ button_text}}</{% if link != blank %}a{% else %}button{% endif %}>
+                            {% if settings.animations_hover_elements == '3d-lift' %}
                             </div>
-                        {% endif %}
-                        {% if title != blank %}
-                            <h3 
-                                class="title text-center" style="
-                                    --color: {% if title_color != blank and title_color != "rgba(0,0,0,0)" %}{{ title_color }}{% endif %};
-                                    --font-size: {{ title_fs }};
-                                    --font-size-mb: {{ title_fs_mb }};
-                                    --font-weight: {{ title_fw }};
-                                "    
-                            >{{ title }}</h3>
-                        {% endif %}
-                        {% if button_text != blank %}
-                            <{% if link != blank %}a href="{{ link }}"{% else %}button{% endif %}
-                                class="primary-button button slidable-spotlight-slide-button" 
-                                style="
-                                    --text-color: {% if button_text_color != blank and button_text_color != 'rgba(0,0,0,0)' %}{{ button_text_color }}{% endif %};
-                                    --border-color: {% if button_border_color != blank and button_border_color != 'rgba(0,0,0,0)' %}{{ button_border_color }}{% endif %};
-                                    --background-color: {% if button_gradient != blank and button_gradient != 'rgba(0,0,0,0)' %}{{ button_gradient }}{% elsif button_bg_color != blank and button_bg_color != 'rgba(0,0,0,0)' %}{{button_bg_color}}{% endif %};
-                                    --text-color-hover: {% if button_text_color_hover != blank and button_text_color_hover != 'rgba(0,0,0,0)' %}{{ button_text_color_hover }}{% endif %};
-                                    --border-color-hover: {% if button_border_color_hover != blank and button_border_color_hover != 'rgba(0,0,0,0)' %}{{ button_border_color_hover }}{% endif %};
-                                    --background-color-hover: {% if button_gradient_hover != blank and button_gradient_hover != 'rgba(0,0,0,0)' %}{{ button_gradient_hover }}{% elsif button_bg_color_hover != blank and button_bg_color_hover != 'rgba(0,0,0,0)' %}{{button_bg_color_hover }}{% endif %};
-                                    --button-width: {{ button_width | append: 'px' }};
-
-                                    "
-                            >
-                                {{ button_text}}
-                            </{% if link != blank %}a{% else %}button{% endif %}>
-                        {% endif %}
+                            {% endif %}
+                        {%- endif -%}
                     </div>
-                {% endif %}
-            {% endfor %}
+                {%- endif -%}
+            {%- endfor -%}
         </div>
     </div>
 </div>
-
 <style>
-    {% if section_bg_image != blank %}
-        .section-block-{{section.id}}{
-            background: url({{ section_bg_image | img_url: '1920x' }});
-            background-repeat: repeat-x;
-            background-size: cover;
-        }
-    {% else %}
-        .section-block-{{section.id}} {
-            background: {% if section_bg_gradient != blank %}{{ section_bg_gradient }}{% else %}{{ section_bg_color }}{% endif %};
-        }   
-    {% endif %}
-   
-    @media (max-width: 1024px) {
-    }
-
-    @media (max-width: 767px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_mobile | append: 'px' }};
-            padding-bottom: {{ mg_bottom_mobile | append: 'px' }};
-        }
-    }
-    
-    @media (min-width: 1200px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_desktop | append: 'px' }};
-            padding-bottom: {{ mg_bottom_desktop | append: 'px' }};
-        }
-    }
-    
-    @media (min-width: 1025px) {
-        {% if section.settings.container == 'fullwidth' %}
-            .section-block-{{section.id}} .container-full {
-                padding-left: {{ padding_full_width | append: 'px' }};
-                padding-right: {{ padding_full_width | append: 'px' }};
-            }
-        {% endif %}
-    }
-
-    @media (min-width: 768px) and (max-width: 1199px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_tablet | append: 'px' }};
-            padding-bottom: {{ mg_bottom_tablet | append: 'px' }};
-        }
-    }
+    {%- if section_bg_image != blank -%}
+        .section-block-{{section.id}}{background: url({{ section_bg_image | img_url: '1920x' }});background-repeat: repeat-x;background-size: cover}
+    {%- else -%}
+        .section-block-{{section.id}} {background: {% if section_bg_gradient != blank %}{{ section_bg_gradient }}{% else %}{{ section_bg_color }}{% endif %}}   
+    {%- endif -%}
+    @media (max-width: 767px) {.section-block-{{section.id}} {padding-top: {{ mg_top_mobile | append: 'px' }};padding-bottom: {{ mg_bottom_mobile | append: 'px' }}}}
+    @media (min-width: 1200px) {.section-block-{{section.id}} {padding-top: {{ mg_top_desktop | append: 'px' }};padding-bottom: {{ mg_bottom_desktop | append: 'px' }}}}
+    {%- if section.settings.container == 'fullwidth' -%}
+        @media (min-width: 1025px) {.section-block-{{section.id}} .container-full {padding-left: {{ padding_full_width | append: 'px' }};padding-right: {{ padding_full_width | append: 'px' }}}}
+    {%- endif -%}
+    @media (min-width: 768px) and (max-width: 1199px) {.section-block-{{section.id}} {padding-top: {{ mg_top_tablet | append: 'px' }};padding-bottom: {{ mg_bottom_tablet | append: 'px' }}}}
 </style>
-
 {% schema %}
   {
     "name": "t:sections.slidable_spotlight.name",
@@ -167,7 +96,7 @@
     "settings": [   
         {   
             "type": "header",
-            "content": "t:sections.layout.content"
+            "content": "t:settings_schema.general.name"
         },
         {
             "type": "select",

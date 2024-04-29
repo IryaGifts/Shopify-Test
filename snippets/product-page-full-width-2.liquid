@@ -225,11 +225,6 @@
     endif
 
     if show_share
-        assign share_product_type = settings.share_product_type
-        if share_product_type == 'addthis'
-            assign share_product_script = settings.share_product_script
-        endif
-
         if check_block_title and check_block_buttons
             assign check_show_share = share_layout
         elsif check_block_title and check_block_buttons != true
@@ -465,7 +460,7 @@
                 <div class="page-content" id="ProductContent">
             {%- endif -%}
                 <div class="productView-top">
-                    <div class="halo-productView-left productView-images clearfix" data-image-gallery>
+                    <div class="halo-productView-left productView-images clearfix{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}" data-image-gallery>
                         {%- if main_image_show_custom_cursor -%}
                             <div class="cursor-wrapper handleMouseLeave">
                                 <div class="custom-cursor custom-cursor__outer">
@@ -520,17 +515,20 @@
                                                             {% if product_image_popup == 'fancybox' %} data-fancybox="images" href="{{ media.preview_image | img_url: 'master' }}" {% endif %}
                                                         >
                                                             <img id="product-featured-image-{{ media.id }}"
-                                                                srcset="{{ media.preview_image | img_url: 'master' }}"
-                                                                src="{{ media | img_url: 'master' }}"
+                                                                {% if settings.enable_lazyload and forloop.index > 3 %}data-{% endif %}srcset="{{ media.preview_image | img_url: 'master' }}"
+                                                                {% unless settings.enable_lazyload and forloop.index > 3 %}src="{{ media | img_url: 'master' }}"{% endunless %}
                                                                 alt="{{ media.preview_image.alt | escape }}"
-                                                                title="{{ media.preview_image.alt | escape }}"
-                                                                sizes="auto"
+                                                                sizes="(min-width: 2000px) 1500px, (min-width: 1200px) 1200px, (min-width: 768px) calc((100vw - 30px) / 2), calc(100vw - 20px)"
+                                                                width="{{ media.width }}"
+                                                                height="{{ media.height }}"
                                                                 loading="lazy"
                                                                 data-sizes="auto"
                                                                 data-main-image
                                                                 data-index="{{ forloop.index }}"
                                                                 data-cursor-image
+                                                                {% if settings.enable_lazyload and forloop.index > 3 %}class="lazyload"{% endif %}
                                                             />
+                                                            {%- if settings.enable_lazyload and forloop.index > 3 -%}<span class="data-lazy-loading"></span>{%- endif -%}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -554,7 +552,6 @@
                                                                         srcset="https://i.ytimg.com/vi/{{ media.external_id }}/maxresdefault.jpg"
                                                                         src="https://i.ytimg.com/vi/{{ media.external_id }}/maxresdefault.jpg"
                                                                         alt="{{ media.alt | escape }}"
-                                                                        title="{{ media.alt | escape }}"
                                                                         sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
                                                                         loading="lazy"
                                                                         data-sizes="auto"
@@ -569,7 +566,6 @@
                                                                         srcset="{{ media | img_url: 'master' }}"
                                                                         src="{{ media | img_url: 'master' }}"
                                                                         alt="{{ media.alt | escape }}"
-                                                                        title="{{ media.alt | escape }}"
                                                                         sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
                                                                         loading="lazy"
                                                                         data-sizes="auto"
@@ -601,7 +597,6 @@
                                                                     srcset="{{ media | img_url: 'master' }}"
                                                                     src="{{ media | img_url: 'master' }}"
                                                                     alt="{{ media.alt | escape }}"
-                                                                    title="{{ media.alt | escape }}"
                                                                     sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
                                                                     loading="lazy"
                                                                     data-sizes="auto"
@@ -782,7 +777,7 @@
                                 {%- case block.type -%}
                                     {%- when 'breadcrumb' -%}
                                         {%- if breadcrumb_layout == 'content' -%}
-                                            <div class="productView-moreItem moreItem-breadcrumb {% unless check_breadcrumb_full %}hidden-on-mobile{% endunless %}"
+                                            <div class="productView-moreItem moreItem-breadcrumb {% unless check_breadcrumb_full %}hidden-on-mobile{% endunless %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                                                 style="--spacing-top: {{ breadcrumb_mg_top_desktop | append: 'px' }};
                                                 --spacing-bottom: {{ breadcrumb_mg_bottom_desktop | append: 'px' }};
                                                 --spacing-top-mb: {{ breadcrumb_mg_top_mobile | append: 'px' }};
@@ -797,7 +792,7 @@
                                             </div>
                                         {%- endif -%}
                                     {%- when 'vendor' -%}
-                                        <div class="productView-moreItem"
+                                        <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                                             style="--spacing-top: {{ spacing_top | append: 'px' }};
                                             --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
                                         >
@@ -810,7 +805,7 @@
                                             %}
                                         </div>
                                     {%- when 'title' -%}
-                                        <div class="productView-moreItem"
+                                        <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger {% if share_layout == '3' %}animate--fade-in{% else %}animate--slide-in{% endif %}{% endif %}"
                                             style="--spacing-top: {{ spacing_top | append: 'px' }};
                                             --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
                                         >
@@ -818,8 +813,6 @@
                                                 block: block,
                                                 product: product,
                                                 check_show_share: check_show_share,
-                                                share_product_type: share_product_type,
-                                                share_product_script: share_product_script,
                                                 share_layout: check_show_share
                                             %}
                                         </div>
@@ -832,7 +825,7 @@
                                             assign color_text_sold_in = block.settings.color_text_sold_in
                                         -%}
                                         {%- if show_review or show_sold_in -%}
-                                            <div class="productView-moreItem"
+                                            <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                                                 style="--spacing-top: {{ spacing_top | append: 'px' }};
                                                 --spacing-bottom: {{ spacing_bottom | append: 'px' }};
                                                 --color-text-sold-in: {{ color_text_sold_in }}"
@@ -853,7 +846,7 @@
                                             </div>
                                         {%- endif -%}
                                     {%- when 'short_description' -%}
-                                        <div class="productView-moreItem"
+                                        <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                                             style="--spacing-top: {{ spacing_top | append: 'px' }};
                                             --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
                                         >
@@ -865,7 +858,7 @@
                                             %}
                                         </div>
                                     {%- when 'variant_description' -%}
-                                        <div class="productView-moreItem"
+                                        <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                                             style="--spacing-top: {{ spacing_top | append: 'px' }};
                                             --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
                                         >
@@ -880,14 +873,15 @@
                                             assign show_vendor = block.settings.show_vendor
                                             assign show_availability = block.settings.show_availability
                                             assign show_sku = block.settings.show_sku
+                                            assign show_barcode = block.settings.show_barcode
                                             assign show_product_type = block.settings.show_product_type
                                             assign stock_level_display = block.settings.stock_level_display
                                             assign enable_border_top = block.settings.enable_border_top
                                             assign enable_border_bottom = block.settings.enable_border_bottom
                                             assign color_border = block.settings.color_border
                                         -%}
-                                        {%- if show_vendor or show_availability or show_sku or show_product_type -%}
-                                            <div class="productView-moreItem"
+                                        {%- if show_vendor or show_availability or show_sku or show_barcode or show_product_type -%}
+                                            <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                                                 style="--spacing-top: {{ spacing_top | append: 'px' }};
                                                 --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
                                             >
@@ -896,6 +890,7 @@
                                                     show_vendor: show_vendor,
                                                     show_availability: show_availability,
                                                     show_sku: show_sku,
+                                                    show_barcode: show_barcode,
                                                     current_variant: current_variant,
                                                     show_product_type: show_product_type,
                                                     stock_level_display: stock_level_display,
@@ -907,7 +902,7 @@
                                         {%- endif -%}
                                     {%- when 'price' -%}
                                         {% assign fontsize_text = block.settings.fontsize_text %}
-                                        <div class="productView-moreItem"
+                                        <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                                             style="--spacing-top: {{ spacing_top | append: 'px' }};
                                             --spacing-bottom: {{ spacing_bottom | append: 'px' }};
                                             --fontsize-text: {{ fontsize_text | append: 'px' }}"
@@ -948,7 +943,7 @@
                                             endif
                                         -%}
                                         {%- if show_countdown -%}
-                                            <div class="productView-moreItem"
+                                            <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                                                 style="--spacing-top: {{ spacing_top | append: 'px' }};
                                                 --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
                                             >
@@ -963,7 +958,7 @@
                                         {%- endif -%}
                                     {%- when 'variant_picker' -%}
                                         {% unless has_product_combo %}
-                                            <div class="productView-moreItem"
+                                            <div class="productView-moreItem productView-moreItem-product-variant{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                                                 style="--spacing-top: {{ spacing_top | append: 'px' }};
                                                 --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
                                             >
@@ -978,7 +973,7 @@
                                         {% endunless %}
                                     {%- when 'customization_property' -%}
                                         {% if has_customization_option == true %}
-                                            <div class="productView-moreItem"
+                                            <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                                                 style="--spacing-top: {{ spacing_top | append: 'px' }};
                                                 --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
                                             >
@@ -1004,7 +999,7 @@
                                         {% endunless %}
                                     {%- when 'perks' -%}
                                         {% unless has_product_combo %}
-                                            <div class="productView-moreItem"
+                                            <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                                                 style="--spacing-top: {{ spacing_top | append: 'px' }};
                                                 --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
                                             >
@@ -1021,7 +1016,7 @@
                                     {%- when 'quantity_selector' -%}
                                         {% unless has_product_combo %}
                                             {%- if check_show_qty == 'show_qty_1' -%}
-                                                <div class="productView-moreItem"
+                                                <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
                                                     style="--spacing-top: {{ spacing_top | append: 'px' }};
                                                     --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
                                                 >
@@ -1053,8 +1048,6 @@
                                                     product: product,
                                                     current_variant: current_variant,
                                                     check_show_share: check_show_share,
-                                                    share_product_type: share_product_type,
-                                                    share_product_script: share_product_script,
                                                     share_layout: check_show_share,
                                                     section: section,
                                                     check_show_qty: check_show_qty,
@@ -1066,19 +1059,13 @@
                                             </div>
                                         {% endunless %}
                                     {%- when 'customer_viewing' -%}
-                                        <div class="productView-moreItem"
-                                            style="--spacing-top: {{ spacing_top | append: 'px' }};
-                                            --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
-                                        >
+                                        <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--spacing-top: {{ spacing_top | append: 'px' }};--spacing-bottom: {{ spacing_bottom | append: 'px' }}">
                                             {% render 'product-customer-viewing',
                                                 block: block
                                             %}
                                         </div>
                                     {%- when 'pickup_availability' -%}
-                                        <div class="productView-moreItem"
-                                            style="--spacing-top: {{ spacing_top | append: 'px' }};
-                                            --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
-                                        >
+                                        <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--spacing-top: {{ spacing_top | append: 'px' }};--spacing-bottom: {{ spacing_bottom | append: 'px' }}">
                                             {%- liquid 
                                                 assign show_pickup_availability = block.settings.show_pickup_availability
                                             -%}
@@ -1091,14 +1078,9 @@
                                         </div>
                                     {%- when 'share' -%}
                                         {%- if check_show_share == '1' -%}
-                                            <div class="productView-moreItem"
-                                                style="--spacing-top: {{ spacing_top | append: 'px' }};
-                                                --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
-                                            >
+                                            <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--spacing-top: {{ spacing_top | append: 'px' }};--spacing-bottom: {{ spacing_bottom | append: 'px' }}">
                                                 {% render 'halo-share',
                                                     product: product,
-                                                    share_product_type: share_product_type,
-                                                    share_product_script: share_product_script,
                                                     share_layout: check_show_share
                                                 %}
                                             </div>
@@ -1108,10 +1090,7 @@
                                             assign show_trust_image = block.settings.show_trust_image
                                         -%}
                                         {%- if show_trust_image -%}
-                                            <div class="productView-moreItem"
-                                                style="--spacing-top: {{ spacing_top | append: 'px' }};
-                                                --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
-                                            >
+                                            <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--spacing-top: {{ spacing_top | append: 'px' }};--spacing-bottom: {{ spacing_bottom | append: 'px' }}">
                                                 <div class="productView-securityImage">
                                                     {%- render 'halo-trust-image',
                                                         type: 'product'
@@ -1126,45 +1105,24 @@
                                             assign background_color_block = block.settings.background_color_block
                                             assign background_gradient_color_block = block.settings.background_gradient_color_block
                                         -%}
-                                        <div class="productView-moreItem moreItem-productText"
-                                            style="--spacing-top: {{ spacing_top | append: 'px' }};
-                                            --spacing-bottom: {{ spacing_bottom | append: 'px' }};
-                                            {% if background_gradient_color_block != blank %}
-                                                --background-style: {{ background_gradient_color_block }};
-                                            {% else %}
-                                                --background-style: {{ background_color_block }};
-                                            {% endif %}"
-                                        >
-                                            <div class="productView-customText text-{{ custom_block_align }}"
-                                                style="--content-spacing: {{ content_spacing | append: 'px' }};"
-                                            >
-                                                {% render 'product-text',
-                                                    block: block
-                                                %}
+                                        <div class="productView-moreItem moreItem-productText{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--spacing-top: {{ spacing_top | append: 'px' }};--spacing-bottom: {{ spacing_bottom | append: 'px' }};{% if background_gradient_color_block != blank %}--background-style: {{ background_gradient_color_block }};{% else %}--background-style: {{ background_color_block }};{% endif %}">
+                                            <div class="productView-customText text-{{ custom_block_align }}" style="--content-spacing: {{ content_spacing | append: 'px' }};">
+                                                {% render 'product-text', block: block %}
                                             </div>
                                         </div>
                                     {%- when 'custom_information' -%}
-                                        <div class="productView-moreItem"
-                                            style="--spacing-top: {{ spacing_top | append: 'px' }};
-                                            --spacing-bottom: {{ spacing_bottom | append: 'px' }};"
-                                        >
+                                        <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--spacing-top: {{ spacing_top | append: 'px' }};--spacing-bottom: {{ spacing_bottom | append: 'px' }};">
                                             {% render 'product-custom-information',
                                                 block: block
                                             %}
                                         </div>
                                     {%- when 'grouped_product' -%}
                                         {%- if has_product_combo -%}
-                                            <div class="productView-moreItem"
-                                                style="--spacing-top: {{ spacing_top | append: 'px' }};
-                                                --spacing-bottom: {{ spacing_bottom | append: 'px' }};
-                                                "
-                                            >
+                                            <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--spacing-top: {{ spacing_top | append: 'px' }};--spacing-bottom: {{ spacing_bottom | append: 'px' }};">
                                                 {% render 'grouped-product',
                                                     block: block,
                                                     show_share: show_share
                                                     check_show_share: check_show_share,
-                                                    share_product_type: share_product_type,
-                                                    share_product_script: share_product_script,
                                                     share_layout: check_show_share,
                                                     picker_type: picker_type,
                                                     show_size_chart: show_size_chart,
@@ -1180,32 +1138,18 @@
                                     {%- when 'custom_liquid' -%}
                                         {{ block.settings.custom_liquid }}
                                     {%- when 'complementary_products' -%}
-                                        <div class="productView-moreItem"
-                                            style="--spacing-top: {{ spacing_top | append: 'px' }};
-                                            --spacing-bottom: {{ spacing_bottom | append: 'px' }};
-                                            "
-                                        >
+                                        <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--spacing-top: {{ spacing_top | append: 'px' }};--spacing-bottom: {{ spacing_bottom | append: 'px' }};">
                                             <complementary-products class="productView-complementary complementary-products style-{{ complementary_product_layout }} no-js-hidden" id="complementary-product-data" data-complementary-product data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=10&intent=complementary">
                                                 {%- if recommendations.performed and recommendations.products_count > 0 -%}
                                                     {%- if complementary_product_title -%}
                                                         <div class="complementary-products-title">
-                                                            <div class="title">
-                                                                <span class="text">
-                                                                    {{ complementary_product_title | escape }}
-                                                                </span>
-                                                            </div>
+                                                            <div class="title"><span class="text">{{ complementary_product_title | escape }}</span></div>
                                                         </div>
                                                     {%- endif -%}
                                                     <div class="complementary-products-slider" {% if complementary_product_layout == "2" %}style="--complementary-object-fit: {{ complementary_product_object }};"{% endif %}>
                                                         <div class="products-carousel {% if complementary_product_layout == "1" %}column-{{ complementary_product_limit }}{% endif %}"
                                                             data-item-arrows= "{{ complementary_product_arrows }}" 
-                                                            data-item-dots= "{{ complementary_product_dots }}"
-                                                            {% if complementary_product_layout == "1" %}
-                                                                data-item-to-show="{{ complementary_product_limit_1 }}"
-                                                            {% endif %}
-                                                            {% if complementary_product_layout == "2" %}
-                                                                data-item-rows="{{ complementary_product_limit_2 }}"
-                                                            {% endif %}
+                                                            data-item-dots= "{{ complementary_product_dots }}"{% if complementary_product_layout == "1" %} data-item-to-show="{{ complementary_product_limit_1 }}"{% endif %}{% if complementary_product_layout == "2" %} data-item-rows="{{ complementary_product_limit_2 }}"{% endif %}
                                                         >
                                                             {%- if complementary_product_layout == "1" -%}
                                                                 {%- for product in recommendations.products limit: limit -%}
@@ -1238,6 +1182,8 @@
                                             </complementary-products>
                                             <script src="{{ "build-complementary-products.js" | asset_url }}" defer></script>
                                         </div>
+                                    {%- when '@app' -%}
+                                        {% render block %}
                                 {%- endcase -%}
                             {%- endfor -%}
                             {%- if show_tab -%}
@@ -1289,7 +1235,7 @@
     {% unless  has_product_combo %}
         {% render 'product-bundle' %}
     {% endunless %}
-    <div class="productView-bottom">
+    <div class="productView-bottom{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger{% if tab_layout_mobile == 'popup' %} animate--fade-in{% else %} animate--slide-in{% endif %}{% endif %}">
         <div class="{% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%}container-full{% else %}container{% endif %}">
             {%- if show_tab and tab_layout == 'horizontal' -%}
                 {% render 'halo-product-tab',
@@ -1340,7 +1286,4 @@
 {%- if zoomed_image and main_image_show_custom_cursor != true -%}
     <script src="{{ 'zoomed-image.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
-
-{% render 'schema',
-    product: product
-%}
+{% render 'schema', product: product %}

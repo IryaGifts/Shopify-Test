@@ -2,69 +2,48 @@
 {%- assign swipe = section.settings.policies_block_swipe_on_mobile -%}
 <link rel="stylesheet" href="{{ 'component-policies-block.css' | asset_url }}" media="print" onload="this.media='all'">
 <noscript>{{ 'component-policies-block.css' | asset_url | stylesheet_tag }}</noscript>
-
-<div class="policies-block section-block-{{section.id}}">
+<div class="policies-block section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
     <div class="{% if section.settings.container == 'fullwidth' %}container-full{% elsif section.settings.container == '1770' %}container-1770{% elsif section.settings.container == '1170' %}container-1170{% else %}container{% endif %}">
         <div class="bg-policies-block">
             {%- if swipe == 'slider' -%}
             <banner-slider-component>
             {%- endif -%}
                 <div class="halo-row column-{{ section.blocks.size }}{% if swipe == 'slider' %} slider slider--tablet{% endif %}{% unless section.settings.enable_item_distance %} not-distance{% endunless %}{% if swipe == 'scroll' %} scroll-snap-mobile disable-srollbar{% endif %}">      
-                    {% for block in section.blocks %}
-                    <div class="halo-item{% if swipe == 'slider' %} slider__slide{% endif %}{% if block.settings.description != blank %} has-des{% endif %}">
+                    {%- for block in section.blocks -%}
+                    <div class="halo-item{% if swipe == 'slider' %} slider__slide{% endif %}{% if block.settings.description != blank %} has-des{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} data-cascade style="--animation-order: {{ forloop.index }};"{% endif %}>
                         <a class="alignItems--{{ section.settings.align_items }}{% if section.settings.text_align_items == 'left' %} text-left{% elsif section.settings.text_align_items == 'center' %} text-center{% else %} text-right{% endif %}"{% if block.settings.link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link }}"{% endif %} title="{{block.settings.text}}" style="--item-radius-style: {{ section.settings.item_radius | append: 'px' }}; --item-padding-top-style: {{ section.settings.item_padding_top | append: 'px' }}; --item-padding-bottom-style: {{ section.settings.item_padding_bottom | append: 'px' }}; --item-padding-left-right: {{  section.settings.item_padding_left_right | append: 'px' }}">
-                            {% if block.settings.icon_type == 'image' %}
-                                {% if block.settings.image != blank %}
+                            {%- if block.settings.icon_type == 'image' -%}
+                                {%- if block.settings.image != blank -%}
                                     {%- assign preview_img = block.settings.image -%}
                                     <img {% render 'lazyload',preview_img: preview_img  %} style="--icon-mg-right-style: {{ block.settings.icon_mg_right | append: 'px' }}" />
-                                    {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
-                                {% endif %}
-                            {% else %}
-                                {% if block.settings.icon != blank %}
-                                <span class="policies-icon" style="--icon-width-style: {{ block.settings.icon_width | append: 'px' }}; --icon-height-style: {{ block.settings.icon_height | append: 'px' }}; --icon-mg-right-style: {{ block.settings.icon_mg_right | append: 'px' }}">
-                                  {{ block.settings.icon }}
-                                </span>
-                                {% endif %}
-                            {% endif %}
+                                    {%- if settings.enable_lazyload -%}<span class="data-lazy-loading"></span>{%- endif -%}
+                                {%- endif -%}
+                            {%- else -%}
+                                {%- if block.settings.icon != blank -%}
+                                <span class="policies-icon" style="--icon-width-style: {{ block.settings.icon_width | append: 'px' }}; --icon-height-style: {{ block.settings.icon_height | append: 'px' }}; --icon-mg-right-style: {{ block.settings.icon_mg_right | append: 'px' }}">{{ block.settings.icon }}</span>
+                                {%- endif -%}
+                            {%- endif -%}
                             {%- if block.settings.description != blank -%}
                             <div class="policies-content">
                                 {%- if block.settings.text != blank -%}
-                                <span class="policies-text" style="--font-size-text-style: {{ block.settings.font_size_text | append: 'px' }};
-                                                                   --font-size-text-style-mb: {{ block.settings.font_size_text_mb | append: 'px' }};
-                                                                   --font-weight-text-style: {{ block.settings.font_weight_text }};
-                                                                   --font-style-text-style: {{ block.settings.font_style_text }};
-                                                                   --mg-bottom-text-style: {{ block.settings.mg_bottom_text | append: 'px' }}">
-                                    {{block.settings.text}}
-                                </span>
+                                <span class="policies-text" style="--font-size-text-style: {{ block.settings.font_size_text | append: 'px' }};--font-size-text-style-mb: {{ block.settings.font_size_text_mb | append: 'px' }};--font-weight-text-style: {{ block.settings.font_weight_text }};--font-style-text-style: {{ block.settings.font_style_text }};--mg-bottom-text-style: {{ block.settings.mg_bottom_text | append: 'px' }}">{{block.settings.text}}</span>
                                 {%- endif -%}
-                                <p class="policies-des">
-                                    {{block.settings.description}}
-                                </p>
+                                <p class="policies-des">{{block.settings.description}}</p>
                             </div>
-                            {% else %}
+                            {%- else -%}
                                 {%- if block.settings.text != blank -%}
-                                <span class="policies-text" style="--font-size-text-style: {{ block.settings.font_size_text | append: 'px' }};
-                                                                   --font-size-text-style-mb: {{ block.settings.font_size_text_mb | append: 'px' }};
-                                                                   --font-weight-text-style: {{ block.settings.font_weight_text }};
-                                                                   --font-style-text-style: {{ block.settings.font_style_text }};
-                                                                   --mg-bottom-text-style: {{ block.settings.mg_bottom_text | append: 'px' }}">
-                                    {{block.settings.text}}
-                                </span>
+                                <span class="policies-text" style="--font-size-text-style: {{ block.settings.font_size_text | append: 'px' }};--font-size-text-style-mb: {{ block.settings.font_size_text_mb | append: 'px' }};--font-weight-text-style: {{ block.settings.font_weight_text }};--font-style-text-style: {{ block.settings.font_style_text }};--mg-bottom-text-style: {{ block.settings.mg_bottom_text | append: 'px' }}">{{block.settings.text}}</span>
                                 {%- endif -%}
                             {%- endif -%}
                         </a>
                     </div>
-                    {% endfor %}
+                    {%- endfor -%}
                 </div>
                 {%- if swipe == 'slider' and section.blocks.size > 1 -%}
                     <div class="slider-buttons no-js-hidden slider-arrows">
                         <div class="slider-action {% if section.blocks.size == 2 %}count_2{% endif %}">
-                            <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'accessibility.previous_slide' | t }}">
-                                {% render 'icon-caret' %}
-                            </button>
-                            <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'accessibility.next_slide' | t }}">
-                                {% render 'icon-caret' %}
-                            </button>
+                            <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'accessibility.previous_slide' | t }}">{% render 'icon-caret' %}</button>
+                            <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'accessibility.next_slide' | t }}">{% render 'icon-caret' %}</button>
                         </div>
                     </div>
                 {%- endif -%}
@@ -74,7 +53,6 @@
         </div>    
     </div>
 </div>
-
 <style>
     {%- liquid
         assign policies_bg = section.settings.policies_bg
@@ -101,140 +79,66 @@
         assign item_color_border = section.settings.item_color_border
     -%}
 
-    {% if policies_bg_image != blank %}
-        .section-block-{{section.id}} {
-            background: url({{ policies_bg_image | img_url: '1920x' }});
-            background-repeat: repeat-x;
-            background-size: cover;
-        }
-    {% else %}
-        .section-block-{{section.id}} {
-            background: {% if policies_bg_gradient != blank %}{{ policies_bg_gradient }}{% else %}{{ policies_bg }}{% endif %};
-        }
-    {% endif %}
+    {%- if policies_bg_image != blank -%}
+        .section-block-{{section.id}} {background: url({{ policies_bg_image | img_url: '1920x' }});background-repeat: repeat-x;background-size: cover}
+    {%- else -%}
+        .section-block-{{section.id}} {background: {% if policies_bg_gradient != blank %}{{ policies_bg_gradient }}{% else %}{{ policies_bg }}{% endif %}}
+    {%- endif -%}
 
     .section-block-{{section.id}} .halo-item + .halo-item {
-        {% if section.settings.border_item == 'style_1' %}
-            border-left: 1px solid {{ item_color_border }};
-        {% elsif section.settings.border_item == 'style_2' %}
+        {%- if section.settings.border_item == 'style_1' -%}
+            border-left: 1px solid {{ item_color_border }}
+        {%- elsif section.settings.border_item == 'style_2' -%}
+            position: relative
+        {%- endif -%}
+    }
+    .layout_rtl .section-block-{{section.id}} .halo-item + .halo-item {
+        {%- if section.settings.border_item == 'style_1' -%}
+            border-right: 1px solid {{ item_color_border }};border-left: 0;
+        {%- elsif section.settings.border_item == 'style_2' -%}
             position: relative;
-        {% endif %}
+        {%- endif -%}
     }
 
-    body.layout_rtl .section-block-{{section.id}} .halo-item + .halo-item {
-        {% if section.settings.border_item == 'style_1' %}
-            border-right: 1px solid {{ item_color_border }};
-            border-left: 0;
-        {% elsif section.settings.border_item == 'style_2' %}
-            position: relative;
-        {% endif %}
-    }
+    {%- if section.settings.border_item == 'style_2' -%}
+        .section-block-{{section.id}} .halo-item + .halo-item:before {content: '';width: 1px;height: 24px;display: block;position: absolute;top: 50%;left: -6px;transform: translateY(-50%);background-color: {{ item_color_border }}}
+        .layout_rtl .section-block-{{section.id}} .halo-item + .halo-item:before {right: -6px;left: auto}
+        .section-block-{{section.id}} .halo-item:nth-child(3):before {left: 6px}
+        .section-block-{{section.id}} .policies-text:hover {text-decoration: underline;text-underline-offset: 0.3rem}
+    {%- endif -%}
 
-    {% if section.settings.border_item == 'style_2' %}
-        .section-block-{{section.id}} .halo-item + .halo-item:before {
-            content: '';
-            width: 1px;
-            height: 24px;
-            display: block;
-            position: absolute;
-            top: 50%;
-            left: -6px;
-            transform: translateY(-50%);
-            background-color: {{ item_color_border }};
-        }
-        
-        body.layout_rtl .section-block-{{section.id}} .halo-item + .halo-item:before {
-            right: -6px;
-            left: auto;
-        }
-
-        .section-block-{{section.id}} .halo-item:nth-child(3):before {
-            left: 6px;
-        }
-
-        .section-block-{{section.id}} .policies-text:hover {
-            text-decoration: underline;
-            text-underline-offset: 0.3rem;
-        }
-    {% endif %}
-
-    .section-block-{{section.id}} .policies-icon {
-        color: {{ color_icon }};
-    }
-    .section-block-{{section.id}} .policies-icon svg {
-        fill: {{ color_icon }};
-    }
-
-    .section-block-{{section.id}} .policies-text {
-        color: {{ color_block }};
-    }
-    
-    .section-block-{{section.id}} .slider-button svg {
-        fill: {{ color_block }};
-    }
-
-    .section-block-{{section.id}} .halo-item a {
-        background-color: {{ bg_color_block }};
-        border: 1px solid {{ border_block }};
-    }
-
+    .section-block-{{section.id}} .policies-icon {color: {{ color_icon }}}
+    .section-block-{{section.id}} .policies-icon svg {fill: {{ color_icon }}}
+    .section-block-{{section.id}} .policies-text {color: {{ color_block }}}
+    .section-block-{{section.id}} .slider-button svg {fill: {{ color_block }}}
+    .section-block-{{section.id}} .halo-item a {background-color: {{ bg_color_block }};border: 1px solid {{ border_block }}}
     @media (max-width: 1024px) {
-        {% if swipe == 'slider' %}
-            .section-block-{{section.id}} .halo-item + .halo-item:before {
-                content: none;
-            }
-        {% endif %}
+        {%- if swipe == 'slider' -%}
+            .section-block-{{section.id}} .halo-item + .halo-item:before {content: none}
+        {%- endif -%}
 
-        {% if policies_bg_image != blank %}
-            .section-block-{{section.id}} {
-                background-position: center top;
-            }
-        {% endif %}
+        {%- if policies_bg_image != blank -%}
+            .section-block-{{section.id}} {background-position: center top}
+        {%- endif -%}
     }
-
     @media (max-width: 767px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_mobile | append: 'px' }};
-            padding-bottom: {{ mg_bottom_mobile | append: 'px' }};
-        }
-        {% if section.settings.border_item == 'style_2' %}
-            .section-block-{{section.id}} .halo-item.slider__slide + .halo-item.slider__slide:before {
-                content: none;
-            }
-        {% endif %}
+        .section-block-{{section.id}} {padding-top: {{ mg_top_mobile | append: 'px' }};padding-bottom: {{ mg_bottom_mobile | append: 'px' }}}
+        {%- if section.settings.border_item == 'style_2' -%}
+            .section-block-{{section.id}} .halo-item.slider__slide + .halo-item.slider__slide:before {content: none}
+        {%- endif -%}
     }
-
-    @media (min-width: 1200px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_desktop | append: 'px' }};
-            padding-bottom: {{ mg_bottom_desktop | append: 'px' }};
-        }
-    }
-
+    @media (min-width: 1200px) {.section-block-{{section.id}} {padding-top: {{ mg_top_desktop | append: 'px' }};padding-bottom: {{ mg_bottom_desktop | append: 'px' }}}}
     @media (min-width: 1025px) {
-        {% if section.settings.container == 'fullwidth' %}
-            .section-block-{{section.id}} .container-full {
-                padding-left: {{ padding_full_width | append: 'px' }};
-                padding-right: {{ padding_full_width | append: 'px' }};
-            }
-        {% endif %}
+        {%- if section.settings.container == 'fullwidth' -%}
+            .section-block-{{section.id}} .container-full {padding-left: {{ padding_full_width | append: 'px' }};padding-right: {{ padding_full_width | append: 'px' }}}
+        {%- endif -%}
 
-        {% if bg_color_block == 'rgba(0,0,0,0)' or bg_color_block == blank or bg_color_block == settings.colors_bg %}
-            .policies-block .halo-row.not-distance {
-                margin-left: -{{  section.settings.item_padding_left_right | append: 'px' }};
-                margin-right: -{{  section.settings.item_padding_left_right | append: 'px' }};
-            }
-        {% endif %}
+        {%- if bg_color_block == 'rgba(0,0,0,0)' or bg_color_block == blank or bg_color_block == settings.colors_bg -%}
+            .policies-block .halo-row.not-distance {margin-left: -{{  section.settings.item_padding_left_right | append: 'px' }};margin-right: -{{  section.settings.item_padding_left_right | append: 'px' }}}
+        {%- endif -%}
     }
-
-    @media (min-width: 768px) and (max-width: 1199px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_tablet | append: 'px' }};
-            padding-bottom: {{ mg_bottom_tablet | append: 'px' }};
-        }
-    }
+    @media (min-width: 768px) and (max-width: 1199px) {.section-block-{{section.id}} {padding-top: {{ mg_top_tablet | append: 'px' }};padding-bottom: {{ mg_bottom_tablet | append: 'px' }}}}
 </style>
-
 {%- endif -%}
 
 {% schema %}
@@ -245,7 +149,7 @@
         "settings": [
             {
                 "type": "header",
-                "content": "t:sections.layout.content"
+                "content": "t:settings_schema.general.name"
             },
             {
                 "type": "select",

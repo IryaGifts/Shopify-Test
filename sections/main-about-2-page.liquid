@@ -35,11 +35,11 @@
         <div class="about-content-wrapper">
         {% endif %}
         {%- if show_page_title -%}
-            <h1 class="page-header text-{{ page_title_alignment }}" {% if page_title_color != blank and page_title_color != 'rgba(0,0,0,0)' %}style="color: {{ page_title_color }}"{% endif %}>
+            <h1 class="page-header text-{{ page_title_alignment }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" {% if page_title_color != blank and page_title_color != 'rgba(0,0,0,0)' %}style="color: {{ page_title_color }}"{% endif %}>
                 {{ page.title | escape }}
             </h1>
         {%- endif -%}
-        <div class="halo-page-content halo-about-content">
+        <div class="halo-page-content halo-about-content{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
         	<div class="about about-1">
         		{%- if show_about_info -%}
     				{%- for block in section.blocks -%}
@@ -62,16 +62,16 @@
                              	endif
                             -%}
                             {%- if title != blank -%}
-                            	<h2 class="page-subheader about-title text-center" style="color: {{ content_text_color }};">
+                            	<h2 class="page-subheader about-title text-center{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="color: {{ content_text_color }};">
                             		{{ title | escape }}
                             	</h2>
                             {%- endif -%}
                             {%- if block.type == 'content' -%}
-                            	<div class="about-content halo-text-format text-{{ align }}" style="color: {{ content_text_color }};">
+                            	<div class="about-content halo-text-format text-{{ align }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="color: {{ content_text_color }};">
                             		{{ content }}
                             	</div>
                             {%- elsif block.type == 'image' -%}
-                            	<div class="about-row style-{{ style }}">
+                            	<div class="about-row style-{{ style }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
 	                            	<div class="about-row-item about-row-itemFirst">
 	                            		<div class="item">
 		                            		{%- if image_1 != blank -%}
@@ -80,7 +80,7 @@
 			                            		{%- else -%}
 			                            			<div class="image image-zoom" style="padding-top: {{ 1 | divided_by: image_1.aspect_ratio | times: 100 | append: '%' }}">
 			                            		{%- endif -%}
-			                            			<img srcset="{{ image_1 | img_url: 'master' }} 1x, {{ image_1 | img_url: 'master', scale: 2 }} 2x"
+			                            			<img srcset="{{ image_1 | img_url: 'master' }}"
 										                src="{{ image_1 | img_url: 'master' }}"
 										                loading="lazy"
 										                alt="{{ image_1.alt | default: shop.name | escape }}"
@@ -107,7 +107,7 @@
 			                            		{%- else -%}
 			                            			<div class="image image-zoom" style="padding-top: {{ 1 | divided_by: image_2.aspect_ratio | times: 100 | append: '%' }}">
 			                            		{%- endif -%}
-			                            			<img srcset="{{ image_2 | img_url: 'master' }} 1x, {{ image_2 | img_url: 'master', scale: 2 }} 2x"
+			                            			<img srcset="{{ image_2 | img_url: 'master' }}"
 										                src="{{ image_2 | img_url: 'master' }}"
 										                loading="lazy"
 										                alt="{{ image_2.alt | default: shop.name | escape }}"
@@ -132,7 +132,7 @@
 			                            		{%- else -%}
 			                            			<div class="image image-zoom" style="padding-top: {{ 1 | divided_by: image_3.aspect_ratio | times: 100 | append: '%' }}">
 			                            		{%- endif -%}
-			                            			<img srcset="{{ image_3 | img_url: 'master' }} 1x, {{ image_3 | img_url: 'master', scale: 2 }} 2x"
+			                            			<img srcset="{{ image_3 | img_url: 'master' }}"
 										                src="{{ image_3 | img_url: 'master' }}"
 										                loading="lazy"
 										                alt="{{ image_3.alt | default: shop.name | escape }}"
@@ -412,7 +412,7 @@
 		[
 			{
                 "type": "header",
-                "content": "t:sections.main-about-page.settings.header__1.content"
+                "content": "t:settings_schema.general.name"
             },
             {
                 "type": "checkbox",
@@ -653,7 +653,7 @@
                     {
                         "type" : "text",
                         "id" : "title",
-                        "label" : "t:sections.main-about-page.blocks.content.settings.information.label__1",
+                        "label" : "t:sections.image-banner.blocks.image.settings.content.label__19",
                         "default": "About HALO"
                     },
                     {
@@ -705,7 +705,7 @@
                 [
                 	{
                         "type": "header",
-                        "content": "t:sections.main-about-page.blocks.image.settings.header__1.content"
+                        "content": "t:settings_schema.general.name"
                     },
                     {
                         "type" : "text",

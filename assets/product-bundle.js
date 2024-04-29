@@ -41,66 +41,115 @@ class ProductBundle extends HTMLElement {
 
     onSubmitHandler(event) {
         event.preventDefault();
-        const $this = this,
-            btnAddTocart = $this.querySelector('[data-bundle-addtocart]');
+        const previewCartList = document.querySelector('.previewCartList');
 
-        var waitMessage = window.variantStrings.addingToCart;
-
-        this.querySelector('.bundle-product-wrapper').classList.add('has-halo-block-loader');
-
-        const bundleItem = this.querySelectorAll('.bundle-product-item.isChecked');
-        const discountCode = "FBT-BUNDLE-"+ meta.product.id;
-        let data = '';
-        let hint = ',';
-        let attributes = {};
-
-        bundleItem.forEach((item, index) => {
-            const variantId = item.querySelector('[name=group_id]').value;
-
-            if(variantId) {
-                data = `${data}${variantId}:1${index == (bundleItem.length - 1) ? '' : hint}`;
+        const addToCart = () => {
+            const $this = this,
+                btnAddTocart = $this.querySelector('[data-bundle-addtocart]');
+    
+            var waitMessage = window.variantStrings.addingToCart;
+    
+            this.querySelector('.bundle-product-wrapper').classList.add('has-halo-block-loader');
+    
+            const bundleItem = this.querySelectorAll('.bundle-product-item.isChecked');
+            const discountCode = "FBT-BUNDLE-"+ meta.product.id;
+            let data = '';
+            let hint = ',';
+            let attributes = {};
+            const cartItem = document.querySelectorAll('.previewCartItem');
+    
+            if (cartItem) {
+                cartItem.forEach(element => {
+                    const variantId = element.querySelector('.previewCartItem-qty').dataset.variant,
+                        qty = parseInt(element.querySelector('input[name="quantity"]').value);
+    
+                    if(variantId) {
+                        data = `${variantId}:${qty}${hint}${data}`;
+                    }
+                })
             }
-        });
-
-        $.post( "/cart", function(data) {
-            btnAddTocart.value = waitMessage;
-            attributes = data.attributes;
-        }).done(async function() {
-            const addProductsToCart = async () => {
-                await fetch(`/cart/${data}`);
-            }
-
-            const updateBundleDiscountData = async () => {
-                const bundleDiscountRate = parseFloat($this.querySelector('[data-bundle-discount-rate]').dataset.bundleDiscountRate);
-
-                const items = [...bundleItem].map(item => parseInt(item.dataset.bundleProductItemId));
-
-                const new_checkout_level_applications = [{ name: discountCode, bundleDiscountRate, items }];
-                const newAttributes = { ...attributes, checkout_level_applications: new_checkout_level_applications };
-                const attributesBody = JSON.stringify({ attributes: newAttributes });
-                localStorage.setItem('storedDiscount', discountCode);
-                
-                await fetch(`${routes.cart_update_url}`, {...fetchConfig(), ...{ body: attributesBody }});
-            }
-
-            const applyDiscountCodeToServer = async () => {
-                await fetch(`/discount/${discountCode}?redirect=cart`) 
-            }
-
-            try {
-                await addProductsToCart();
-
-                if (bundleItem.length == $this.form.querySelectorAll('.bundle-product-item').length) {
-                    await updateBundleDiscountData();
-                    await applyDiscountCodeToServer();
+    
+            bundleItem.forEach((item, index) => {
+                const variantId = item.querySelector('[name=group_id]').value;
+    
+                if(variantId) {
+                    data = `${data}${variantId}:1${index == (bundleItem.length - 1) ? '' : hint}`;
                 }
+            });
+    
+            $.post( "/cart", function(data) {
+                btnAddTocart.value = waitMessage;
+                attributes = data.attributes;
+            }).done(async function() {
+                const addProductsToCart = async () => {
+                    await fetch(`/cart/${data}`, {mode: 'no-cors'});
+                }
+    
+                const updateBundleDiscountData = async () => {
+                    const bundleDiscountRate = parseFloat($this.querySelector('[data-bundle-discount-rate]').dataset.bundleDiscountRate);
+    
+                    const items = [...bundleItem].map(item => parseInt(item.dataset.bundleProductItemId));
+    
+                    const new_checkout_level_applications = [{ name: discountCode, bundleDiscountRate, items }];
+                    const newAttributes = { ...attributes, checkout_level_applications: new_checkout_level_applications };
+                    const attributesBody = JSON.stringify({ attributes: newAttributes });
+                    localStorage.setItem('storedDiscount', discountCode);
+                    
+                    await fetch(`${routes.cart_update_url}`, {...fetchConfig(), ...{ body: attributesBody }});
+                }
+    
+                const applyDiscountCodeToServer = async () => {
+                    await fetch(`/discount/${discountCode}?redirect=cart`) 
+                }
+    
+                try {
+                    await addProductsToCart();
+    
+                    if (bundleItem.length == $this.form.querySelectorAll('.bundle-product-item').length) {
+                        await updateBundleDiscountData();
+                        await applyDiscountCodeToServer();
+                    }
+    
+                    $this.querySelector('.bundle-product-wrapper').classList.remove('has-halo-block-loader');
+                    $this.redirectTo(window.routes.cart);
+                } catch(err) {
+                    console.error(err);
+                }
+            });
+        }
 
-                $this.querySelector('.bundle-product-wrapper').classList.remove('has-halo-block-loader');
-                $this.redirectTo(window.routes.cart);
-            } catch(err) {
-                console.error(err);
-            }
-        });
+        if (!previewCartList) {
+            Shopify.getCart((cart) => {
+                if(!$.isEmptyObject(cart)){
+                    const $cartDropdown = $('#halo-cart-sidebar .halo-sidebar-wrapper .previewCart-wrapper');
+    
+                    $.ajax({
+                        type: 'GET',
+                        url: window.routes.root + '/cart?view=ajax_side_cart',
+                        cache: false,
+                        success: function (data) {
+                            var response = $(data);
+    
+                            $cartDropdown.html(response);
+                        },
+                        error: function (xhr, text) {
+                            console.log($.parseJSON(xhr.responseText).description);
+                        },
+                        complete: function () {
+                            if ((window.show_multiple_currencies && typeof Currency != 'undefined' && Currency.currentCurrency != shopCurrency) || window.show_auto_currency) {
+                                Currency.convertAll(window.shop_currency, $('#currencies .active').attr('data-currency'), 'span.money', 'money_format');
+                            }
+                            document.dispatchEvent(new CustomEvent('cart-update', { detail: cart }));
+                            addToCart();
+                        }
+                    });
+                } else {
+                    addToCart();
+                }
+            })
+        } else {
+            addToCart();
+        }
     }
 
     onHandleCheckedProduct(event) {

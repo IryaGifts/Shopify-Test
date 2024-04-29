@@ -99,6 +99,7 @@
     overflow-y: auto;
     line-height: 1;
     font-size: 0;
+    z-index: 1;
 }
 
 .content_absolute .content::-webkit-scrollbar {

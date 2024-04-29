@@ -146,6 +146,7 @@
         --row-gap: 15px; 
 
         overflow: auto;
+        overflow-y: hidden;
         scroll-snap-type: x mandatory;
     }
 
@@ -212,7 +213,7 @@
         overflow: hidden;
     }
 
-    .puzzled-image-banner-wrapper .section-block-banner-image .img-box {
+    /*.puzzled-image-banner-wrapper .section-block-banner-image .img-box {
         display: block;
         transform: scale(1.15);
         opacity: 0;         
@@ -220,7 +221,7 @@
         transform-style: preserve-3d;
         backface-visibility: visible;
         transition: transform 1s ease-out, opacity 1s ease;
-    }
+    }*/
     
     .puzzled-image-banner-wrapper .section-block-banner-image.show .img-box {
         opacity: 1;

@@ -61,12 +61,12 @@
             {%- endif -%}
             <div class="portfolio-header-and-filter page-header-{{ page_title_alignment }}">
                 {%- if show_page_title -%}
-                    <h1 class="page-header text-{{ page_title_alignment }}">
+                    <h1 class="page-header text-{{ page_title_alignment }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                         {{ page.title | escape }}
                     </h1>
                 {%- endif -%}
                 {% if show_filter %}
-                    <div class="filter-icon-container" id="filter-icon">
+                    <div class="filter-icon-container{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="filter-icon">
                         {% render 'icon-sidebar' %}
                         <span class="filter-text">{{ 'portfolio.filter' | t }}</span>
                         <span class="filter-close">{{ 'portfolio.close' | t }}</span>
@@ -74,7 +74,7 @@
                 {% endif %}
             </div>
         </div>
-        <div class="portfolio-intro">
+        <div class="portfolio-intro{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
             {% if page_heading != blank %}
                 <h2 class="page-subheader portfolio-title text-{{ content_alignment }}">
                     {{ page_heading | escape }}
@@ -107,7 +107,7 @@
                                 {%- endfor -%}
                             "
                         >
-                            <li class="tab tab-all is-active" data-gallery="all">
+                            <li class="tab tab-all is-active{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" data-gallery="all">
                                 <a class="tab-title" href="#portfolio-tab-all" role="button" title="{{ 'portfolio.tab_all' | t }}">
                                     {{ 'portfolio_page.general.all' | t }}
                                 </a>
@@ -116,7 +116,7 @@
                     {%- endif -%}
                 </div>
             {% endif %}
-            <div class="tabs-contents" 
+            <div class="tabs-contents{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" 
                 data-gallery-tab-content id="haloPortfolioTabContents"
                 data-limit="{{ limit }}"
                 data-infinite="{{ infinite_scroll }}"
@@ -155,7 +155,7 @@
                                             "
                                         >
                                             <div class="image" style="padding-top: {{ 1 | divided_by: thumbnail.aspect_ratio | times: 100 | append: '%' }}">
-                                                <img srcset="{{ thumbnail | img_url: 'master' }} 1x, {{ thumbnail | img_url: 'master', scale: 2 }} 2x"
+                                                <img srcset="{{ thumbnail | img_url: 'master' }}"
                                                     src="{{ thumbnail | img_url: 'master' }}"
                                                     loading="lazy"
                                                     alt="{{ thumbnail.alt | default: shop.name | escape }}"
@@ -189,7 +189,7 @@
                     </div>
                 </div>
                 {%- if infinite_scroll -%}
-                    <div class="portfolio-infinite-scroll text-center" data-collection-infinite >
+                    <div class="portfolio-infinite-scroll text-center{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" data-collection-infinite >
                         <a class="button"
                             id="portfolio-showmore-btn" 
                             title="Show more button"
@@ -336,7 +336,7 @@
         [
             {
                 "type": "header",
-                "content": "t:sections.main_portfolio_page.settings.header__1"
+                "content": "t:settings_schema.general.name"
             },
             {
                 "type": "checkbox",

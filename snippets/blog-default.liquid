@@ -73,7 +73,7 @@
             </div>
         {%- endif -%}
         {%- if show_sidebar -%}
-            <div class="header-with-sidebar">
+            <div class="header-with-sidebar{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
         {% endif %}
             {%- if show_page_title -%}
                 <h1 class="page-header text-{{ page_title_alignment }}">
@@ -107,7 +107,7 @@
                             {{ 'sections.sidebar.title' | t }}
                         </span>
                     </div>
-                    <div class="halo-sidebar-wrapper custom-scrollbar">
+                    <div class="halo-sidebar-wrapper custom-scrollbar {% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                         {% render 'sidebar',
                             section: section,
                             show_collapse: show_collapse,
@@ -117,7 +117,7 @@
                 </div>
             {%- endif -%}
             {%- paginate blog.articles by limit -%}
-                <div class="page-content main-blog">
+                <div class="page-content main-blog {% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                     {% comment %} {%- if show_sidebar and section.blocks.size > 0 -%}
                         <div class="sidebar-toogle" data-sidebar>
                             {% render 'icon-sidebar' %}
@@ -130,7 +130,7 @@
                             {% else %}
                                 {%- assign first = false -%}
                             {% endif %}
-                            <div class="item{% if forloop.first == true %} item--first{% endif %}" style="--color-summary-style: {{ text_color }}">
+                            <div class="item{% if forloop.first == true %} item--first{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if settings.banner_animation == 'effect_fade_up' %}--animation-order: {{ forloop.index }};{% endif %}--color-summary-style: {{ text_color }}">
                                 {% render 'article-card-3',
                                     article: article,
                                     media_size: media_size,

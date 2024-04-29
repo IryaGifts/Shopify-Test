@@ -62,4 +62,9 @@ body.product-card-layout-07 #halo-card-mobile-popup .halo-popup-wrapper {
   #halo-card-mobile-popup {
     min-width: 95%;
   }
+
+  #halo-card-mobile-popup .card-action-bottom.has-wishlist,
+  #halo-card-mobile-popup .card-wishlist {
+    display: none !important;
+  }
 }

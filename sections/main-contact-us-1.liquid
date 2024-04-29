@@ -3,11 +3,6 @@
 <noscript>{{ 'component-contact.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'component-contact-form.css' | asset_url | stylesheet_tag }}</noscript>
 
-{%- if settings.banner_animation == 'effect_1' -%}
-    <link rel="stylesheet" href="{{ 'component-contact-form-banner-animation.css' | asset_url }}" media="print" onload="this.media='all'">
-    <noscript>{{ 'component-contact-form-banner-animation.css' | asset_url | stylesheet_tag }}</noscript>
-{%- endif -%}
-
 {%- liquid
     assign padding_top = section.settings.mg_top_desktop | append: 'px'
     assign padding_bottom = section.settings.mg_bottom_desktop | append: 'px'
@@ -47,20 +42,20 @@
             {% render 'breadcrumb', alignment: breadcrumb_alignment %}
         {%- endif -%}
         {%- if show_page_title -%}
-            <h1 class="page-header text-{{ page_title_alignment }}">
+            <h1 class="page-header text-{{ page_title_alignment }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                 {{ page.title | escape }}
             </h1>
         {%- endif -%}
-        <div class="page-content contact-content">
+        <div class="page-content contact-content{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
             <div class="contact contact-1">
                 <div class="contact-item {% if show_contact_info %}{% if has_contact_info %}contact-itemLeft{% endif %}{% endif %}">
                     {%- if contact_form_title != blank -%}
-                        <h2 class="page-subheader contact-title">
+                        <h2 class="page-subheader contact-title{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                             {{ contact_form_title | escape }}
                         </h2>
                     {%- endif %}
                     {%- if contact_form_text != blank -%}
-                        <div class="contact-text">
+                        <div class="contact-text{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                             {{ contact_form_text }}
                         </div>
                     {%- endif %}
@@ -70,7 +65,7 @@
                 </div>
                 {%- if show_contact_info -%}
                     {%- if has_contact_info -%}
-                        <div class="contact-item contact-itemRight">
+                        <div class="contact-item contact-itemRight{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                             {%- if contact_info_title != blank -%}
                                 <h2 class="page-subheader contact-title">
                                     {{ contact_info_title | escape }}
@@ -169,7 +164,7 @@
         "settings": [
             {
                 "type": "header",
-                "content": "t:sections.main_contact.settings.header__1"
+                "content": "t:settings_schema.general.name"
             },
             {
                 "type": "checkbox",
@@ -343,7 +338,7 @@
             {
                 "type": "textarea",
                 "id": "contact_form_text",
-                "label": "t:sections.main_contact.settings.contact_form.label__2"
+                "label": "t:sections.image-banner.blocks.image.settings.content.label__16"
             },
             {
                 "type": "header",
@@ -358,7 +353,7 @@
             {
                 "type": "text",
                 "id": "contact_info_title",
-                "label": "t:sections.main_contact.settings.contact_info.label__2",
+                "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                 "default": "Contact Information"
             },
             {

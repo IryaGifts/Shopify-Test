@@ -27,40 +27,20 @@
     if swipe_on_mobile == true and layout == 'grid' and products_to_display > 2
         assign swipe = true
     endif
-
-    
 -%}
 <div class="product-block product-block-02 section-block-{{section.id}}">
-    <{% if swipe %}product-slider-component{% else %}div{% endif %} 
-    class="halo-block halo-product-block" 
-    id="halo-product-block-{{ section.id }}"
-    >
+    <{% if swipe %}product-slider-component{% else %}div{% endif %} class="halo-block halo-product-block" id="halo-product-block-{{ section.id }}">
         <div class="{% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%}container-full{% else %}container{% endif %}">
             <div class="halo-row">
-                <div class="halo-block-content collection-column-2{% if section.settings.enable_layout_special %} enable_layout_special{% endif %}" data-product-block data-limit="{{ limit }}" data-layout="{{ layout }}" sectionId="{{ section.id }}"
-                    {% if collection != blank %}
-                        data-collection="{{ collection }}"
-                        data-image-ratio="{{ image_ratio }}"
-                        data-swipe="{{ swipe }}"
-                    {% endif %}>
+                <div class="halo-block-content collection-column-2{% if section.settings.enable_layout_special %} enable_layout_special{% endif %}" data-product-block data-limit="{{ limit }}" data-layout="{{ layout }}" sectionId="{{ section.id }}"{% if collection != blank %} data-collection="{{ collection }}" data-image-ratio="{{ image_ratio }}" data-swipe="{{ swipe }}"{% endif %}>
                         {%- if block_title != blank -%}
                             <div class="halo-block-header text-{{ block_title_align }}{% if section.settings.view_all != blank %} viewAll--{{ section.settings.view_all_align }} has-viewAll{% endif %}">
-                                <h3 class="title">
-                                    <span class="text">{{ block_title | escape }}</span>
-                                </h3>
-                                {% if section.settings.view_all != blank %}
-                                <a class="view_all"{% if section.settings.link_view_all == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.link_view_all }}"{% endif %} title="{{section.settings.view_all}}">
-                                    {%- if section.settings.icon_view_all -%}
-                                    <span class="icon-svg">
-                                        {{ section.settings.icon_view_all }}
-                                    </span>
-                                    {%- endif -%}
-                                    {{ section.settings.view_all }}
-                                </a>
-                                {% endif %}
+                                <h3 class="title"><span class="text">{{ block_title | escape }}</span></h3>
+                                {%- if section.settings.view_all != blank -%}
+                                <a class="view_all"{% if section.settings.link_view_all == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.link_view_all }}"{% endif %} title="{{section.settings.view_all}}">{%- if section.settings.icon_view_all -%}<span class="icon-svg">{{ section.settings.icon_view_all }}</span>{%- endif -%}{{ section.settings.view_all }}</a>
+                                {%- endif -%}
                             </div>
                         {%- endif -%}
-
                         {%- if layout== 'grid' -%}
                             {%- liquid
                                 assign product_limit = 0
@@ -78,13 +58,7 @@
                                 assign arrows = section.settings.product_block_arrows
                                 assign arrows_mb = section.settings.product_block_arrows_mb
                             -%}
-                            <div class="products-carousel column-{{ column }}"
-                                data-item-to-show="{{ column }}"
-                                data-item-dots="{{ dots }}"
-                                data-item-dots-mb="{{ dots_mb }}"
-                                data-item-arrows="{{ arrows }}"
-                                data-item-arrows-mb="{{ arrows_mb }}"
-                            >
+                            <div class="products-carousel column-{{ column }}" data-item-to-show="{{ column }}" data-item-dots="{{ dots }}" data-item-dots-mb="{{ dots_mb }}" data-item-arrows="{{ arrows }}" data-item-arrows-mb="{{ arrows_mb }}">
                         {%- endif -%}
                             {%- for tag in current_tags -%}
                                 {%- if tag contains 'limit=' -%}
@@ -103,43 +77,24 @@
                             {%- if collection.products[0] != nil -%}
                                 {%- for product in collection.products limit: limit -%}
                                     <div class="product{% if swipe == 'true' %} slider__slide grid__item{% endif %}">
-                                        {% render 'product-grid-layout',
-                                            product_card_product: product,
-                                            portrait_aspect_ratio: '125',
-                                            serial: forloop.index,
-                                            sectionId: sectionId,
-                                            media_size: image_ratio,
-                                            hasCountdown: hasCountdown,
-                                            loading: true
-                                        %}
+                                        {% render 'product-card-loading', product_card_product: product, media_size: image_ratio, portrait_aspect_ratio: '133' %}
                                     </div>
                                 {%- endfor -%}
                             {%- else -%}
                                 {%- for product in (1..limit) -%}
                                     <div class="product{% if swipe %} slider__slide grid__item{% endif %}">
-                                        {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
-                                        {% render 'product-card-placeholder',
-                                            index: current
-                                        %}
+                                        {%- capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture -%}
+                                        {% render 'product-card-placeholder', index: current %}
                                     </div>
                                 {%- endfor -%}
                             {%- endif -%}
                         </div>
                         {%- if swipe -%}
                             <div class="slider-buttons no-js-hidden{% if products_to_display < 4 %} medium-hide{% endif %}{% if products_to_display < 3 %} small-hide{% endif %}">
-                                <div class="slider-counter">
-                                    <span class="slider-counter--current">1</span>
-                                    <span aria-hidden="true"> / </span>
-                                    <span class="visually-hidden">{{ 'accessibility.of' | t }}</span>
-                                    <span class="slider-counter--total">{{ products_to_display }}</span>
-                                </div>
+                                <div class="slider-counter"><span class="slider-counter--current">1</span><span aria-hidden="true"> / </span><span class="visually-hidden">{{ 'accessibility.of' | t }}</span><span class="slider-counter--total">{{ products_to_display }}</span></div>
                                 <div class="slider-action">
-                                    <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'accessibility.previous_slide' | t }}">
-                                        {% render 'icon-caret' %}
-                                    </button>
-                                    <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'accessibility.next_slide' | t }}">
-                                        {% render 'icon-caret' %}
-                                    </button>
+                                    <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'accessibility.previous_slide' | t }}">{% render 'icon-caret' %}</button>
+                                    <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'accessibility.next_slide' | t }}">{% render 'icon-caret' %}</button>
                                 </div>
                             </div>
                         {%- endif -%}
@@ -147,47 +102,18 @@
                             {%- assign product_total = collections[collection].all_products_count -%}
                             {%- if product_total > product_limit -%}
                                 <div class="product-infinite-scroll text-center {% if swipe %}hidden-mobile{% endif %}" data-product-infinite>
-                                    <button type="button" class="button button--secondary"
-                                        data-collection="{{ collection.handle }}"
-                                        data-limit="{{ product_limit }}"
-                                        data-swipe="{{ swipe }}"
-                                        data-page="2"
-                                        data-total="{{ product_total }}"
-                                        data-image-ratio="{{ image_ratio }}"
-                                        sectionId="{{ section.id }}"
-                                        {% if product_total <= product_limit %}
-                                            disabled="disabled"
-                                        {% endif %}
-                                    >   
-                                        {{ section.settings.button_icon }}
-                                        <span>{{ section.settings.button_text }}</span>
-                                    </button>
+                                    <button type="button" class="button button--secondary" data-collection="{{ collection.handle }}" data-limit="{{ product_limit }}" data-swipe="{{ swipe }}" data-page="2" data-total="{{ product_total }}" data-image-ratio="{{ image_ratio }}" sectionId="{{ section.id }}"{% if product_total <= product_limit %} disabled="disabled"{% endif %}>{{ section.settings.button_icon }} <span>{{ section.settings.button_text }}</span></button>
                                 </div>
                             {%- endif -%}
                         {%- endif -%}
                 </div>
-
-                <div class="halo-block-content collection-column-2{% if section.settings.enable_layout_special %} enable_layout_special{% endif %}" data-product-block data-limit="{{ limit }}" data-layout="{{ layout }}" sectionId="{{ section.id }}"
-                    {% if collection_02 != blank %}
-                        data-collection="{{ collection_02 }}"
-                        data-image-ratio="{{ image_ratio }}"
-                        data-swipe="{{ swipe }}"
-                    {% endif %}>
+                <div class="halo-block-content collection-column-2{% if section.settings.enable_layout_special %} enable_layout_special{% endif %}" data-product-block data-limit="{{ limit }}" data-layout="{{ layout }}" sectionId="{{ section.id }}"{% if collection_02 != blank %} data-collection="{{ collection_02 }}" data-image-ratio="{{ image_ratio }}" data-swipe="{{ swipe }}"{% endif %}>
                         {%- if block_title_02 != blank -%}
                             <div class="halo-block-header text-{{ block_title_align }}{% if section.settings.view_all != blank %} viewAll--{{ section.settings.view_all_align }} has-viewAll{% endif %}">
-                                <h3 class="title">
-                                    <span class="text">{{ block_title_02 | escape }}</span>
-                                </h3>
-                                {% if section.settings.view_all_02 != blank %}
-                                <a class="view_all"{% if section.settings.link_view_all_02 == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.link_view_all_02 }}"{% endif %} title="{{section.settings.view_all_02}}">
-                                    {%- if section.settings.icon_view_all -%}
-                                    <span class="icon-svg">
-                                        {{ section.settings.icon_view_all }}
-                                    </span>
-                                    {%- endif -%}
-                                    {{ section.settings.view_all_02 }}
-                                </a>
-                                {% endif %}
+                                <h3 class="title"><span class="text">{{ block_title_02 | escape }}</span></h3>
+                                {%- if section.settings.view_all_02 != blank -%}
+                                <a class="view_all"{% if section.settings.link_view_all_02 == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.link_view_all_02 }}"{% endif %} title="{{section.settings.view_all_02}}">{%- if section.settings.icon_view_all -%}<span class="icon-svg">{{ section.settings.icon_view_all }}</span>{%- endif -%}{{ section.settings.view_all_02 }}</a>
+                                {%- endif -%}
                             </div>
                         {%- endif -%}
 
@@ -208,13 +134,7 @@
                                 assign arrows = section.settings.product_block_arrows
                                 assign arrows_mb = section.settings.product_block_arrows_mb
                             -%}
-                            <div class="products-carousel column-{{ column }}"
-                                data-item-to-show="{{ column }}"
-                                data-item-dots="{{ dots }}"
-                                data-item-dots-mb="{{ dots_mb }}"
-                                data-item-arrows="{{ arrows }}"
-                                data-item-arrows-mb="{{ arrows_mb }}"
-                            >
+                            <div class="products-carousel column-{{ column }}" data-item-to-show="{{ column }}" data-item-dots="{{ dots }}" data-item-dots-mb="{{ dots_mb }}" data-item-arrows="{{ arrows }}" data-item-arrows-mb="{{ arrows_mb }}">
                         {%- endif -%}
                             {%- for tag in current_tags -%}
                                 {%- if tag contains 'limit=' -%}
@@ -233,43 +153,24 @@
                             {%- if collection_02.products[0] != nil -%}
                                 {%- for product in collection_02.products limit: limit -%}
                                     <div class="product{% if swipe == 'true' %} slider__slide grid__item{% endif %}">
-                                        {% render 'product-grid-layout',
-                                            product_card_product: product,
-                                            portrait_aspect_ratio: '125',
-                                            serial: forloop.index,
-                                            sectionId: sectionId,
-                                            media_size: image_ratio,
-                                            hasCountdown: hasCountdown,
-                                            loading: true
-                                        %}
+                                        {% render 'product-card-loading', product_card_product: product, media_size: image_ratio, portrait_aspect_ratio: '133' %}
                                     </div>
                                 {%- endfor -%}
                             {%- else -%}
                                 {%- for product in (1..limit) -%}
                                     <div class="product{% if swipe %} slider__slide grid__item{% endif %}">
-                                        {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
-                                        {% render 'product-card-placeholder',
-                                            index: current
-                                        %}
+                                        {%- capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture -%}
+                                        {% render 'product-card-placeholder', index: current %}
                                     </div>
                                 {%- endfor -%}
                             {%- endif -%}
                         </div>
                         {%- if swipe -%}
                             <div class="slider-buttons no-js-hidden{% if products_to_display < 4 %} medium-hide{% endif %}{% if products_to_display < 3 %} small-hide{% endif %}">
-                                <div class="slider-counter">
-                                    <span class="slider-counter--current">1</span>
-                                    <span aria-hidden="true"> / </span>
-                                    <span class="visually-hidden">{{ 'accessibility.of' | t }}</span>
-                                    <span class="slider-counter--total">{{ products_to_display }}</span>
-                                </div>
+                                <div class="slider-counter"><span class="slider-counter--current">1</span><span aria-hidden="true"> / </span><span class="visually-hidden">{{ 'accessibility.of' | t }}</span><span class="slider-counter--total">{{ products_to_display }}</span></div>
                                 <div class="slider-action">
-                                    <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'accessibility.previous_slide' | t }}">
-                                        {% render 'icon-caret' %}
-                                    </button>
-                                    <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'accessibility.next_slide' | t }}">
-                                        {% render 'icon-caret' %}
-                                    </button>
+                                    <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'accessibility.previous_slide' | t }}">{% render 'icon-caret' %}</button>
+                                    <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'accessibility.next_slide' | t }}">{% render 'icon-caret' %}</button>
                                 </div>
                             </div>
                         {%- endif -%}
@@ -277,21 +178,7 @@
                             {%- assign product_total = collections[collection_02].all_products_count -%}
                             {%- if product_total > product_limit -%}
                                 <div class="product-infinite-scroll text-center {% if swipe %}hidden-mobile{% endif %}" data-product-infinite>
-                                    <button type="button" class="button button--secondary"
-                                        data-collection="{{ collection.handle }}"
-                                        data-limit="{{ product_limit }}"
-                                        data-swipe="{{ swipe }}"
-                                        data-page="2"
-                                        data-total="{{ product_total }}"
-                                        data-image-ratio="{{ image_ratio }}"
-                                        sectionId="{{ section.id }}"
-                                        {% if product_total <= product_limit %}
-                                            disabled="disabled"
-                                        {% endif %}
-                                    >   
-                                        {{ section.settings.button_icon }}
-                                        <span>{{ section.settings.button_text }}</span>
-                                    </button>
+                                    <button type="button" class="button button--secondary" data-collection="{{ collection_02.handle }}" data-limit="{{ product_limit }}" data-swipe="{{ swipe }}" data-page="2" data-total="{{ product_total }}" data-image-ratio="{{ image_ratio }}" sectionId="{{ section.id }}"{% if product_total <= product_limit %} disabled="disabled"{% endif %}>{{ section.settings.button_icon }}<span>{{ section.settings.button_text }}</span></button>
                                 </div>
                             {%- endif -%}
                         {%- endif -%}
@@ -301,7 +188,6 @@
     </{% if swipe %}product-slider-component{% else %}div{% endif %}>
 </div>
 <style>
-
     {%- liquid
         assign product_bg = section.settings.product_bg
         assign product_bg_gradient = section.settings.product_bg_gradient
@@ -347,167 +233,81 @@
         
         assign headingLineHeight = settings.type_heading_line_height
     -%}
-
-    {% if infinite_scroll %}
-        .section-block-{{section.id}} .product-infinite-scroll .button {
-            background-color: {{ bg_color_button }};
-            color: {{ color_button }};
-            border: 1px solid {{ border_color_button }};
-            max-width: {{ maxwidth_button }};
-        }
-
-        .section-block-{{section.id}} .product-infinite-scroll .button svg {
-            fill: {{ color_button }};
-        }
-    {% endif %}
-
+    {%- if infinite_scroll -%}
+        .section-block-{{section.id}} .product-infinite-scroll .button {background-color: {{ bg_color_button }};color: {{ color_button }};border: 1px solid {{ border_color_button }};max-width: {{ maxwidth_button }}}
+        .section-block-{{section.id}} .product-infinite-scroll .button svg {fill: {{ color_button }}}
+    {%- endif -%}
     {%- if section.settings.enable_layout_special -%}
-        .section-block-{{section.id}} .product-item {
-            background-color: {{ bg_card }};
-            padding: {{ padding_card | append: 'px' }};
-            border-radius: {{ border_radius_card | append: 'px' }};
-            border{% unless section.settings.border_layout_card == 'full' %}-bottom{% endunless %}: {{ border_width_card | append: 'px' }} solid {{ border_color_card }}
-        }
+        .section-block-{{section.id}} .product-item {background-color: {{ bg_card }};padding: {{ padding_card | append: 'px' }};border-radius: {{ border_radius_card | append: 'px' }};border{% unless section.settings.border_layout_card == 'full' %}-bottom{% endunless %}: {{ border_width_card | append: 'px' }} solid {{ border_color_card }}}
     {%- endif -%}
 
-    {% if section.settings.view_all != blank %}
-        .section-block-{{section.id}} .halo-block-header{
-            margin-bottom: {{ mg_bottom_title | append: 'px' }};
-        }
-    {% else %}
-        .section-block-{{section.id}} .halo-block-header{
-            margin-bottom: 0;
-        }
-    {% endif %}
+    {%- if section.settings.view_all != blank -%}
+        .section-block-{{section.id}} .halo-block-header{margin-bottom: {{ mg_bottom_title | append: 'px' }}}
+    {%- else -%}
+        .section-block-{{section.id}} .halo-block-header{margin-bottom: 0}
+    {%- endif -%}
 
-    {% if product_bg_image != blank %}
-        .section-block-{{section.id}}{
-            background: url({{ product_bg_image | img_url: '1920x' }});
-            background-repeat: repeat-x;
-            background-size: cover;
-        }
-        .section-block-{{section.id}} .halo-block-header .title .text {
-            background-color: transparent;
-        }
-    {% else %}
-        .section-block-{{section.id}},
-        .section-block-{{section.id}} .halo-block-header .title .text {
-            background: {% if product_bg_gradient != blank %}{{ product_bg_gradient }}{% else %}{{ product_bg }}{% endif %};
-        }
-    {% endif %}
-
-    .section-block-{{section.id}} .halo-block-header .title {
-        color: {{ color_title }};
-        font-size: {{ fontsize_title | append: 'px'  }};
-        {% if section.settings.view_all != blank %}
+    {%- if product_bg_image != blank -%}
+        .section-block-{{section.id}}{background: url({{ product_bg_image | img_url: '1920x' }});background-repeat: repeat-x;background-size: cover}
+        .section-block-{{section.id}} .halo-block-header .title .text {background-color: transparent}
+    {%- else -%}
+        .section-block-{{section.id}},.section-block-{{section.id}} .halo-block-header .title .text {background: {% if product_bg_gradient != blank %}{{ product_bg_gradient }}{% else %}{{ product_bg }}{% endif %}}
+    {%- endif -%}
+    .section-block-{{section.id}} .halo-block-header .title {color: {{ color_title }};font-size: {{ fontsize_title | append: 'px'  }};
+        {%- if section.settings.view_all != blank -%}
             margin-bottom: 0;
-        {% else %}
+        {%- else -%}
             margin-bottom: {{ mg_bottom_title | append: 'px' }};
-        {% endif %}
+        {%- endif -%}
         {%- if fontsize_title > headingLineHeight -%}
             line-height: {{ fontsize_title | append: 'px' }};
         {%- endif -%}
     }
-
-    .section-block-{{section.id}} .halo-block-header .title:before {
-        background-color: {{ border_color_title }};
-        {% unless section.settings.enable_border_title %}
-            display: none;
-        {% endunless %}
-    }
-
-    .section-block-{{section.id}} .halo-block-header .view_all {
-        color: {{color_view_all}};
-        font-weight: {{ font_weight_view_all }};
-        margin-bottom: {{ mg_bottom_view | append: 'px' }} !important;
-        {%- unless section.settings.enable_border_view_all -%}
-            border: 0;
+    .section-block-{{section.id}} .halo-block-header .title:before {background-color: {{ border_color_title }};
+        {%- unless section.settings.enable_border_title -%}
+            display: none
         {%- endunless -%}
     }
-
-    .section-block-{{section.id}} .halo-block-header .view_all svg {
-        color: {{color_view_all_icon}};
-        fill: {{color_view_all_icon}};
+    .section-block-{{section.id}} .halo-block-header .view_all {color: {{color_view_all}};font-weight: {{ font_weight_view_all }};margin-bottom: {{ mg_bottom_view | append: 'px' }} !important;
+        {%- unless section.settings.enable_border_view_all -%}
+            border: 0
+        {%- endunless -%}
     }
-
+    .section-block-{{section.id}} .halo-block-header .view_all svg {color: {{color_view_all_icon}};fill: {{color_view_all_icon}}}
     @media (min-width: 1200px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_desktop | append: 'px' }};
-            padding-bottom: {{ mg_bottom_desktop | append: 'px' }};
-        }
-        {% if product_button_width != blank %}
-            .section-block-{{section.id}} .product-infinite-scroll .button {
-                max-width: {{ product_button_width | append: 'px' }};
-            }
-        {% endif %}
-
+        .section-block-{{section.id}} {padding-top: {{ mg_top_desktop | append: 'px' }};padding-bottom: {{ mg_bottom_desktop | append: 'px' }}}
+        {%- if product_button_width != blank -%}
+            .section-block-{{section.id}} .product-infinite-scroll .button {max-width: {{ product_button_width | append: 'px' }}}
+        {%- endif -%}
     }
-
     @media (min-width: 1025px) {
-        {% if section.settings.container == 'fullwidth' %}
-            .section-block-{{section.id}} .container-full {
-                padding-left: {{ padding_full_width | append: 'px' }};
-                padding-right: {{ padding_full_width | append: 'px' }};
-            }
-        {% endif %}
-
-        .section-block-{{section.id}} .halo-block-content .slick-arrow{
-            top: calc(50% - {{ position_vertical_arrow }});
-        }
-
-        .section-block-{{section.id}} .halo-block-content .slick-prev {
-            left: 15px !important;
-        }
-        
-        .section-block-{{section.id}} .halo-block-content .slick-next {
-            right: 15px !important;
-        }
+        {%- if section.settings.container == 'fullwidth' -%}
+            .section-block-{{section.id}} .container-full {padding-left: {{ padding_full_width | append: 'px' }};padding-right: {{ padding_full_width | append: 'px' }}}
+        {%- endif -%}
+        .section-block-{{section.id}} .halo-block-content .slick-arrow{top: calc(50% - {{ position_vertical_arrow }})}
+        .section-block-{{section.id}} .halo-block-content .slick-prev {left: 15px !important}
+        .section-block-{{section.id}} .halo-block-content .slick-next {right: 15px !important}
     }
-
-    @media (min-width: 768px) and (max-width: 1199px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_tablet | append: 'px' }};
-            padding-bottom: {{ mg_bottom_tablet | append: 'px' }};
-        }
-    }
-
-    @media (max-width: 1024px) {
-        {% if product_bg_image != blank %}
-            .section-block-{{section.id}}{
-                background-position: center top;
-            }
-        {% endif %}
-    }
-
-    @media (max-width: 992px) {
-        .product-block-02 .scroll-snap-mobile {
-            align-items: flex-start;
-        }
-    }
-
+    @media (min-width: 768px) and (max-width: 1199px) {.section-block-{{section.id}} {padding-top: {{ mg_top_tablet | append: 'px' }};padding-bottom: {{ mg_bottom_tablet | append: 'px' }}}}
+    {%- if product_bg_image != blank -%}
+        @media (max-width: 1024px) {.section-block-{{section.id}}{background-position: center top}}
+    {%- endif -%}
+    @media (max-width: 992px) {.product-block-02 .scroll-snap-mobile {align-items: flex-start}}
     @media (max-width: 767px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_mobile | append: 'px' }};
-            padding-bottom: {{ mg_bottom_mobile | append: 'px' }};
-        }
-
-        .section-block-{{section.id}} .halo-block-header .title {
-            font-size: {{ fontsize_title_mb | append: 'px'  }};
+        .section-block-{{section.id}} {padding-top: {{ mg_top_mobile | append: 'px' }};padding-bottom: {{ mg_bottom_mobile | append: 'px' }}}
+        .section-block-{{section.id}} .halo-block-header .title {font-size: {{ fontsize_title_mb | append: 'px'  }};
             {%- if fontsize_title_mb > headingLineHeight -%}
                 line-height: {{ fontsize_title_mb | append: 'px' }};
             {%- endif -%}
         }
-
-        .section-block-{{section.id}} .halo-block-header {
-            margin-bottom: {{ mg_bottom_title_mb | append: 'px' }};
-        }
-
-        .section-block-{{section.id}} .halo-block-header .view_all {
-            margin-bottom: {{ mg_bottom_view_mb | append: 'px' }} !important;
-        }
+        .section-block-{{section.id}} .halo-block-header {margin-bottom: {{ mg_bottom_title_mb | append: 'px' }}}
+        .section-block-{{section.id}} .halo-block-header .view_all {margin-bottom: {{ mg_bottom_view_mb | append: 'px' }} !important}
+        {%- if section.settings.enable_layout_special -%}
+            .product-card-layout-02.quick_shop_option_2 .card-information .card-action {padding-left: 0;padding-right: 0;}
+            .section-block-{{section.id}} .product-item {padding: 10px;}
+        {%- endif -%}
     }
 </style>
-
 {% schema %}
 {
     "name": "t:sections.product_block.settings.header__2.product_block_02",
@@ -515,7 +315,7 @@
     "settings": [
     {
         "type": "header",
-        "content": "t:sections.layout.content"
+        "content": "t:settings_schema.general.name"
     },
     {
         "type": "select",

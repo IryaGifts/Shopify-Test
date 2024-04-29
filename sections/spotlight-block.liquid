@@ -1,186 +1,115 @@
-{% if section.blocks.size > 0 %}
+{%- if section.blocks.size > 0 -%}
 {%- assign swipe = section.settings.spotlight_block_swipe_on_mobile -%}
 {%- assign position_horizontal_slick_arrow = section.settings.position_horizontal_slick_arrow -%}
 <link rel="stylesheet" href="{{ 'component-spotlight-block.css' | asset_url }}" media="print" onload="this.media='all'">
 <noscript>{{ 'component-spotlight-block.css' | asset_url | stylesheet_tag }}</noscript>
-
-{% if settings.banner_animation == 'effect_1' %}
-    {{ 'component-spotlight-banner-animation.css' | asset_url | stylesheet_tag }}
-{% endif %}
-
-{% if settings.banner_animation == 'effect_1' %}<animated-component>{% endif %}
-    <div class="spotlight-block section-block-{{section.id}}{% if section.settings.block_layout == 'slider' %} enable_slider{% endif %}" id="spotlight-{{section.id}}"
-    {% if section.settings.block_layout == 'slider' %}data-loader-script="{{ 'halo.slide-spotlight.js' | asset_url }}"{% endif %}>
+<div class="spotlight-block section-block-{{section.id}}{% if section.settings.block_layout == 'slider' %} enable_slider{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="spotlight-{{section.id}}"{% if section.settings.block_layout == 'slider' %} data-loader-script="{{ 'halo.slide-spotlight.js' | asset_url }}"{% endif %}>
     <div class="{% if section.settings.container == 'fullwidth' %}container-full{% elsif section.settings.container == '1770' %}container-1770 {% elsif section.settings.container == '1570'%}container-1570 {% elsif section.settings.container == '1470'%}container-1470 {% else %}{% if section.settings.container == '1200' %}layout--special{% endif %} container{% endif %}">
-        {% if section.settings.spotlight_block_title != blank %}
+        {%- if section.settings.spotlight_block_title != blank -%}
             <div class="halo-block-header text-{{ section.settings.title_align }}{% if section.settings.view_all != blank %} viewAll--{{ section.settings.view_all_align }}{% endif %}">   
-                <h3 class="title" style="--margin-bottom-title: {{ section.settings.margin_bottom_title | append: 'px' }}">
-                    <span class="text">
-                    {{ section.settings.spotlight_block_title }}
-                    </span>
-                </h3>
-                {% if section.settings.spotlight_block_des != blank %}
-                    <div class="rte subtext-spotlight" style="--margin-bottom-des: {{ section.settings.margin_bottom_des | append: 'px' }}">
-                        {{ section.settings.spotlight_block_des }}
-                    </div>        
-                {% endif %}
-
-                {% if section.settings.view_all != blank %}
-                    <a class="view_all{% if section.settings.enable_border_view_all %} has-border{% endif %}"{% if section.settings.link_view_all == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.link_view_all }}"{% endif %} title="{{section.settings.view_all}}" 
-                        style="--font-weight-view-all-style: {{ section.settings.font_weight_view_all }};
-                        --mg-bottom-view-style: {{ section.settings.mg_bottom_view | append: 'px' }};
-                        --color-view-all-style: {{ section.settings.color_view_all }};
-                        --font-size-view-all-style: {{ section.settings.view_all_fs | append: 'px' }};
-                        ">
-                        {{ section.settings.view_all }}
-                    </a>
-                {% endif %}
+                <h3 class="title{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--margin-bottom-title: {{ section.settings.margin_bottom_title | append: 'px' }}"><span class="text">{{ section.settings.spotlight_block_title }}</span></h3>
+                {%- if section.settings.spotlight_block_des != blank -%}
+                    <div class="rte subtext-spotlight" style="--margin-bottom-des: {{ section.settings.margin_bottom_des | append: 'px' }}">{{ section.settings.spotlight_block_des }}</div>        
+                {%- endif -%}
+                {%- if section.settings.view_all != blank -%}
+                    <a class="view_all{% if section.settings.enable_border_view_all %} has-border{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if section.settings.link_view_all == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.link_view_all }}"{% endif %} title="{{section.settings.view_all}}" style="--font-weight-view-all-style: {{ section.settings.font_weight_view_all }};--mg-bottom-view-style: {{ section.settings.mg_bottom_view | append: 'px' }};--color-view-all-style: {{ section.settings.color_view_all }};--font-size-view-all-style: {{ section.settings.view_all_fs | append: 'px' }}">{{ section.settings.view_all }}</a>
+                {%- endif -%}
             </div>
-        {% endif %}
+        {%- endif -%}
         {%- if swipe == 'slider' and section.settings.block_layout == 'grid' -%}
         <banner-slider-component>
         {%- endif -%}
-
-            <div class="halo-row column-{{ section.settings.column }}{% if swipe == 'slider' and section.settings.block_layout == 'grid' %} slider slider--tablet{% endif %}{% if section.settings.item_distance == 0 %} not-distance{% endif %}{% if swipe == 'scroll' and section.settings.block_layout == 'grid' %} scroll-snap-mobile disable-srollbar{% endif %}{% if section.settings.column_mb == '2' %} column-mb-2{% endif %}{% if section.settings.container == '1320' %} width-1320{% endif %}{% if section.settings.display_spotlight_button %} button-bottom{% endif %}" 
-            style="--row-distance-style: {{ section.settings.item_distance | prepend: '-' | append: 'px' }}; --arrow-side-position: {{ position_horizontal_slick_arrow }};"
-            {% if section.settings.block_layout == 'slider' %}data-spotlight-slider data-rows="{{section.settings.column}}" data-arrows="{{ section.settings.enable_arrows }}" data-arrows-mb="{{ section.settings.enable_arrows_mb }}" data-rows-mb="{{ section.settings.column_mb }}"{% endif %} data-swipe="{{ swipe }}" data-dots="{{ section.settings.enable_dots }}" data-dots-mb="{{ section.settings.enable_dots_mb }}">
-            {% for block in section.blocks %}
-                <div class="halo-item{% if swipe == 'slider' and section.settings.block_layout == 'grid' %} slider__slide{% endif %} spotlight--{{ block.type }}{% if section.settings.enable_plus_icon %} enable_plus_icon{% endif %}" id="block-{{block.id}}" style="--item-distance-style: {{ section.settings.item_distance | append: 'px' }};" data-animate="{{ settings.banner_animation }}">
-                    <div class="spotlight-item spotlight-item__{{block.type}}{% if block.settings.enable_absolute and block.settings.enable_image %} content_absolute{% endif %}{% if block.settings.border_color_title != blank and block.settings.border_color_title != 'rgba(0,0,0,0)' %} enable_border_color{% endif %}{% if block.settings.enable_des_hover %} enable_des_hover{% endif %}">
-                        {% if block.settings.enable_image %}
+            <div class="halo-row column-{{ section.settings.column }}{% if swipe == 'slider' and section.settings.block_layout == 'grid' %} slider slider--tablet{% endif %}{% if section.settings.item_distance == 0 %} not-distance{% endif %}{% if swipe == 'scroll' and section.settings.block_layout == 'grid' %} scroll-snap-mobile disable-srollbar{% endif %}{% if section.settings.column_mb == '2' %} column-mb-2{% endif %}{% if section.settings.container == '1320' %} width-1320{% endif %}{% if section.settings.display_spotlight_button %} button-bottom{% endif %}{% if section.settings.block_layout == 'grid' %} block-layout-grid{% endif %}" style="--animation-items: {{ section.blocks.size }};--row-distance-style: {{ section.settings.item_distance | prepend: '-' | append: 'px' }};--arrow-side-position: {{ position_horizontal_slick_arrow }}"{% if section.settings.block_layout == 'slider' %} data-spotlight-slider data-rows="{{section.settings.column}}" data-arrows="{{ section.settings.enable_arrows }}" data-arrows-mb="{{ section.settings.enable_arrows_mb }}" data-rows-mb="{{ section.settings.column_mb }}"{% endif %} data-swipe="{{ swipe }}" data-dots="{{ section.settings.enable_dots }}" data-dots-mb="{{ section.settings.enable_dots_mb }}">
+            {%- for block in section.blocks -%}
+                <div class="halo-item{% if swipe == 'slider' and section.settings.block_layout == 'grid' %} slider__slide{% endif %} spotlight--{{ block.type }}{% if section.settings.enable_plus_icon %} enable_plus_icon{% endif %}" id="block-{{block.id}}" style="--item-distance-style: {{ section.settings.item_distance | append: 'px' }};">
+                    <div class="spotlight-item spotlight-item__{{block.type}}{% if block.settings.enable_absolute and block.settings.enable_image %} content_absolute{% endif %}{% if block.settings.border_color_title != blank and block.settings.border_color_title != 'rgba(0,0,0,0)' %} enable_border_color{% endif %}{% if block.settings.enable_des_hover %} enable_des_hover{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" {% if settings.banner_animation == 'effect_fade_up' %} data-cascade style="--animation-order: {{ forloop.index }};"{% endif %}>
+                        {%- if block.settings.enable_image -%}
                             <div class="image-container">
-                                <div class="img-box">
-                                    {% if block.settings.image != blank %}
+                                <div class="img-box{% if block.settings.image_behavior != 'none' %} animate--{{ block.settings.image_behavior }} o-hidden{% endif %}">
+                                    {%- if block.settings.image != blank -%}
                                         {%- assign preview_img = block.settings.image -%}
-                                        <a {% if block.settings.link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link }}"{% endif %} class="image-zoom adaptive_height" style="padding-top: {{ 1 | divided_by: preview_img.aspect_ratio | times: 100 }}%" title="{{ block.settings.title | default: shop.name | escape  }}">
-                                            <img {% render 'lazyload',preview_img: preview_img %} />
+                                        <a {% if block.settings.link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link }}"{% endif %} class="image-zoom adaptive_height image" style="padding-top: {% unless preview_img.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: preview_img.aspect_ratio | times: 120 | append: '%' }}{% else %}{{ 1 | divided_by: preview_img.aspect_ratio | times: 100 | append: '%' }}{% endunless %}" title="{{ block.settings.title | default: shop.name | escape  }}">
+                                            <img {% render 'lazyload',preview_img: preview_img %}{% unless preview_img.presentation.focal_point == '50.0% 50.0%' %} style="object-position: {{ preview_img.presentation.focal_point }}"{% endunless %} />
                                             {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
                                         </a>
-                                    {% else %}
-                                        <a {% if block.settings.link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link }}"{% endif %} class="image-zoom" title="{{ block.settings.title | default: shop.name | escape  }}">
+                                    {%- else -%}
+                                        <a {% if block.settings.link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link }}"{% endif %} class="image-zoom image" title="{{ block.settings.title | default: shop.name | escape  }}">
                                             {% if block.settings.enable_absolute %}
                                                 <div class="not_img" style="--height_not_img: 200px">370 x 200px</div>
                                             {% else %}
                                                 <div class="not_img" style="--height_not_img: 440px">370 x 440px</div>
                                             {% endif %}
                                         </a>
-                                    {% endif %}
-                                    {% if section.settings.enable_plus_icon %}
+                                    {%- endif -%}
+                                    {%- if section.settings.enable_plus_icon -%}
                                         <span class="show-icon-more" style="--color-icon-plus: {{ section.settings.color_plus_icon }}"></span>
-                                    {% endif %}
+                                    {%- endif -%}
                                 </div>
                             </div>
-                        {% endif %}
+                        {%- endif -%}
                         {%- if block.settings.sub_title != blank or block.settings.title != blank or block.settings.des != blank or block.settings.button != blank -%}
-                            <div class="content spotlight-inner text-{{block.settings.title_align}} align-items--{{block.settings.align_items}} {% if section.settings.enable_content_border %}is-bordered{%  endif %} {% if block.settings.title == blank and block.settings.des == blank %} not_title_des{% endif %}{% unless block.settings.enable_image %} not-image{% endunless %}{% if block.settings.border_color_button == 'rgba(0,0,0,0)' and block.settings.bg_color_button == 'rgba(0,0,0,0)' %} enable-transparnet{% endif %}" 
-                            style="--align-items-spacing-top-style: {{ block.settings.align_items_spacing_top | append: 'px' }}; 
-                                    --align-items-spacing-bottom-style: {{ block.settings.align_items_spacing_bottom | append: 'px' }}; 
-                                    --align-items-spacing-lr-style: {{ block.settings.align_items_spacing_lr | append: 'px' }};
-                                    --align-items-postion-content-style: {{ block.settings.align_items_spacing_top_bottom_position | append: 'px' }};
-                                    --align-items-postion-content-mb-style: {{ block.settings.align_items_spacing_top_bottom_position_mb | append: 'px' }};
-                                    --bg_color_content: {{ block.settings.bg_color_content }};
-                                    --content-border-color: {% if section.settings.content_border_color != blank and section.settings.content_border_color != 'rgba(0,0,0,0)' %}{{ section.settings.content_border_color }}{% endif %};"
-                            >
+                            <div class="content spotlight-inner text-{{block.settings.title_align}} align-items--{{block.settings.align_items}}{% if section.settings.enable_content_border %} is-bordered{% endif %}{% if block.settings.title == blank and block.settings.des == blank %} not_title_des{% endif %}{% unless block.settings.enable_image %} not-image{% endunless %}{% if block.settings.border_color_button == 'rgba(0,0,0,0)' and block.settings.bg_color_button == 'rgba(0,0,0,0)' %} enable-transparnet{% endif %}{% if block.settings.font_weight_title == '400' %} spotlight-inner--border-light{% endif %}" style="--align-items-spacing-top-style: {{ block.settings.align_items_spacing_top | append: 'px' }}; --align-items-spacing-bottom-style: {{ block.settings.align_items_spacing_bottom | append: 'px' }}; --align-items-spacing-lr-style: {{ block.settings.align_items_spacing_lr | append: 'px' }};--align-items-postion-content-style: {{ block.settings.align_items_spacing_top_bottom_position | append: 'px' }};--align-items-postion-content-mb-style: {{ block.settings.align_items_spacing_top_bottom_position_mb | append: 'px' }};--bg_color_content: {{ block.settings.bg_color_content }};--content-border-color: {% if section.settings.content_border_color != blank and section.settings.content_border_color != 'rgba(0,0,0,0)' %}{{ section.settings.content_border_color }}{% endif %}">
                                 {%- if block.settings.sub_title != blank -%}
-                                    <p class="sub_title custom-text-style{% if block.settings.border_sub_title %} has-border{% endif %}"
-                                        style="--color-text-style: {{ block.settings.color_sub_title }};
-                                            --fontsize-text-style: {{ block.settings.fontsize_sub_title | append: 'px' }};
-                                            --font-weight-text-style: {{ block.settings.font_weight_sub_title }};
-                                            --mg-bottom-sub-title-style: {{ block.settings.mg_bottom_sub_title | append: 'px' }}">
-                                        <span>{{ block.settings.sub_title }}</span>
-                                    </p>
+                                    <p class="sub_title custom-text-style{% if block.settings.border_sub_title %} has-border{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 0;{% endif %}--color-text-style: {{ block.settings.color_sub_title }};--fontsize-text-style: {{ block.settings.fontsize_sub_title | append: 'px' }};--font-weight-text-style: {{ block.settings.font_weight_sub_title }};--mg-bottom-sub-title-style: {{ block.settings.mg_bottom_sub_title | append: 'px' }}"><span>{{ block.settings.sub_title }}</span></p>
                                 {%- endif -%}
                                 {%- if block.settings.title != blank -%}
-                                    <h3 class="title custom-text-style has--{{ block.settings.border_title }}"
-                                        style="--color-text-style: {{ block.settings.color_title }};
-                                            --fontsize-text-style: {{ block.settings.fontsize_title | append: 'px' }};
-                                            --fontsize-mobile-text-style: {{ block.settings.fontsize_title_mb | append: 'px' }};
-                                            --font-text-style: {%- if block.settings.enable_style_italic -%}italic{%- else -%}normal{%- endif -%};
+                                    <h3 class="title custom-text-style has--{{ block.settings.border_title }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 1;{% endif %}--color-text-style: {{ block.settings.color_title }};--fontsize-text-style: {{ block.settings.fontsize_title | append: 'px' }};--fontsize-mobile-text-style: {{ block.settings.fontsize_title_mb | append: 'px' }};--title-font-weight: {{block.settings.font_weight_title}};--font-text-style: {%- if block.settings.enable_style_italic -%}italic{%- else -%}normal{%- endif -%}; 
                                             {%- if block.settings.border_title == 'border_s1' -%}
-                                                padding-bottom: 7px;
-                                                border-bottom: 3px solid {{ block.settings.border_color_title }};
+                                                padding-bottom: 7px;border-bottom: 3px solid {{ block.settings.border_color_title }};
                                             {%- elsif block.settings.border_title == 'border_hover' or block.settings.border_title == 'border_s2' -%}
                                                 --border-color-title-style: {{ block.settings.border_color_title }};
                                             {%- elsif block.settings.border_title == 'none' -%}
                                                 --border-color-title-style: transparent;
                                                 {% elsif  block.settings.border_title == 'border_s3' %}
-                                                --border-color-title-style: transparent;
-                                                padding-bottom: 22px;
+                                                --border-color-title-style: transparent;padding-bottom: 22px;
                                             {%- endif -%}">
-                                        <a {% if block.settings.link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link }}"{% endif %}
-                                            class="link_title 
-                                            {% if block.settings.border_title == 'border_s3' %}has_border_s3{% endif %}"
-                                            {% if block.settings.border_title == 'border_s3' %}style="--border-color-title-style-3: {{ block.settings.border_color_title }};"{% endif %}
-                                        >
-                                            <span>{{ block.settings.title }}</span>
-                                        </a>
+                                        <a {% if block.settings.link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link }}"{% endif %} class="link_title{% if block.settings.border_title == 'border_s3' %} has_border_s3{% endif %}"{% if block.settings.border_title == 'border_s3' %} style="--border-color-title-style-3: {{ block.settings.border_color_title }};"{% endif %}><span>{{ block.settings.title }}</span></a>
                                     </h3>
                                 {%- endif -%}
                                 {%- if block.settings.des != blank -%}
-                                    <div class="des custom-text-style"
-                                        style="--color-text-style: {{ block.settings.color_des }};
-                                            --fontsize-text-style: {{ block.settings.fontsize_des | append: 'px' }};
-                                            --margin-top-des-style: {{ block.settings.mg_top_des | append: 'px' }}">
-                                    {{ block.settings.des }}
-                                    </div>
+                                    <div class="des custom-text-style{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 2;{% endif %}--color-text-style: {{ block.settings.color_des }};--fontsize-text-style: {{ block.settings.fontsize_des | append: 'px' }};--margin-top-des-style: {{ block.settings.mg_top_des | append: 'px' }}">{{ block.settings.des }}</div>
                                 {%- endif -%}
                                 {%- if block.settings.button != blank -%}
-                                    <a {% if block.settings.link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link }}"{% endif %} class="spotlight-button button custom-button-style{% if block.settings.enable_button_custom_border %} enable-button-custom-border{% endif %}{% if block.settings.border_color_button == 'rgba(0,0,0,0)' and block.settings.bg_color_button == 'rgba(0,0,0,0)' %} enable-transparnet{% endif %}" 
-                                        style="--color-button-style: {{ block.settings.color_button }};
-                                            --bg-color-button-style: {% if block.settings.bg_color_button_gradient != blank %}{{ block.settings.bg_color_button_gradient }}{% else %}{{ block.settings.bg_color_button | color_modify: 'alpha', block.settings.bg_opacity_button }}{% endif %};
-                                            --border-color-button-style: {{ block.settings.border_color_button }};
-                                            --color-button-hover-style: {{ block.settings.color_button_hover }};
-                                            --bg-color-button-hover-style: {% if block.settings.bg_color_button_gradient_hover != blank %}{{ block.settings.bg_color_button_gradient_hover }}{% else %}{{ block.settings.bg_color_button_hover }}{% endif %}; 
-                                            --border-color-button-hover-style: {{ block.settings.border_color_button_hover }};
-                                            --text-transform-button-style: {{block.settings.btn_text_transform}};
-                                            --font-size-button-style: {{block.settings.fontsize_btn | append: 'px' }};
-                                            --margin-top-button-style: {{block.settings.mg_top_btn | append: 'px' }};
-                                            --button-width-style: {{block.settings.button_width | append: 'px' }}">
-                                        {%- if block.settings.btn_icon != blank -%}
-                                            {{ block.settings.btn_icon }}
-                                        {%- endif -%}
-                                        <span>{{ block.settings.button }}</span>
-                                    </a>
+                                    {% if settings.banner_animation == 'effect_fade_up' %}
+                                    <div class="scroll-trigger animate--slide-in" style="--animation-order: 3;">
+                                    {% endif %}
+                                        <a {% if block.settings.link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link }}"{% endif %} class="spotlight-button button custom-button-style{% if block.settings.enable_button_custom_border %} enable-button-custom-border{% endif %}{% if block.settings.border_color_button == 'rgba(0,0,0,0)' and block.settings.bg_color_button == 'rgba(0,0,0,0)' %} enable-transparnet{% endif %}" style="--color-button-style: {{ block.settings.color_button }}; --bg-color-button-style: {% if block.settings.bg_color_button_gradient != blank %}{{ block.settings.bg_color_button_gradient }}{% else %}{{ block.settings.bg_color_button | color_modify: 'alpha', block.settings.bg_opacity_button }}{% endif %}; --border-color-button-style: {{ block.settings.border_color_button }}; --color-button-hover-style: {{ block.settings.color_button_hover }}; --bg-color-button-hover-style: {% if block.settings.bg_color_button_gradient_hover != blank %}{{ block.settings.bg_color_button_gradient_hover }}{% else %}{{ block.settings.bg_color_button_hover }}{% endif %}; --border-color-button-hover-style: {{ block.settings.border_color_button_hover }}; --text-transform-button-style: {{block.settings.btn_text_transform}}; --font-size-button-style: {{block.settings.fontsize_btn | append: 'px' }}; --margin-top-button-style: {{block.settings.mg_top_btn | append: 'px' }}; --button-width-style: {{block.settings.button_width | append: 'px' }}">{%- if block.settings.btn_icon != blank -%}{{ block.settings.btn_icon }}{%- endif -%}
+                                            <span>{{ block.settings.button }}</span>
+                                        </a>
+                                    {% if settings.banner_animation == 'effect_fade_up' %}
+                                    </div>
+                                    {% endif %}
                                 {%- endif -%}
                             </div>
                         {%- endif -%}
                     </div>
                 </div>
-            {% endfor %}
+            {%- endfor -%}
             </div>
-
             {%- if swipe == 'slider' and section.blocks.size > 1 and section.settings.block_layout == 'grid' -%}
                 <div class="slider-buttons no-js-hidden">
                     <ul class="slider-dots {% if section.blocks.size == 2 %}count_2{% endif %}">
-                        {% for block in section.blocks %}
-                        <li class="dots-item {% if forloop.first %}active{% endif %}">
-                            <button name="dots" data-index="{{ forloop.index0 }}">{{ forloop.index }}</button>
-                        </li>
-                        {% endfor %}
+                        {%- for block in section.blocks -%}
+                        <li class="dots-item {% if forloop.first %}active{% endif %}"><button name="dots" data-index="{{ forloop.index0 }}">{{ forloop.index }}</button></li>
+                        {%- endfor- %}
                     </ul>
                 </div>
             {%- endif -%}
-            {% if section.settings.display_spotlight_button %}
+            {%- if section.settings.display_spotlight_button -%}
             <div class="group-btn">
-                {% if section.settings.spotlight_button_text != blank %}
-                <a {% if section.settings.spotlight_button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.spotlight_button_link }}"{% endif %} title="{{ section.settings.spotlight_button_text | split: '|' | first }}" class="btn button">
-                    {{ section.settings.spotlight_button_text }}
-                </a>
-                {% endif %}   
-            {% if section.settings.spotlight_button_text_2 != blank %}
-                <a {% if section.settings.spotlight_button_link_2 == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.spotlight_button_link_2 }}"{% endif %} title="{{ section.settings.spotlight_button_text_2 | split: '|' | first }}" class="btn-2 button">
-                    {{ section.settings.spotlight_button_text_2 }}
-                </a>
-                {% endif %} 
+                {%- if section.settings.spotlight_button_text != blank -%}
+                <a {% if section.settings.spotlight_button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.spotlight_button_link }}"{% endif %} title="{{ section.settings.spotlight_button_text | split: '|' | first }}" class="btn button">{{ section.settings.spotlight_button_text }}</a>
+                {%- endif -%}   
+            {%- if section.settings.spotlight_button_text_2 != blank -%}
+                <a {% if section.settings.spotlight_button_link_2 == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.spotlight_button_link_2 }}"{% endif %} title="{{ section.settings.spotlight_button_text_2 | split: '|' | first }}" class="btn-2 button">{{ section.settings.spotlight_button_text_2 }}</a>
+                {%- endif -%} 
             </div>
-            {% endif %}
+            {%- endif -%}
         {%- if swipe == 'slider' and section.settings.block_layout == 'grid' -%}
         </banner-slider-component>
         {%- endif -%}
     </div>
-    </div>
-{% if settings.banner_animation == 'effect_1' %}</animated-component>{% endif %}
-
+</div>
 <style>
     {%- liquid
         assign spotlight_bg = section.settings.spotlight_bg
@@ -221,111 +150,34 @@
         assign mg_top_button = section.settings.mg_top_button
         assign enable_border_title = section.settings.enable_border_title
     -%}
-
-    .section-block-{{section.id}}{
-        {%- if section.settings.display_border_bottom -%}   
-            border-bottom: 1px solid {{ section.settings.border_color }};   
-        {%- endif -%}
-        padding-top: {{ mg_minus_desktop | times: 0.5 | append: 'px' }};
-    }
-
-    .section-block-{{section.id}} .halo-block-header {
-        margin-top: -{{ mg_minus_desktop | append: 'px' }};
-    }
-
-    {% if spotlight_bg_image != blank %}
-        .section-block-{{section.id}}{
-            background: url({{ spotlight_bg_image | img_url: '1920x' }});
-            background-repeat: repeat-x;
-            background-size: cover;
-        }
-        .section-block-{{section.id}} .halo-block-header .title .text {
-            background-color: transparent;
-        }
-    {% else %}
-        .section-block-{{section.id}},
-        .section-block-{{section.id}} .halo-block-header .title .text {
-            background: {% if spotlight_bg_gradient != blank %}{{ spotlight_bg_gradient }}{% else %}{{ spotlight_bg }}{% endif %};
-        }
-    {% endif %}
-
-    {% unless enable_border_title %}
-    .section-block-{{section.id}} .halo-block-header .title .text {
-        background-color: transparent;
-    }
-    {% endunless %}
-
-    .section-block-{{section.id}} .halo-block-header .title:before {
-        background-color: {{ color_title }};
-        {% unless enable_border_title %}
-            display: none;
-        {% endunless %}
-    }
-
-    .section-block-{{section.id}} .halo-block-header .title {
-        color: {{ color_title }};
-        font-size: {{ fontsize_title | append: 'px' }};
-        margin-top: 2px;
-        {% if enable_border_title %}
-            display: block;
-        {% endif %}
-    }
-
-    .section-block-{{section.id}} .halo-block-header .rte {
-        color: {{ color_des }};
-        font-size: {{ fontsize_des | append: 'px' }};
-    }
-
-    .section-block-{{section.id}} .view_all {
-        font-weight: var(--font-weight-view-all-style);
-        margin-bottom: var(--mg-bottom-view-style);
-        color: var(--color-view-all-style);
-        font-size: var(--font-size-view-all-style);
-    }
-
-    .section-block-{{section.id}} .view_all:not(.has-border) {
-        border-bottom: none;
-    }
-
-    .section-block-{{section.id}} .view_all.has-border {
-        border-bottom: 1px solid;
-    }
-
-    {% if section.settings.display_spotlight_button %}
-        .section-block-{{section.id}} .group-btn {
-            margin-top: {{ mg_top_button | append: 'px' }};
-        }
-
-        .section-block-{{section.id}} a.button {
-            max-width: {{ maxwidth_button | append: 'px' }};
-        }
-
-        .section-block-{{section.id}} a.btn,
-        .section-block-{{section.id}} a.btn-2:hover {
-            background: {% if bg_color_gradient_button != blank %}{{ bg_color_gradient_button }}{% else %}{{ bg_color_button }}{% endif %};
-            color: {{ color_button }};
-            border: 2px solid {{ border_color_button }};
-        }
-
-        .section-block-{{section.id}} a.btn:hover,
-        .section-block-{{section.id}} a.btn-2{
-            background-color: {% if bg_color_gradient_button_hover != blank %}{{ bg_color_gradient_button_hover }}{% else %}{{ bg_color_button_hover }}{% endif %};
-            color: {{ color_button_hover }};
-            border: 2px solid {{ border_color_button_hover }};
-        }
-    {% endif %}
-    
-    {% if section.settings.container == 'fullwidth' %}
-        .section-block-{{section.id}} .spotlight-block {
-            overflow: hidden;
-        }
-    {% endif %}
-
-    .section-block-{{section.id}} .spotlight-item .img-box a{
-        border-radius: {{ item_radius | append: 'px' }};
-    }
-
-    {% if section.settings.enable_shadow and section.settings.shadow_color != 'rgba(0,0,0,0)' and section.settings.shadow_color != blank %}
+    .section-block-{{section.id}}{ {%- if section.settings.display_border_bottom -%}border-bottom: 1px solid {{ section.settings.border_color }};{%- endif -%}padding-top: {{ mg_minus_desktop | times: 0.5 | append: 'px' }}}
+    .section-block-{{section.id}} .halo-block-header {margin-top: -{{ mg_minus_desktop | append: 'px' }}}
+    {%- if spotlight_bg_image != blank -%}
+        .section-block-{{section.id}}{background: url({{ spotlight_bg_image | img_url: '1920x' }});background-repeat: repeat-x;background-size: cover}
+        .section-block-{{section.id}} .halo-block-header .title .text {background-color: transparent}
+    {%- else -%}
+        .section-block-{{section.id}}, .section-block-{{section.id}} .halo-block-header .title .text {background: {% if spotlight_bg_gradient != blank %}{{ spotlight_bg_gradient }}{% else %}{{ spotlight_bg }}{% endif %};}
+    {%- endif -%}
+    {%- unless enable_border_title -%}
+    .section-block-{{section.id}} .halo-block-header .title .text {background-color: transparent}
+    {%- endunless -%}
+    .section-block-{{section.id}} .halo-block-header .title:before {background-color: {{ color_title }};{%- unless enable_border_title -%}display: none{%- endunless -%}}
+    .section-block-{{section.id}} .halo-block-header .title {color: {{ color_title }};font-size: {{ fontsize_title | append: 'px' }};margin-top: 2px;{%- if enable_border_title -%}display: block{%- endif -%}}
+    .section-block-{{section.id}} .halo-block-header .rte {color: {{ color_des }};font-size: {{ fontsize_des | append: 'px' }}; line-height: {{ fontsize_des | plus: 8 | append: 'px' }}}
+    .section-block-{{section.id}} .view_all {font-weight: var(--font-weight-view-all-style);margin-bottom: var(--mg-bottom-view-style);color: var(--color-view-all-style);font-size: var(--font-size-view-all-style)}
+    .section-block-{{section.id}} .view_all:not(.has-border) {border-bottom: none}
+    .section-block-{{section.id}} .view_all.has-border {border-bottom: 1px solid}
+    {%- if section.settings.display_spotlight_button -%}
+        .section-block-{{section.id}} .group-btn {margin-top: {{ mg_top_button | append: 'px' }}}
+        .section-block-{{section.id}} a.button {max-width: {{ maxwidth_button | append: 'px' }}}
+        .section-block-{{section.id}} a.btn,.section-block-{{section.id}} a.btn-2:hover {background: {% if bg_color_gradient_button != blank %}{{ bg_color_gradient_button }}{% else %}{{ bg_color_button }}{% endif %};color: {{ color_button }};border: 2px solid {{ border_color_button }}}
+        .section-block-{{section.id}} a.btn:hover,.section-block-{{section.id}} a.btn-2{background-color: {% if bg_color_gradient_button_hover != blank %}{{ bg_color_gradient_button_hover }}{% else %}{{ bg_color_button_hover }}{% endif %};color: {{ color_button_hover }};border: 2px solid {{ border_color_button_hover }}}
+    {%- endif -%}
+    {%- if section.settings.container == 'fullwidth' -%}
+        .section-block-{{section.id}} .spotlight-block {overflow: hidden}
+    {%- endif -%}
+    .section-block-{{section.id}} .spotlight-item .img-box a{border-radius: {{ item_radius | append: 'px' }}}
+    {%- if section.settings.enable_shadow and section.settings.shadow_color != 'rgba(0,0,0,0)' and section.settings.shadow_color != blank -%}
         {% liquid
             assign boxX = section.settings.shadow_horizontal_length | append: 'px'
             assign boxY = section.settings.shadow_vertical_length | append: 'px'
@@ -334,104 +186,55 @@
             assign boxColor = section.settings.shadow_color
             assign boxInset = section.settings.shadow_inset
         %}
-        .section-block-{{section.id}} .halo-item .spotlight-item {
-            box-shadow: {{ boxX }} {{ boxY }} {{ boxBlur }} {{ boxSpread }} {{ boxColor }} {% if boxInset == 'inset' %}inset{% endif %};
-        }
-    {% endif %}
-
-    {% if section.settings.enable_shadow %}
-        .section-block-{{ section.id }} .title {
-            margin-top: 22px;
-        }
-
-        .section-block-{{ section.id }} .spotlight-button {
-            padding-top: 0;
-            margin-top: -3px;
-        }
-    {% endif %}
-
+        .section-block-{{section.id}} .halo-item .spotlight-item {box-shadow: {{ boxX }} {{ boxY }} {{ boxBlur }} {{ boxSpread }} {{ boxColor }} {% if boxInset == 'inset' %}inset{% endif %}}
+    {%- endif -%}
+    {%- if section.settings.enable_shadow -%}
+        .section-block-{{ section.id }} .title {margin-top: 22px}
+        .section-block-{{ section.id }} .spotlight-button {padding-top: 0;margin-top: -3px}
+    {%- endif -%}
     @media (min-width: 1200px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_desktop | append: 'px' }};
-            padding-bottom: {{ mg_bottom_desktop | append: 'px' }};
-        }
+        .section-block-{{section.id}} {padding-top: {{ mg_top_desktop | append: 'px' }};padding-bottom: {{ mg_bottom_desktop | append: 'px' }}}
     }
-
     @media (min-width: 1025px) {
-        {% if section.settings.container == 'fullwidth' %}
-            {% if section.settings.disable_padding_content %}
-                .section-block-{{section.id}} .container-full .halo-block-header{
-                    margin-left: {{ padding_full_width | append: 'px' }};
-                    margin-right: {{ padding_full_width | append: 'px' }};
-                }
-            {% else %}
-                .section-block-{{section.id}} .container-full {
-                    padding-left: {{ padding_full_width | append: 'px' }};
-                    padding-right: {{ padding_full_width | append: 'px' }};
-                }
-            {% endif %}
-        {% elsif section.settings.container == '1200' %}
-            .section-block-{{section.id}} .container {
-                max-width: 1200px !important;
-            }
-        {% endif %}
+        {%- if section.settings.container == 'fullwidth' -%}
+            {%- if section.settings.disable_padding_content -%}
+                .section-block-{{section.id}} .container-full .halo-block-header{margin-left: {{ padding_full_width | append: 'px' }};margin-right: {{ padding_full_width | append: 'px' }}}
+            {%- else -%}
+                .section-block-{{section.id}} .container-full {padding-left: {{ padding_full_width | append: 'px' }};padding-right: {{ padding_full_width | append: 'px' }}}
+            {%- endif -%}
+        {%- elsif section.settings.container == '1200' -%}
+            .section-block-{{section.id}} .container { max-width: 1200px !important}
+        {%- endif -%}
 
-        {% unless enable_border_title %}
-            .section-block-{{section.id}} .halo-block-header .title .text {
-                width: auto;
-            }
-        {% endunless %}
+        {%- unless enable_border_title -%}
+            .section-block-{{section.id}} .halo-block-header .title .text {width: auto}
+        {%- endunless -%}
     }
-
     @media (min-width: 768px) and (max-width: 1199px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_tablet | append: 'px' }};
-            padding-bottom: {{ mg_bottom_tablet | append: 'px' }};
-        }
+        .section-block-{{section.id}} {padding-top: {{ mg_top_tablet | append: 'px' }};padding-bottom: {{ mg_bottom_tablet | append: 'px' }}}
     }
-
     @media (max-width: 1024px) {
-        {% if spotlight_bg_image != blank %}
-            .section-block-{{section.id}}{
-                background-position: center top;
-            }
-        {% endif %}
-        {% if section.settings.disable_padding_content %}
-            .section-block-{{section.id}} .container-full .halo-block-header{
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-        {% endif %}
+        {%- if spotlight_bg_image != blank -%}
+            .section-block-{{section.id}}{background-position: center top}
+        {%- endif -%}
+        {%- if section.settings.disable_padding_content -%}
+            .section-block-{{section.id}} .container-full .halo-block-header{padding-left: 15px;padding-right: 15px}
+        {%- endif -%}
     }
-
     @media (max-width: 767px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_mobile | append: 'px' }};
-            padding-bottom: {{ mg_bottom_mobile | append: 'px' }};
-        }
-      
-        .section-block-{{section.id}} .halo-block-header .title {
-            font-size: {{ fontsize_title_mb | append: 'px' }};
-        }
-
-        {% if mg_top_button > 40 %}
-            .section-block-{{section.id}} .group-btn {
-                margin-top: 40px;
-            }
-        {% endif %}
+        .section-block-{{section.id}} {padding-top: {{ mg_top_mobile | append: 'px' }};padding-bottom: {{ mg_bottom_mobile | append: 'px' }}}
+        .section-block-{{section.id}} .halo-block-header .title {font-size: {{ fontsize_title_mb | append: 'px' }}}
+        {%- if mg_top_button > 40 -%}
+            .section-block-{{section.id}} .group-btn {margin-top: 40px}
+        {%- endif -%}
     }
-
     @media (max-width: 551px) {
-        {% if section.settings.disable_padding_content %}
-            .section-block-{{section.id}} .container-full .halo-block-header{
-                padding-left: 10px;
-                padding-right: 10px;
-            }
-        {% endif %}
+        {%- if section.settings.disable_padding_content -%}
+            .section-block-{{section.id}} .container-full .halo-block-header{padding-left: 10px;padding-right: 10px}
+        {%- endif -%}
     }
 </style>
-{% endif %}
-
+{%- endif -%}
 {% schema %}
 {
     "name": "t:sections.spotlight_block.presets.section",
@@ -440,7 +243,7 @@
     "settings": [
     {
         "type": "header",
-        "content": "t:sections.layout.content"
+        "content": "t:settings_schema.general.name"
     },
     {
         "type": "select",
@@ -458,7 +261,7 @@
             },
             {
                 "value": "1320",
-                "label": "t:sections.layout.container.option5"
+                "label": "t:sections.layout.container.option7"
             },
             {
                 "value": "1470",
@@ -1186,7 +989,7 @@
             "max": 500,
             "step": 5,
             "unit": "t:sections.layout.fontsize.fontsize_title.unit",
-            "default": 40
+            "default": 10
         },
         {
             "type": "range",
@@ -1196,7 +999,7 @@
             "max": 500,
             "step": 5,
             "unit": "t:sections.layout.fontsize.fontsize_title.unit",
-            "default": 40
+            "default": 10
         },
         {
             "type": "range",
@@ -1307,6 +1110,37 @@
             "step": 1,
             "unit": "t:sections.layout.fontsize.fontsize_title.unit",
             "default": 20
+        },
+        {
+            "type": "select",
+            "id": "font_weight_title",
+            "label": "t:settings_schema.typography.settings.font_weight.label",
+            "default": "500",
+            "options": [
+            {
+                "value": "400",
+                "label": "t:settings_schema.typography.settings.font_weight.options__1"
+            },
+            {
+                "value": "500",
+                "label": "t:settings_schema.typography.settings.font_weight.options__2"
+            },
+            {
+                "value": "600",
+                "label": "t:settings_schema.typography.settings.font_weight.options__3"
+            },
+            {
+                "value": "700",
+                "label": "t:settings_schema.typography.settings.font_weight.options__4"
+            },
+            {
+                "value": "800",
+                "label": "t:settings_schema.typography.settings.font_weight.options__5"
+            },
+            {
+                "value": "900",
+                "label": "t:settings_schema.typography.settings.font_weight.options__6"
+            }]
         },
         {
             "type": "checkbox",
@@ -1778,15 +1612,15 @@
             "options": [
             {
                 "value": "lowercase",
-                "label": "t:sections.spotlight_block.settings.lowercase"
+                "label": "t:settings_schema.typography.settings.text_transform.options__4"
             },
             {
                 "value": "capitalize",
-                "label": "t:sections.spotlight_block.settings.capitalize"
+                "label": "t:settings_schema.typography.settings.text_transform.options__2"
             },
             {
                 "value": "uppercase",
-                "label": "t:sections.spotlight_block.settings.uppercase"
+                "label": "t:settings_schema.typography.settings.text_transform.options__3"
             }]
         },
         {
@@ -1804,6 +1638,31 @@
             "step": 1,
             "unit": "t:sections.layout.mg_desktop.unit",
             "default": 30
+        },
+        {
+          "type": "header",
+          "content": "t:sections.main-product.settings.general.animation"
+        },
+        {
+          "type": "select",
+          "id": "image_behavior",
+          "options": [
+            {
+              "value": "none",
+              "label": "t:settings_schema.typography.settings.text_transform.options__1"
+            },
+            {
+              "value": "ambient",
+              "label": "t:sections.main-product.settings.general.image_behavior.option__1"
+            },
+            {
+              "value": "zoom-in",
+              "label": "t:sections.main-product.settings.general.image_behavior.option__3"
+            }
+          ],
+          "default": "none",
+          "info": "t:sections.main-product.settings.general.image_behavior.info",
+          "label": "t:sections.main-product.settings.general.image_behavior.label"
         }]
     }],
     "presets": [

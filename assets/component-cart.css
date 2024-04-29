@@ -38,17 +38,8 @@
   max-width: 340px;
 }
 
-.cart-countdown {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
 .cart-countdown .icon {
   display: none;
-  width: 21px;
-  height: 21px;
-  margin: 0 10px 0 0;
   fill: currentColor;
   stroke: currentColor;
 }
@@ -56,7 +47,12 @@
 .cart-countdown .time {
   font-weight: var(--font-weight-bold);
 }
-
+.cart-countdown-product {
+  font-weight: 500;
+}
+.cart-countdown-product > span:after, .cart-countdown-product > span:hover:after{
+  background: var(--color-link-hover);
+}
 .cart {
   display: block;
   width: 100%;
@@ -355,6 +351,11 @@
   top: 0;
 }
 
+.halo-cart-content.is-loading .btn-quantity {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
 .cart-item-qty .btn-quantity:before {
   content: '';
   position: absolute;
@@ -592,7 +593,7 @@
 }
 
 /**/
-.cart-container .haloCalculatorShipping .animated-loading {
+/*.cart-container .haloCalculatorShipping .animated-loading {
     width: auto !important;
     font-size: 0;
     animation-duration: 2s;
@@ -605,7 +606,7 @@
     background: #f9f9f9;
     background: linear-gradient(to right,#f9f9f9 4%,#f1f2f3 25%,#f9f9f9 36%);
     background-size: 1200px 100%;
-}
+}*/
 
 .order-discount-card-wrapper {
   margin-bottom: 15px;
@@ -649,6 +650,15 @@
 
   .cart-content-empty .cart-actions {
     margin-top: 15px;
+  }
+
+  .cart-item__price-wrapper .price.cart-item__old-price {
+    padding-bottom: 3px;
+    padding-left: 0;
+  }
+
+  .cart-item__price-wrapper .cart-item__discounted-prices dd {
+    padding-left: 7px;
   }
 }
 
@@ -733,10 +743,6 @@
     width: 100% !important;
   }
 
-  .cart-item__price-wrapper .unit-price, .cart-item__price-wrapper .price {
-    padding-left: 0;
-  }
-
   .gift-card-container {
     justify-content: center;
   }
@@ -745,8 +751,8 @@
     text-align: center;
   }
 
-  .cart-item__old-price.price--end {
-    display: none;
+  .cart-item__price-wrapper .cart-item__discounted-prices {
+    justify-content: flex-end;
   }
 }
 
@@ -817,6 +823,19 @@
   .cart-item-qty .btn-quantity:before {
     width: 12px;
     top: 21px;
+  }
+
+  .cart-item-block.cart-item-price.small-screen-visible .price.price--end {
+    padding-left: 0;
+  }
+
+  .cart-item__price-wrapper .cart-item__discounted-prices {
+    justify-content: flex-start;
+  }
+
+  .cart-item__price-wrapper .cart-item__discounted-prices dd {
+    padding-left: 0;
+    padding-right: 10px;
   }
 }
 
@@ -900,7 +919,7 @@
   }
   
   .cart-countdown {
-      padding-left: 15%;
+      padding-left: 20px;
       padding-right: 20px;
   }
 

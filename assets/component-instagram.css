@@ -14,6 +14,31 @@ instagram-block-load,
     margin-bottom: 5px;
 }
 
+.instagram-slide .instagram-layout--scroll {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: clip;
+    padding-right: 5.5%;
+    padding-bottom: 55px;
+}
+
+.instagram-layout--scroll::-webkit-scrollbar {
+    height: 3px;
+}
+
+.instagram-layout--scroll::-webkit-scrollbar-track {
+    background: #dcdcdc;
+}
+
+.instagram-layout--scroll::-webkit-scrollbar-thumb {
+    background: #000000;
+}
+
+.instagram-slide .instagram-layout--scroll .halo-item {
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
 .instagram-slide .halo-block-header {
     margin-bottom: 0;
 }
@@ -80,24 +105,34 @@ instagram-block-load,
     grid-row-end: span 2;
 }
 
-.halo-grid-row + .button {
+.instagram-grid--layout__2 .halo-item .not_img {
+    height: 250px !important;
+    line-height: 250px !important;
+}
+
+.instagram-grid--layout__2 .halo-item:nth-child(3) .not_img {
+    height: 516px !important;
+    line-height: 516px !important;
+}
+
+.instagram-grid--layout__3 .halo-item .not_img {
+    height: 380px !important;
+    line-height: 380px !important;
+}
+
+.instagram-grid--layout__3 .halo-item:first-child .not_img {
+    height: 760px !important;
+    line-height: 760px !important;
+}
+
+.halo-grid-row + .button,
+.halo-grid-row + .animate--slide-in .button {
     margin-top: 30px;
 }
 
 .instagram-special .halo-item {
     position: relative;
 }
-
-/*.instagram-special .halo-item:after {
-    content: '';
-    background-color: rgba(0,0,0,.3);
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    pointer-events: none;
-}*/
 
 .instagram-special .halo-item .image-zoom{
     border-radius: var(--items-border-radius-style);
@@ -163,6 +198,16 @@ instagram-block-load,
     display: block !important;
 }
 
+.instagram-slide .halo-row .instagram-item-scroll {
+    white-space: nowrap;    
+}
+.instagram-layout--infinite:hover .instagram-item-scroll, .instagram-layout--infinite:focus .instagram-item-scroll {
+    animation-play-state: paused;
+}
+.instagram-slide .halo-row.instagram-layout--infinite .halo-item {
+    width: var(--width_item);
+}
+
 .instagram-slide .halo-row .halo-item .icon-show-more {
     display: none;
     position: absolute;
@@ -185,6 +230,18 @@ instagram-block-load,
     display: inline-block;
 }
 
+.instagram-slide .halo-row .halo-item .icon-show-more--style_2 {
+    top: auto;
+    left: 20px;
+    bottom: 20px;
+    padding: 10px;
+    transform: translate(0);
+    background-color: var(--color-white);
+    border-radius: 50%;
+    opacity: 1;
+    visibility: visible;
+}
+
 .instagram-slide .halo-row .halo-item a:hover .icon-show-more {
     opacity: 1;
     visibility: visible;
@@ -193,6 +250,24 @@ instagram-block-load,
 .instagram-slide .enable_hide_portion {
     width: 107%;
     transform: translateX(-3%);
+}
+
+.instagram-slide .lazyload,
+.instagram-slide .lazyloading {
+    transform: scale(1.15);
+    transition: transform 800ms cubic-bezier(.13,.55,.25,1), opacity 700ms cubic-bezier(.26,.54,.32,1);
+}
+
+.instagram-slide .lazyloaded {
+    transform: scale(1);
+}
+
+.instagram-slide .active .halo-item {
+    pointer-events: none;
+}
+
+.instagram-slide.padding-full-width-0 .halo-block-header .title {
+    font-weight: 400;
 }
 
 @media (max-width: 1024px){
@@ -210,7 +285,9 @@ instagram-block-load,
     .instagram-slide .md-column-3 .halo-item {
         width: 33.333333%;
     }
-
+    .instagram-slide .instagram-layout--infinite.md-column-3 .halo-item {
+        width: 33.33vw;
+    }
     .hidden-md {
         display: none !important;
     }
@@ -228,12 +305,6 @@ instagram-block-load,
     .halo-grid-row {
         grid-template-columns: 1fr 1fr 1fr;
     }
-    /*.instagram-grid--layout__1 .halo-item:nth-child(7) {
-        order: 1;
-    }
-    .instagram-grid--layout__1 .halo-item:nth-child(1) {
-        order: 2;
-    }*/
     .instagram-grid--layout__1 .halo-item:nth-child(1) {
         order: 2;
     }
@@ -362,6 +433,10 @@ instagram-block-load,
         width: 50%;
     }
 
+    .instagram-slide .halo-row.instagram-layout--infinite .halo-item {
+        width: 50vw;
+    }
+
     .hidden-sm {
         display: none !important;
     }
@@ -412,6 +487,14 @@ instagram-block-load,
         padding-right: var(--grid-gap);
         padding-left: var(--grid-gap);
         margin-bottom: calc(var(--grid-gap) * 2);
+    }
+
+    .instagram-slide.padding-full-width-0 .slick-arrow.slick-prev {
+        left: 60px !important;
+    }
+
+    .instagram-slide.padding-full-width-0 .slick-arrow.slick-next {
+        right: 60px !important;
     }
 }
 

@@ -23,19 +23,19 @@
     assign style = section.settings.style
 -%}
 
-<aztable-items class="aztable-items" data-section-id="{{ section.id }}" data-section-type="brands" id="BrandsSection-{{ section.id }}" data-section="{{ section.id }}">
+<aztable-items class="aztable-items{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" data-section-id="{{ section.id }}" data-section-type="brands" id="BrandsSection-{{ section.id }}" data-section="{{ section.id }}">
     <div class="halo-page-header">
         <div class="{% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%} container-full{% else %}container{% endif %}">
             {%- if show_breadcrumb -%}
                 {% render 'breadcrumb', alignment: breadcrumb_alignment %}
             {%- endif -%}
             {%- if show_page_title -%}
-                <h1 class="page-header text-{{ page_title_alignment }}">
+                <h1 class="page-header text-{{ page_title_alignment }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                     {{ page.title | escape }}
                 </h1>
             {%- endif -%}
             {% if display_brands_slider and section.blocks.size > 0 %}
-                <div class="logo-brands" data-loader-script="{{ 'halo.slide-page-brand.js' | asset_url }}">
+                <div class="logo-brands{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}" data-loader-script="{{ 'halo.slide-page-brand.js' | asset_url }}">
                   <div class="row brands-slider" data-page-brands-slider data-dots="false" data-arrows="true" data-rows="{% if settings.layout_style == 'layout_style_fullwidth' %}6{% else %}5{% endif %}">
                     {% for block in section.blocks %}
                     {% liquid 
@@ -43,7 +43,7 @@
                         assign brand_name = block.settings.brand_name
                         assign brand_link = block.settings.link_to_vendor
                     %}
-                    <div class="brand-image-container">
+                    <div class="brand-image-container{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}">
                       <a title="{{ brand_name }}"{% if brand_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ brand_link }}"{% endif %}>
                         {% if brand_image != blank %}
                         <img src="{{ brand_image | image_url: width: 200 }}" alt="{{ brand_image.alt }}" loading='lazy' width='{{ brand_image.width }}' height='{{ brand_image.height }}' />
@@ -59,7 +59,7 @@
                 </div>
                 {% endif %}
             {% assign array = "A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|#" | split: "|" %}
-            <div class="wrapper-AZTable">
+            <div class="wrapper-AZTable{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                 <ul id="haloAZTable" class="haloAZTable style-{{ style }} list-unstyled {% if style == '1' %}visible-all{% endif %} scroll-snap-mobile disable-srollbar">
                     <li data-letter="all" class="all-letter is-active">
                         <a href="javascript:void(0)" role="button">{{ 'brands_page.general.all' | t }}</a>
@@ -73,9 +73,9 @@
             </div>
         </div>
     </div>
-    <div class="halo-page-content halo-brands-content">
+    <div class="halo-page-content halo-brands-content{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
         <div class="{% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'full' %}container-full{% else %}container{% endif %}">
-            <div id="haloAZWrapper" class="haloAZWrapper active-all{% if style == '1' %} visible-all{% endif %}">
+            <div id="haloAZWrapper" class="haloAZWrapper active-all{% if style == '1' %} visible-all{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                 {%- for item in array -%}
                     <div class="az-group" data-letter="{{ item | downcase }}" id="az-code-{{ item | downcase }}">
                         <h3 class="az-group-title text-left">{{ item | downcase }}</h3>
@@ -211,13 +211,13 @@
 </script>
 
 {% schema %}
-	{
-		"name": "t:sections.main-brands.name",
+    {
+        "name": "t:sections.main-brands.name",
         "settings":
         [
             {
                 "type": "header",
-                "content": "t:sections.main-brands.settings.header__1"
+                "content": "t:settings_schema.general.name"
             },
             {
                 "type": "checkbox",
@@ -429,5 +429,5 @@
                 ]
             }
         ]
-	}
+    }
 {% endschema %}

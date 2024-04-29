@@ -52,7 +52,9 @@ class Toolbar extends HTMLElement {
                 dropdownButton.addEventListener('click', this.onClickDropdownButtonHandler.bind(this));
             });
 
-            document.body.addEventListener('click', this.onBodyClickEvent.bind(this));
+            window.addEventListener('load', () => {
+                document.body.addEventListener('click', this.onBodyClickEvent.bind(this));
+            });
         }
 
         if(this.querySelector('[data-sorting]')){
@@ -115,7 +117,12 @@ class Toolbar extends HTMLElement {
     }
 
     checkNeedToConvertCurrency() {
-        return (window.show_multiple_currencies && Currency.currentCurrency != shopCurrency) || window.show_auto_currency;
+        var currencyItem = $('.dropdown-item[data-currency]');
+        if (currencyItem.length) {
+            return (window.show_multiple_currencies && Currency.currentCurrency != shopCurrency) || window.show_auto_currency;
+        } else {
+            return;
+        }
     }
 
     onClickDropdownButtonHandler(event) {
@@ -229,7 +236,7 @@ class Toolbar extends HTMLElement {
 
         if(window.compare.show){
             this.setLocalStorageProductForCompare({
-                link: $('a[data-compare-link]'),
+                link: $('[data-compare-link]'),
                 onComplete: null
             });
         }
@@ -631,11 +638,10 @@ class Toolbar extends HTMLElement {
             if (scrollTop > offsetScroll) {
                 requestAnimationFrame(this.showSticky.bind(this));
 
-                if(document.body.classList.contains('scroll-up')){
-                    var height = document.querySelector('sticky-header').offsetHeight;
-
+                if(document.querySelector('.section-header-navigation').classList.contains('shopify-section-header-show')){
+                    var height = document.querySelector('.header-mobile').offsetHeight;
                     this.style.top = `${height}px`;
-                } else if(document.body.classList.contains('scroll-down')) {
+                } else if(document.querySelector('.section-header-mobile').classList.contains('shopify-section-header-hidden')) {
                     this.style.top = 0;
                 }
             } else{

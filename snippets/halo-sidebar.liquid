@@ -2,12 +2,6 @@
 	{% render 'halo-customer-login-sidebar' %}
 {%- endif -%}
 
-{% if settings.header_layout == '02' or settings.header_layout == '11' %}
-	{%- if settings.enable_multilang_shopify or settings.enable_currencies -%}
-		{% render 'halo-language-currency-sidebar' %}
-	{%- endif -%}
-{%- endif -%}
-
 {%- if settings.show_quick_cart -%}
 	{% unless template contains 'cart' %}
 		{% render 'halo-cart-sidebar' %}
@@ -20,7 +14,7 @@
 
 {% render 'halo-sidebar-search' %}
 
-{% if settings.header_layout == '04' and settings.mobile_menu == 'default' %}
+{% if settings.mobile_menu == 'vertical' %}
 	{% render 'halo-sidebar-menu-vertical' %}
 {% else %}
 	{% render 'halo-sidebar-menu' %}

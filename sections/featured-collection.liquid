@@ -2,24 +2,17 @@
 {%- assign swipe = section.settings.featured_collection_block_swipe_on_mobile -%}
 <link rel="stylesheet" href="{{ 'component-featured-collection.css' | asset_url }}" media="all" onload="this.media='all'">
 <noscript>{{ 'component-featured-collection.css' | asset_url | stylesheet_tag }}</noscript>
-
-{%- if settings.banner_animation == 'effect_1' -%}
-    <link rel="stylesheet" href="{{ 'component-featured-collection-banner-animation.css' | asset_url }}" media="all" onload="this.media='all'">
-    <noscript>{{ 'component-featured-collection-banner-animation.css' | asset_url | stylesheet_tag }}</noscript>
-{%- endif -%}
-
-{% if settings.banner_animation == 'effect_1' %}<animated-component>{% endif %}
-    <div class="featured-collection-block section-block-{{section.id}}" id="featured-collection-{{section.id}}">
+<div class="featured-collection-block section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="featured-collection-{{section.id}}">
         <div class="{% if section.settings.container == 'fullwidth' %}container-full{% elsif section.settings.container == '1170' %}container-1170{% elsif section.settings.container == '1770' %}container-1770{% else %}container{% endif %}">
             {% if section.settings.featured_collection_block_title != blank %}
-                <div class="halo-block-header text-{{ section.settings.title_align }}">   
+                <div class="halo-block-header text-{{ section.settings.title_align }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">   
                     <h3 class="title">
                         <span class="text">
                         {{ section.settings.featured_collection_block_title }}
                         </span>
                     </h3>
                     {% if section.settings.featured_collection_block_btn_text != blank %}
-                        <a {% if section.settings.featured_collection_block_btn_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.featured_collection_block_btn_link }}"{% endif %} title="{{ section.settings.featured_collection_block_btn_text | split: '|' | first }}" class="btn button text-{{ section.settings.title_align }}">
+                        <a {% if section.settings.featured_collection_block_btn_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.featured_collection_block_btn_link }}"{% endif %} title="{{ section.settings.featured_collection_block_btn_text | split: '|' | first }}" class="btn button text-{{ section.settings.title_align }}{% if settings.banner_animation == 'effect_fade_up' %} not_fade_up{% endif %}">
                             {%- if section.settings.btn_icon != blank -%}
                                 {{ section.settings.btn_icon }}
                             {%- endif -%}
@@ -42,13 +35,13 @@
                         {% assign collection_image = blank %}
                     {% endif %}
 
-                    <div class="halo-item{% if swipe %} slider__slide{% endif %}" id="block-{{block.id}}" data-animate="{{ settings.banner_animation }}">
-                        <div class="featured-collection-item {% if block.settings.enable_absolute %}content_absolute{% endif %}">
+                    <div class="halo-item{% if swipe %} slider__slide{% endif %}" id="block-{{block.id}}">
+                        <div class="featured-collection-item {% if block.settings.enable_absolute %}content_absolute{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} data-cascade style="--animation-order: {{ forloop.index }};"{% endif %}>
                             <div class="img-box">
                                 {% if block.settings.image != blank %}
                                     {%- assign preview_img = block.settings.image -%}
-                                    <a {% if block.settings.url == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.url }}"{% endif %} class="image-zoom adaptive_height" style="padding-top: {{ 1 | divided_by: preview_img.aspect_ratio | times: 100 }}%">
-                                        <img {% render 'lazyload',preview_img: preview_img %} />
+                                    <a {% if block.settings.url == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.url }}"{% endif %} class="image-zoom adaptive_height" style="padding-top: {% unless preview_img.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: preview_img.aspect_ratio | times: 120 | append: '%' }}{% else %}{{ 1 | divided_by: preview_img.aspect_ratio | times: 100 | append: '%' }}{% endunless %}">
+                                        <img {% render 'lazyload',preview_img: preview_img %}{% unless preview_img.presentation.focal_point == '50.0% 50.0%' %} style="object-position: {{ preview_img.presentation.focal_point }}"{% endunless %} />
                                         {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
                                     </a>
                                 {% else %}
@@ -119,9 +112,7 @@
             </banner-slider-component>
             {%- endif -%}
         </div>
-    </div>
-{% if settings.banner_animation == 'effect_1' %}</animated-component>{% endif %}
-
+</div>
 <style>
     {%- liquid
         assign featured_collection_bg = section.settings.featured_collection_bg
@@ -268,7 +259,7 @@
     "settings": [
     {
         "type": "header",
-        "content": "t:sections.layout.content"
+        "content": "t:settings_schema.general.name"
     },
     {
         "type": "select",
@@ -517,12 +508,12 @@
     "blocks": [
         {
             "type": "featured_collection",
-            "name": "t:settings_schema.typography.settings.typography.collection",
+            "name": "t:sections.featured-collection.settings.swipe_on_mobile.category",
             "settings": [
                 {
                     "type": "link_list",
                     "id": "collection",
-                    "label": "Collection"
+                    "label": "t:sections.featured-collection.settings.swipe_on_mobile.category"
                 },
                 {
                     "type": "image_picker",
@@ -658,7 +649,7 @@
     ],
     "presets": [
     {
-        "name": "t:sections.featured-collection.presets.name",
+        "name": "t:sections.featured-collection.name",
         "category": "Collection",
         "blocks": [
             {
@@ -671,6 +662,9 @@
                 "type": "featured_collection"
             }
         ]
-    }]
+    }],
+    "disabled_on": {
+        "groups": ["header"]
+    }
 }
 {% endschema %}

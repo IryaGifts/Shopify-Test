@@ -4,6 +4,8 @@
     padding: 0;
     bottom: auto;
     min-height: auto;
+    transform: translate3d(0,2rem,0);
+    transition: opacity .5s,transform .35s ease,visibility .35s ease;
 }
 
 .search-modal__content {
@@ -11,10 +13,6 @@
     align-items: center;
     justify-content: center;
 }
-/* 
-.search-modal__form {
-    width: 100%;
-} */
 
 .quickSearchResultsBlock .productEmpty{
     font-size: var(--font-body-size);
@@ -74,9 +72,10 @@ body:not(:has(predictive-search)) .quickSearchResultsWrap {
     width: auto;
     height: auto;
     margin-right: 0;
+}
+.search-modal__form .search__button .icon-search-1 {
     transform: rotate(-90deg);
 }
-
 .search-modal__content .search-modal__close-button{
     background-color: transparent;
     border-color: transparent;
@@ -87,7 +86,6 @@ body:not(:has(predictive-search)) .quickSearchResultsWrap {
 .quickSearchResultsWrap{
     position: absolute;
     top: calc(100% + 5px);
-/*     right: 15px; */
     right: 0;
     left: auto;
     width: 570px;
@@ -247,10 +245,11 @@ body:not(:has(predictive-search)) .quickSearchResultsWrap {
 
 details[open] > .search-modal {
     opacity: 1;
-    animation: animateMenuOpen var(--duration-default) ease;
+    visibility: visible;
+    transform: translateZ(0);
 }
 details[open] .search-modal .quickSearchResultsWrap {
-    display: block!important;
+    display: block;
     animation: appear-down var(--duration-default) ease;
 }
 
@@ -594,9 +593,4 @@ input::-webkit-search-decoration {
     .wrapper-header-bottom .layout_search--style2 .products-grid .product {
         padding: 0 7.5px;
     }
-
-    /*.open_search .background-overlay {
-        display: block;
-        z-index: 2;
-    }*/
 }

@@ -1,13 +1,13 @@
 <li class="menu-lv-item menu-lv-1 text-left no-megamenu {% if link.links != blank %}dropdown {% endif %} {% if sale_item_lv1 contains title %} menu-sale{% endif %}">
     {%- if link.links != blank -%}
-        <a class="menu-lv-1__action  header__menu-item list-menu__item link focus-inset menu_mobile_link"{% if link.url == blank %} role="link" aria-disabled="true"{% else %} href="{{ link.url }}"{% endif %}>
+        <a class="menu-lv-1__action  header__menu-item list-menu__item link focus-inset menu_mobile_link link-effect"{% if link.url == blank %} role="link" aria-disabled="true"{% else %} href="{{ link.url }}"{% endif %}>
 
             {% assign img = link.handle | downcase | replace: ' ', '-' | append: '.png' | file_url %}
             <span class="icon-img">
                 <img src="{{ img }}" alt="{{ link.title }}" onError="style.display = 'none';">
             </span>
 
-            <span class="text{%- if link.child_active %} header__active-menu-item{% endif %}">
+            <span class="text p-relative{%- if link.child_active %} header__active-menu-item{% endif %}">
                 {{ link.title | escape }}
             </span>
             <span class="icon-dropdown" data-toggle-menu-mb="">
@@ -35,7 +35,7 @@
                     </span>
                     {{ link.title | escape }}
                 </div>
-                <li class="menu-lv-item menu-lv-2 text-left navigation_all_mobile">
+                <li class="menu-lv-item menu-lv-2 text-left navigation_all_mobile d-none">
                     <a {% if link.url == blank %} role="link" aria-disabled="true"{% else %} href="{{ link.url }}"{% endif %} class="menu-lv-2__action header__menu-item list-menu__item link link--text focus-inset caption-large"{% if childlink.current %} aria-current="page"{% endif %}>
                         <span class="text{%- if link.child_active %} header__active-menu-item{% endif %}">
                             {{ 'general.navigation.go_to' | t }} {{ link.title | escape }}
@@ -69,7 +69,7 @@
                                             </span>
                                             {{ link.title | escape }}
                                         </div>
-                                        <li class="menu-lv-item menu-lv-3 text-left navigation_all_mobile">
+                                        <li class="menu-lv-item menu-lv-3 text-left navigation_all_mobile d-none">
                                                 <a {% if childlink.url == blank %} role="link" aria-disabled="true"{% else %} href="{{ childlink.url }}"{% endif %} class="menu-lv-3__action header__menu-item list-menu__item link link--text focus-inset caption-large">
                                                     <span class="text">
                                                          {{ 'general.navigation.go_to' | t }} {{ childlink.title | escape }}
@@ -95,12 +95,12 @@
             </div>
         </ul>
     {%- else -%}
-        <a {% if link.url == blank %} role="link" aria-disabled="true"{% else %} href="{{ link.url }}"{% endif %} class="menu-lv-1__action header__menu-item header__menu-item list-menu__item link link--text focus-inset"{% if link.current %} aria-current="page"{% endif %}>
+        <a {% if link.url == blank %} role="link" aria-disabled="true"{% else %} href="{{ link.url }}"{% endif %} class="menu-lv-1__action header__menu-item header__menu-item list-menu__item link link--text focus-inset link-effect"{% if link.current %} aria-current="page"{% endif %}>
             {% assign img = link.handle | downcase | replace: ' ', '-' | append: '.png' | file_url %}
             <span class="icon-img">
                 <img src="{{ img }}" alt="{{ link.title }}" onError="style.display = 'none';">
             </span>
-            <span class="text{%- if link.current %} header__active-menu-item{% endif %}">{{ link.title | escape }}</span>
+            <span class="text p-relative{%- if link.current %} header__active-menu-item{% endif %}">{{ link.title | escape }}</span>
         </a>
     {%- endif -%}
 </li>

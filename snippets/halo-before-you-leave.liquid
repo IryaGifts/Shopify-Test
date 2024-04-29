@@ -10,38 +10,26 @@
 	assign btn = settings.before_you_leave_btn
 	assign btn_link = settings.before_you_leave_btn_link
 -%}
-
 <link rel="stylesheet" href="{{ 'component-before-you-leave.css' | asset_url }}" media="print" onload="this.media='all'">
-
 <noscript>{{ 'component-before-you-leave.css' | asset_url | stylesheet_tag }}</noscript>
-
 <before-you-leave-component class="halo-sidebar halo-sidebar-{{ position }} halo-leave-sidebar" id="halo-leave-sidebar" data-time="{{ time | times: 60000 }}">
-    <button type="button" class="halo-sidebar-close" data-close-before-you-leave>
-        {% render 'icon-close' %}
-        {{ 'general.common.close' | t }}
-    </button>
+    <button type="button" class="halo-sidebar-close" data-close-before-you-leave>{% render 'icon-close' %}{{ 'general.common.close' | t }}</button>
     <div class="halo-sidebar-wrapper custom-scrollbar">
     	{%- if logo != blank -%}
 			<div class="before-you-leave-header">
-				<img srcset="{{ logo | img_url: '80x' }} 1x, {{ logo | img_url: '80x', scale: 2 }} 2x"
-	                src="{{ logo | img_url: '80x' }}"
-	                loading="lazy"
-	                alt="{{ logo.alt | default: shop.name | escape }}">
+            {%- assign height = logo.width | divided_by: logo.aspect_ratio | round -%}
+            {{ logo | image_url: width: logo.width | image_tag: width: logo.width, height: height, sizes: "100vw", widths: '80, 165, 375' }}
 			</div>
 		{%- endif -%}
 		<div class="before-you-leave-banner">
 			<div class="image{% unless background != blank %} no-image{% endunless %}">
 				{%- if background != blank -%}
-					<img srcset="{{ background | img_url: '470x' }} 1x, {{ background | img_url: '470x', scale: 2 }} 2x"
-		                src="{{ background | img_url: '470x' }}"
-		                loading="lazy"
-		                alt="{{ background.alt | default: shop.name | escape }}">
+		            {%- assign height_bg = background.width | divided_by: background.aspect_ratio | round -%}
+            		{{ background | image_url: width: 470 | image_tag: height: height_bg, sizes: "100vw", widths: '320, 375, 470' }}
 				{%- endif -%}
 			</div>
 			{%- if content != blank -%}
-				<div class="content">
-					{{ content }}
-				</div>
+				<div class="content">{{ content }}</div>
 			{%- endif -%}
 		</div>
 		{%- if collection != blank -%}
@@ -54,38 +42,27 @@
 			{%- endif -%}
 		    <div class="before-you-leave-content">
 		        <div class="before-you-leave-content-title">
-		            <div class="title">
-		                <span class="text">
-		                	{{ 'before_you_leave.general.recommended_product' | t }}
-		                </span>
-		                <span class="count">{{ count }}</span>
-		            </div>
+		            <div class="title"><span class="text">{{ 'before_you_leave.general.recommended_product' | t }}</span><span class="count">{{ count }}</span></div>
 		        </div>
 		        <div class="before-you-leave-content-product">
 		            <div class="products-carousel">
-		                {% for product in collection.products limit: limit %}
+		                {%- for product in collection.products limit: limit -%}
 		                    <div class="product">
-		                        {% render 'product-card-sidebar',
-									product_card_product: product
-								%}
+		                        {% render 'product-card-sidebar', product_card_product: product %}
 		                    </div>
-		                {% else %}
-		                	
-		                {% endfor %}
+		                {%- else -%}
+		                {%- endfor -%}
 		            </div>
 		        </div>
 		    </div>
 		{%- endif -%}
 		{%- if show_btn -%}
 			<div class="before-you-leave-back">
-				<a class="button button-{{ btn }}"{% if btn_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ btn_link }}"{% endif %}>
-					<span class="text">{{ 'before_you_leave.general.continue_shopping' | t }}</span>
-				</a>
+				<a class="button button-{{ btn }}"{% if btn_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ btn_link }}"{% endif %}><span class="text">{{ 'before_you_leave.general.continue_shopping' | t }}</span></a>
 			</div>
 		{%- endif -%}
     </div>
 </before-you-leave-component>
-
 <script type="text/javascript">
 	class BeforeYouLeave extends HTMLElement {
 		constructor() {
@@ -105,14 +82,12 @@
 			document.addEventListener('mousemove', this.resetTimer.bind(this));
 			document.addEventListener('keydown', this.resetTimer.bind(this));
 			document.addEventListener('scroll', this.resetTimer.bind(this));
-
 			this.closeButton.addEventListener('click', this.closeBeforeYouLeave.bind(this));
 			document.body.addEventListener('click', this.onBodyClick.bind(this));
 		}
 
 		onBodyClick(e) {
 			if (!document.body.classList.contains('before-you-leave-show') || this.contains(e.target)) return;
-
 			document.body.classList.remove('before-you-leave-show');
 		}
 
@@ -127,12 +102,11 @@
 			if (!this.productCarousel) return;
 
 			this.initSlickSlider();
-
 			document.body.classList.add('before-you-leave-show');
 		}
 
 		initSlickSlider() {
-			if(this.productCarousel.classList.contains('slick-slider')) {
+			if(!this.productCarousel.classList.contains('slick-slider')) {
 				$(this.productCarousel).slick({
 					dots: true,
 					arrows: false,

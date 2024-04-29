@@ -49,56 +49,33 @@
     endif
     assign show_infinite_scrolling = section.settings.show_infinite_scrolling
 -%}
-
 <style type="text/css" media="screen">
-    {% if has_sidebar %}
+    {%- if has_sidebar -%}
         :root {
-            {% if sidebar_heading_font == 'font_1' %}
+            {%- if sidebar_heading_font == 'font_1' -%}
                 --sidebar-heading-font: var(--font-heading-family);
-            {% elsif sidebar_heading_font == 'font_2' %}
+            {%- elsif sidebar_heading_font == 'font_2' -%}
                 --sidebar-heading-font: var(--font-body-family);
-            {% endif %}
-            {% if colors_bg != blank or colors_bg_gradient != blank %}
+            {%- endif -%}
+            {%- if colors_bg != blank or colors_bg_gradient != blank -%}
                 --body-bg: {% if colors_bg_gradient != blank %}{{ colors_bg_gradient }}{% else %}{{ colors_bg }}{% endif %};
-            {% endif %}
+            {%- endif -%}
         }
-    {% endif %}
+    {%- endif -%}
 
-    {% if colors_bg != blank or colors_bg_gradient != blank %}
-        body{
-            background: var(--body-bg);
-        }
-    {% endif %}
+    {%- if colors_bg != blank or colors_bg_gradient != blank -%}
+        body { background: var(--body-bg)}
+    {%- endif -%}
 
-    #CollectionSection-{{ section.id }}{
-        padding-top: {{ padding_top }};
-        padding-bottom: {{ padding_bottom }};
-    }
+    #CollectionSection-{{ section.id }}{padding-top: {{ padding_top }};padding-bottom: {{ padding_bottom }}}
 
-    {% if has_sidebar %}
-        #CollectionSection-{{ section.id }} .sidebarBlock-heading{
-            font-family: var(--sidebar-heading-font);
-            font-size: {{ sidebar_heading_font_size | append: 'px' }};
-            font-weight: {{ sidebar_heading_font_weight }};
-            text-transform: {{ sidebar_heading_text_transform }};
-        }
-    {% endif %}
+    {%- if has_sidebar -%}
+        #CollectionSection-{{ section.id }} .sidebarBlock-heading{font-family: var(--sidebar-heading-font);font-size: {{ sidebar_heading_font_size | append: 'px' }};font-weight: {{ sidebar_heading_font_weight }};text-transform: {{ sidebar_heading_text_transform }}}
+    {%- endif -%}
 
-    @media (max-width: 1024px) {
-        #CollectionSection-{{ section.id }}{
-            padding-top: {{ padding_top_tablet }};
-            padding-bottom: {{ padding_bottom_tablet }};
-        }
-    }
-
-    @media (max-width: 550px) {
-        #CollectionSection-{{ section.id }}{
-            padding-top: {{ padding_top_mobile }};
-            padding-bottom: {{ padding_bottom_mobile }};
-        }
-    }
+    @media (max-width: 1024px) {#CollectionSection-{{ section.id }}{padding-top: {{ padding_top_tablet }};padding-bottom: {{ padding_bottom_tablet }}}}
+    @media (max-width: 550px) {#CollectionSection-{{ section.id }}{padding-top: {{ padding_top_mobile }};padding-bottom: {{ padding_bottom_mobile }}}}
 </style>
-
 <div data-section-id="{{ section.id }}" data-section-type="collection" id="CollectionSection-{{ section.id }}" data-section="{{ section.id }}" class="collection-default">
     {%- if settings.layout != '4' or sidebar_type != 'horizontal' -%}
         <div class="{% if container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% elsif container == 'fullwidth'%}container-full{% else %}container{% endif %}">
@@ -107,16 +84,9 @@
             {%- if has_sidebar -%}
                 {{ 'component-main-sidebar.css' | asset_url | stylesheet_tag }}
                 <div class="page-sidebar page-sidebar-{{ sidebar_position }} page-sidebar--{{ sidebar_type }} sidebar--{{ sidebar_layout }}{% if enable_sticky %} has-sticky{% endif %}" id="halo-sidebar">
-                    <a href="javascript:void(0)" class="halo-sidebar-close" data-close-sidebar role="button">
-                        <span class="visually-hidden">{{ 'general.common.close' | t }}</span>
-                        {% render 'icon-close' %}
-                    </a>
-                    <div class="halo-sidebar-header text-left">
-                        <span class="title">
-                            {{ 'sections.sidebar.title' | t }}
-                        </span>
-                    </div>
-                    <div class="halo-sidebar-wrapper custom-scrollbar">
+                    <button type="button" class="halo-sidebar-close" data-close-sidebar role="button"><span class="visually-hidden">{{ 'general.common.close' | t }}</span>{% render 'icon-close' %}</button>
+                    <div class="halo-sidebar-header text-left{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"><span class="title">{{ 'sections.sidebar.title' | t }}</span></div>
+                    <div class="halo-sidebar-wrapper custom-scrollbar{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                         {% render 'collection-sidebar',
                             results: collection,
                             section: section,
@@ -163,36 +133,22 @@
                             assign des_color = block.settings.des_color
                             assign desc_alignment = block.settings.desc_alignment
                         -%}
-                        <div class="articleLookbook-block" style="--lookbook-margin-bottom: {{ margin_bottom | append: 'px' }}";>
+                        <div class="articleLookbook-block{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--lookbook-margin-bottom: {{ margin_bottom | append: 'px' }}";>
                             <div class="articleLookbook-item">
                                 {%- if block.settings.show_image -%}
                                     {%- if image != blank -%}
                                         <a class="image image-zoom image-adapt adaptive_height"{% if link == blank %} role="link" aria-disabled="true"{% else %} href="{{ link }}"{% endif %} style="padding-top: {{ 1 | divided_by: image.aspect_ratio | times: 100 | append: '%' }}">
-                                            <img {% render 'lazyload' ,preview_img: preview_img %} />
-                                            {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
+                                            {%- assign height = image.width | divided_by: image.aspect_ratio | round -%}
+                                            {{ image | image_url: width: 1100 | image_tag: height: height, sizes: "100vw", widths: '375, 550, 750, 1100, 1500, 1780, 2000' }}
                                         </a>
                                     {%- endif -%}
                                 {%- endif -%}
                                 {%- if title -%}
-                                    <h1 class="articleLookbook-title text-{{ title_alignment }}" 
-                                        style="--lb-fontsize-title: {{ fontsize_title }};
-                                                --lb-margin-top-title: {{ margin_top_title }};
-                                                --lb-title-color: {{ title_color }};
-                                                --lb-title-text-transform: {{ title_text_transform }}"
-                                    >
-                                        {{ collection.title }}
-                                    </h1>
+                                    <h1 class="articleLookbook-title text-{{ title_alignment }}" style="--lb-fontsize-title: {{ fontsize_title }};--lb-margin-top-title: {{ margin_top_title }};--lb-title-color: {{ title_color }};--lb-title-text-transform: {{ title_text_transform }}">{{ collection.title }}</h1>
                                 {%- endif -%}
                                 
                                 {%- if show_description and block.settings.desc_pos == 'top' -%}
-                                    <div class="articleLookbook-des text-{{ desc_alignment }}"
-                                        style="--lb-fontsize-des: {{ fontsize_des }};
-                                            --lb-line-height-des: {{ fontsize_des | plus: 10 | append: 'px'}};
-                                            --lb-margin-top-des: {{ margin_top_des }};
-                                            --lb-title-des: {{ des_color }}"
-                                    >
-                                        {{ description }}
-                                    </div>
+                                    <div class="articleLookbook-des text-{{ desc_alignment }}" style="--lb-fontsize-des: {{ fontsize_des }};--lb-line-height-des: {{ fontsize_des | plus: 10 | append: 'px'}};--lb-margin-top-des: {{ margin_top_des }};--lb-title-des: {{ des_color }}">{{ description }}</div>
                                 {%- endif -%}
                             </div>
                         </div>
@@ -213,22 +169,17 @@
                         %}
                     {%- endif -%}
                     {%- if collection.products.size == 0 -%}
-                        <div class="collection collection--empty" id="main-collection-product-grid" data-id="{{ section.id }}">
-                            <p class="collection-product-count ">
-                                {{ 'sections.collection_template.product_count' | t: count: collection.products_count, total: collection.all_products_count }}
-                            </p>
+                        <div class="collection collection--empty{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="main-collection-product-grid" data-id="{{ section.id }}">
+                            <p class="collection-product-count ">{{ 'sections.collection_template.product_count' | t: count: collection.products_count, total: collection.all_products_count }}</p>
                             <div class="collection-product-wrapper">
-                                <h2 class="title">
-                                    {{ 'sections.collection_template.empty' | t }}<br>
-                                    {{ 'sections.collection_template.use_fewer_filters_html' | t: link: collection.url, class: "link-underline link" }}
-                                </h2>
+                                <h2 class="title">{{ 'sections.collection_template.empty' | t }} <br> {{ 'sections.collection_template.use_fewer_filters_html' | t: link: collection.url, class: "link-underline link" }}</h2>
                             </div>
                         </div>
                     {%- else -%}
-                        <div class="collection">
+                        <div class="collection{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                             <ul class="productListing {% if layout == '1' %} productList{% else %} productGrid column-{{ layout }}{% endif %} list-{{ layout }} list-unstyled" id="main-collection-product-grid" data-id="{{ section.id }}">
                                 {%- for product in collection.products -%}
-                                    <li class="product">
+                                    <li class="product{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} data-cascade style="--animation-order: {{ forloop.index }};"{% endif %}>
                                         {% render 'product-grid-layout',
                                             product_card_product: product,
                                             serial: forloop.index,
@@ -242,7 +193,7 @@
                             {%- if paginate.pages > 1 -%}
                                 {% render 'pagination-listing',
                                     paginate: paginate,
-                                    show_infinite_scrolling: show_infinite_scrolling,
+                                    show_infinite_scrolling: show_infinite_scrolling,pagination
                                     anchor: '',
                                     class: 'pagination-wrapper text-center' 
                                 %}
@@ -261,16 +212,9 @@
                             assign desc_alignment = block.settings.desc_alignment
                         -%}
                       {%- if show_description -%}
-                        <div class="articleLookbook-block" style="--lookbook-margin-bottom: {{ margin_bottom | append: 'px' }}";>
+                        <div class="articleLookbook-block{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="--lookbook-margin-bottom: {{ margin_bottom | append: 'px' }}";>
                             <div class="articleLookbook-item">
-                                <div class="articleLookbook-des text-{{ desc_alignment }}"
-                                    style="--lb-fontsize-des: {{ fontsize_des }};
-                                        --lb-line-height-des: {{ fontsize_des | plus: 10 | append: 'px'}};
-                                        --lb-margin-top-des: {{ margin_top_des }};
-                                        --lb-title-des: {{ des_color }}"
-                                >
-                                    {{ description }}
-                                </div>
+                                <div class="articleLookbook-des text-{{ desc_alignment }}" style="--lb-fontsize-des: {{ fontsize_des }};--lb-line-height-des: {{ fontsize_des | plus: 10 | append: 'px'}};--lb-margin-top-des: {{ margin_top_des }};--lb-title-des: {{ des_color }}">{{ description }}</div>
                             </div>
                         </div>
                       {%- endif -%}
@@ -286,10 +230,6 @@
     {%- endif -%}
 
     <div class="loading-overlay loading-overlay--custom">
-        <div class="loading-overlay__spinner">
-            <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-                <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
-            </svg>
-        </div>
+        <div class="loading-overlay__spinner" aria-label="{{ 'general.button_load_more.loading' | t }}"><svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg"><circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle></svg></div>
     </div>
 </div>

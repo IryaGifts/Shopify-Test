@@ -49,20 +49,20 @@
             {% render 'breadcrumb', alignment: breadcrumb_alignment %}
         {%- endif -%}
         {%- if show_page_title -%}
-            <h1 class="page-header text-{{ page_title_alignment }}">
+            <h1 class="page-header text-{{ page_title_alignment }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                 {{ page.title | escape }}
             </h1>
         {%- endif -%}
-        <div class="halo-page-content halo-faqs-content">
+        <div class="halo-page-content halo-faqs-content{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
             {%- if section.blocks.size > 0 -%}
                 <div class="faqs">
                     {%- if faqs_text != blank -%}
-                        <div class="faqs-desc">
+                        <div class="faqs-desc{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                             {{ faqs_text }}
                         </div>
                     {%- endif -%}
                     {%- if show_faqs_filter -%}
-                        <div class="faqs-filter clearfix" id="haloFAQsFilter">
+                        <div class="faqs-filter clearfix{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="haloFAQsFilter">
                             <span class="faqs-filterLabel">{{ 'faqs.general.filter' | t }}</span>
                             <div class="faqs-filterDropdown">
                                 <div class="faqs-filterDropdown-text" data-faqs-filter role="button" tabindex="0">
@@ -88,7 +88,7 @@
                         </div>
                     {%- endif -%}
                     <div class="faqs-message-and-questions">
-                        <div class="faqs-message">
+                        <div class="faqs-message{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                             {% if faqs_message_heading != blank %}
                                 <h3 class="faqs-title faqs-message-heading page-subheader">
                                     {{ faqs_message_heading | escape }}
@@ -120,14 +120,14 @@
                                 </div>
                             {% endif %}
                         </div>
-                        <div class="faqs-questions-and-answers">
+                        <div class="faqs-questions-and-answers{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                         {%- for block in section.blocks -%}
                             {%- liquid
                                 assign title = block.settings.title
                             -%}
                             <div class="faqs-paragraph" id="paragraph-{{ title | handleize }}">
                                     {%- if title != blank -%}
-                                        <h3 class="faqs-title page-subheader">
+                                        <h3 class="faqs-title page-subheader{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                                             {{ title | escape }}
                                         </h3>
                                     {%- endif -%}
@@ -143,7 +143,7 @@
                                                 -%}
 
                                                 {%- if question != blank -%}
-                                                    <div class="faqs-item">
+                                                    <div class="faqs-item{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                                                         <div class="card" id="#accordion-{{ block.id }}-{{ forloop.index }}">
                                                             <div class="card-header collapsed" id="question-{{ block.id }}-{{ forloop.index }}" data-toggle="collapse" data-target="#collapse-{{ block.id }}-{{ forloop.index }}" aria-expanded="true" aria-controls="collapse-{{ block.id }}-{{ forloop.index }}">
                                                                 <div class="title" role="button" tabindex="0">
@@ -172,7 +172,7 @@
             {%- endif -%}
         </div>
         {% if contact_text != blank %}
-            <div class="contact-support-button-wrapper">
+            <div class="contact-support-button-wrapper{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                 <span class="contact-support-text">{{ contact_content_text }}</span>
                 <a {% if contact_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ contact_link }}"{% endif %} class="contact-support-btn" style="--button-color-style: {{ contact_color }};
                                                                                 --button-border-color-style: {{ contact_color_border }};
@@ -238,7 +238,7 @@
         [
             {
                 "type": "header",
-                "content": "t:sections.main_faqs.settings.header__1"
+                "content": "t:settings_schema.general.name"
             },
             {
                 "type": "checkbox",
@@ -416,7 +416,7 @@
             {
                 "type" : "textarea",
                 "id" : "faqs_text",
-                "label" : "t:sections.main_faqs.settings.faqs.label__2",
+                "label" : "t:sections.image-banner.blocks.image.settings.content.label__16",
                 "default": "Below FAQ are some common concerns of our clients before purchasing the theme, if you have other questions, please just send it to example@domain.com."
             },
             {
@@ -426,13 +426,13 @@
             {
                 "type": "text",
                 "id": "faqs_message_heading",
-                "label": "t:sections.main_faqs.settings.faqs.label__3",
+                "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                 "default": "Need Help?"
             },
             {
                 "type": "textarea",
                 "id": "faqs_message_text",
-                "label": "t:sections.main_faqs.settings.faqs.label__4"
+                "label": "t:sections.image-banner.blocks.image.settings.content.label__16"
             },
             {
                 "type": "image_picker",
@@ -477,59 +477,59 @@
             {
                 "type": "text",
                 "id": "contact_text",
-                "label": "t:sections.main_faqs.settings.contact_button.label__1",
+                "label": "t:settings_schema.typography.settings.typography.button_text",
                 "default": "Contact Support"
             },
             {
                 "type": "url",
                 "id": "contact_link",
-                "label": "t:sections.main_faqs.settings.contact_button.label__2"
+                "label": "t:settings_schema.typography.settings.typography.button_link"
             },
             {
                 "type": "color",
                 "id": "contact_color",
-                "label": "t:sections.main_faqs.settings.contact_button.label__3",
+                "label": "t:settings_schema.typography.settings.typography.button_color",
                 "default": "#ffffff"
             },
             {
                 "type": "color",
                 "id": "contact_color_border",
-                "label": "t:sections.main_faqs.settings.contact_button.label__4",
+                "label": "t:sections.rich-text.blocks.button.settings.button_border",
                 "default": "#ef6454"
             },
             {
                 "type": "color",
                 "id": "contact_color_bg",
-                "label": "t:sections.main_faqs.settings.contact_button.label__5",
+                "label": "t:sections.rich-text.blocks.button.settings.button_bg",
                 "default": "#ef6454"
             },
             {
                 "type": "color_background",
                 "id": "contact_color_bg_gradient",
-                "label": "t:sections.main_faqs.settings.contact_button.label__6"
+                "label": "t:sections.rich-text.blocks.button.settings.button_bg_gradient"
             },
             {
                 "type": "color",
                 "id": "contact_color_hover",
-                "label": "t:sections.main_faqs.settings.contact_button.label__7",
+                "label": "t:sections.rich-text.blocks.button.settings.button_color_hover",
                 "default": "#ffffff"
             },
             {
                 "type": "color",
                 "id": "contact_color_border_hover",
-                "label": "t:sections.main_faqs.settings.contact_button.label__8",
+                "label": "t:sections.rich-text.blocks.button.settings.button_border_hover",
                 "default": "#ef6454"
             },
             {
                 "type": "color",
                 "id": "contact_color_bg_hover",
-                "label": "t:sections.main_faqs.settings.contact_button.label__9",
+                "label": "t:sections.rich-text.blocks.button.settings.button_bg_hover",
                 "default": "#ef6454"
             },
             {
                 "type": "color_background",
                 "id": "contact_color_bg_gradient_hover",
-                "label": "t:sections.main_faqs.settings.contact_button.label__10"
+                "label": "t:sections.rich-text.blocks.button.settings.button_bg_gradient_hover"
             }
         ],
         "blocks": [
@@ -545,7 +545,7 @@
                     {
                         "type" : "text",
                         "id" : "title",
-                        "label" : "t:sections.main_faqs.blocks.paragraph.settings.information.label__1",
+                        "label" : "t:sections.image-banner.blocks.image.settings.content.label__19",
                         "default": "Presale"
                     },
                     {

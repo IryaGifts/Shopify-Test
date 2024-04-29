@@ -75,7 +75,7 @@
                                     </a>
                                 {%- endif -%}
                             {%- else -%}
-                                {%- if variantCount > 0 and product.variants.first.title != 'Default Title' -%}
+                                {%- if variantCount > 1 and product.variants.first.title != 'Default Title' -%}
                                     {%- if product.options_with_values.size == 1 and product_swatch_option contains option_name and settings.show_swatch and settings.quick_shop_type == '1' -%}
                                         <input type="hidden" name="id" value="{{ product.variants[0].id }}" />
                                         <input type="hidden" name="quantity" value="1" />

@@ -36,233 +36,31 @@ class VariantQuickViewSelects extends HTMLElement {
     }
 
     updateVariants(variants){
-        const options = Array.from(this.querySelectorAll('.product-form__input'));
-        const type = document.getElementById(`product-quick-view-option-${this.dataset.product}`)?.getAttribute('data-type');
+        if (!variants) return;
+        const selectedOptionOneVariants = this.variantData.filter(variant => this.querySelector(':checked').value === variant.option1);
+        const inputWrappers = [...this.querySelectorAll('.product-form__input')];
+        const inputLength = inputWrappers.length;
+        inputWrappers.forEach((option, index) => {
+            option.querySelector('[data-header-option]').innerText = option.querySelector(':checked').value;
+            if (index === 0 && inputLength > 1) return;
+            const optionInputs = [...option.querySelectorAll('input[type="radio"], option')]
+            const previousOptionSelected = inputLength > 1 ? inputWrappers[index - 1].querySelector(':checked').value : inputWrappers[index].querySelector(':checked').value;
+            const optionInputsValue = inputLength > 1 ? selectedOptionOneVariants.filter(variant => variant[`option${ index }`] === previousOptionSelected).map(variantOption => variantOption[`option${ index + 1 }`]) : this.variantData.map(variantOption => variantOption[`option${ index + 1 }`]);
+            const availableOptionInputsValue = inputLength > 1 ? selectedOptionOneVariants.filter(variant => variant.available && variant[`option${ index }`] === previousOptionSelected).map(variantOption => variantOption[`option${ index + 1 }`]) : this.variantData.filter(variant => variant.available).map(variantOption => variantOption[`option${ index + 1 }`]);
+            this.setInputAvailability(optionInputs, optionInputsValue, availableOptionInputsValue)
+        });
+    }
 
-        let selectedOption1;
-        let selectedOption2;
-        let selectedOption3;
-
-        if (variants) {
-            if (type == 'button') {
-                // console.log(options[0].querySelector('[data-header-option]'));
-                if (options[0]) {
-                    selectedOption1 = Array.from(options[0].querySelectorAll('input')).find((radio) => radio.checked).value;
-                    options[0].querySelector('[data-header-option]').textContent = selectedOption1;
-                }
-
-                if (options[1]) {
-                    selectedOption2 = Array.from(options[1].querySelectorAll('input')).find((radio) => radio.checked).value;
-                    options[1].querySelector('[data-header-option]').textContent = selectedOption2;
-                }
-
-                if (options[2]) {
-                    selectedOption3 = Array.from(options[2].querySelectorAll('input')).find((radio) => radio.checked).value;
-                    options[2].querySelector('[data-header-option]').textContent = selectedOption3;
-                }
-
-                var checkVariant = () => {
-                    var optionsSize = parseInt(options.length);
-
-                    if(optionsSize > 1){
-                        var variantList = variants.filter((variant) => {
-                            switch (optionsSize) {
-                                case 2: return variant.option2 === selectedOption2;
-                                case 3: return variant.option3 === selectedOption3;
-                            }
-                        });
-
-                        var input1List = options[0].querySelectorAll('.product-form__radio');
-
-                        input1List.forEach((input) => {
-                            var label = input.nextSibling;
-                            var optionSoldout = Array.from(variantList).find((variant) => {
-                                return variant.option1 == input.value && variant.available;
-                            });
-
-                            var optionUnavailable = Array.from(variantList).find((variant) => {
-                                return variant.option1 == input.value;
-                            });
-
-                            if(optionSoldout == undefined){
-                                if (optionUnavailable == undefined) {
-                                    label.classList.remove('available');
-                                    label.classList.remove('soldout');
-                                    label.classList.add('unavailable');
-                                } else {
-                                    label.classList.remove('available');
-                                    label.classList.remove('unavailable');
-                                    label.classList.add('soldout');
-                                }
-                            } else {
-                                label.classList.remove('soldout');
-                                label.classList.remove('unavailable');
-                                label.classList.add('available');
-                            }
-                        });
-                    }
-                };
-
-                var updateVariant = (optionSoldout, optionUnavailable, element, optionIndex) => {
-                    var label = element.nextSibling;
-
-                    if(optionSoldout == undefined){
-                        if (optionUnavailable == undefined) {
-                            label.classList.remove('available');
-                            label.classList.remove('soldout');
-                            label.classList.add('unavailable');
-                        } else {
-                            label.classList.remove('available');
-                            label.classList.remove('unavailable');
-                            label.classList.add('soldout');
-                        }
-                    } else {
-                        label.classList.remove('soldout');
-                        label.classList.remove('unavailable');
-                        label.classList.add('available');
-                    }
-                };
-
-                var renderVariant = (optionIndex, fieldset) => {
-                    const inputList = fieldset.querySelectorAll('.product-form__radio');
-
-                    inputList.forEach((input) => {
-                        const inputVal = input.value;
-
-                        const optionSoldout = variants.find((variant) => {
-                            switch (optionIndex) {
-                                case 0: return variant.option1 == inputVal && variant.available;
-                                case 1: return variant.option1 == selectedOption1 && variant.option2 == inputVal && variant.available;
-                                case 2: return variant.option1 == selectedOption1 && variant.option2 == selectedOption2 && variant.option3 == inputVal && variant.available;
-                            }
-                        });
-
-                        const optionUnavailable = variants.find((variant) => {
-                            switch (optionIndex) {
-                                case 0: return variant.option1 == inputVal;
-                                case 1: return variant.option1 == selectedOption1 && variant.option2 == inputVal;
-                                case 2: return variant.option1 == selectedOption1 && variant.option2 == selectedOption2 && variant.option3 == inputVal;
-                            }
-                        });
-
-                        updateVariant(optionSoldout, optionUnavailable, input, optionIndex);
-                    });
-                };
+    setInputAvailability(optionInputs, optionInputsValue, availableOptionInputsValue) {
+        optionInputs.forEach(input => {
+            if (availableOptionInputsValue.includes(input.getAttribute('value'))) {
+                input.classList.remove('soldout');
+                input.innerText = input.getAttribute('value');
             } else {
-                if (options[0]) {
-                    selectedOption1 = options[0].querySelector('select').value;
-                    options[0].querySelector('[data-header-option]').textContent = selectedOption1;
-                }
-
-                if (options[1]) {
-                    selectedOption2 = options[1].querySelector('select').value;
-                    options[1].querySelector('[data-header-option]').textContent = selectedOption2;
-                }
-
-                if (options[2]) {
-                    selectedOption3 = options[2].querySelector('select').value;
-                    options[2].querySelector('[data-header-option]').textContent = selectedOption3;
-                }
-
-                var checkVariant = () => {
-                    var optionsSize = parseInt(options.length);
-
-                    if(optionsSize > 1){
-                        var variantList = variants.filter((variant) => {
-                            switch (optionsSize) {
-                                case 2: return variant.option2 === selectedOption2;
-                                case 3: return variant.option3 === selectedOption3;
-                            }
-                        });
-
-                        var option1List = options[0].querySelectorAll('option');
-
-                        option1List.forEach((option) => {
-                            var optionSoldout = Array.from(variantList).find((variant) => {
-                                return variant.option1 == option.value && variant.available;
-                            });
-
-                            var optionUnavailable = Array.from(variantList).find((variant) => {
-                                return variant.option1 == option.value;
-                            });
-                          
-                            if(optionSoldout == undefined){
-                                if (optionUnavailable == undefined) {
-                                    option.classList.remove('available');
-                                    option.classList.remove('soldout');
-                                    option.classList.add('unavailable');
-                                    option.setAttribute('disabled','disabled');
-                                } else {
-                                    option.classList.remove('available');
-                                    option.classList.remove('unavailable');
-                                    option.classList.add('soldout');
-                                    option.removeAttribute('disabled');
-                                }
-                            } else {
-                                option.classList.remove('soldout');
-                                option.classList.remove('unavailable');
-                                option.classList.add('available');
-                                option.removeAttribute('disabled');
-                            }
-                        });
-                    }
-                };
-
-                var updateVariant = (optionSoldout, optionUnavailable, element) => {
-                    if(optionSoldout == undefined){
-                        if (optionUnavailable == undefined) {
-                            element.classList.remove('available');
-                            element.classList.remove('soldout');
-                            element.classList.add('unavailable');
-                            element.setAttribute('disabled','disabled');
-                        } else {
-                            element.classList.remove('available');
-                            element.classList.remove('unavailable');
-                            element.classList.add('soldout');
-                            element.removeAttribute('disabled');
-                        }
-                    } else {
-                        element.classList.remove('soldout');
-                        element.classList.remove('unavailable');
-                        element.classList.add('available');
-                        element.removeAttribute('disabled');
-                    }
-                };
-
-                var renderVariant = (optionIndex, select) => {
-                    const optionList = select.querySelectorAll('option');
-
-                    optionList.forEach((option) => {
-                        const optionVal = option.getAttribute('value');
-
-                        const optionSoldout = variants.find((variant) => {
-                            switch (optionIndex) {
-                                case 0: return variant.option1 == optionVal && variant.available;
-                                case 1: return variant.option1 == selectedOption1 && variant.option2 == optionVal && variant.available;
-                                case 2: return variant.option1 == selectedOption1 && variant.option2 == selectedOption2 && variant.option3 == optionVal && variant.available;
-                            }
-                        });
-
-                        const optionUnavailable = variants.find((variant) => {
-                            switch (optionIndex) {
-                                case 0: return variant.option1 == optionVal;
-                                case 1: return variant.option1 == selectedOption1 && variant.option2 == optionVal;
-                                case 2: return variant.option1 == selectedOption1 && variant.option2 == selectedOption2 && variant.option3 == optionVal;
-                            }
-                        });
-
-                        updateVariant(optionSoldout, optionUnavailable, option);
-                    });
-                };
+                input.classList.add('soldout');
+                optionInputsValue.includes(input.getAttribute('value')) ? input.innerText = input.getAttribute('value') + ' (Sold out)' : input.innerText = window.variantStrings.unavailable_with_option.replace('[value]', input.getAttribute('value'))
             }
-
-            options.forEach((fieldset) => {
-                const optionIndex = parseInt(fieldset.getAttribute('data-option-index'));
-
-                renderVariant(optionIndex, fieldset);
-                checkVariant();
-            });
-        }
+        });
     }
 
     updateOptions() {
@@ -299,7 +97,7 @@ class VariantQuickViewSelects extends HTMLElement {
                 const html = new DOMParser().parseFromString(text, 'text/html');
 
                 const destination = document.getElementById(`product-quick-view-price-${this.dataset.product}`);
-                const source = html.querySelector('body');
+                const source = html.getElementById(`product-price-${this.dataset.product}`);
                 
                 if (source && destination) {
                     destination.innerHTML = source.innerHTML;
@@ -324,6 +122,7 @@ class VariantQuickViewSelects extends HTMLElement {
         this.quantityInput = this.item.querySelector('input[name="quantity"]');
         this.inventoryProp = this.item.querySelector('[data-inventory]');
         this.skuProp = this.item.querySelector('[data-sku]');
+        this.barcodeProp = this.item.querySelector('[data-barcode]');
         this.notifyMe = this.item.querySelector('.productView-notifyMe');
         this.hotStock = this.item.querySelector('.productView-hotStock');
         const addButton = document.getElementById(`product-quick-view-form-${this.dataset.product}`)?.querySelector('[name="add"]');
@@ -365,7 +164,7 @@ class VariantQuickViewSelects extends HTMLElement {
                 }
 
                 if(this.notifyMe){
-                    this.notifyMe.querySelector('input[name="halo-notify-product-variant"]').value = this.currentVariant.title;
+                    this.notifyMe.querySelector('.halo-notify-product-variant').value = this.currentVariant.title;
                     this.notifyMe.querySelector('.notifyMe-text').innerHTML = '';
                     this.notifyMe.style.display = 'block';
                 }
@@ -501,6 +300,10 @@ class VariantQuickViewSelects extends HTMLElement {
                 this.skuProp.querySelector('.productView-info-value').textContent = this.currentVariant.sku;
             }
 
+            if(this.barcodeProp && this.currentVariant.barcode){
+                this.barcodeProp.querySelector('.productView-info-value').textContent = this.currentVariant.barcode;
+            }
+
             productForms.forEach((productForm) => {
                 const input = productForm.querySelector('input[name="id"]');
 
@@ -517,6 +320,7 @@ class VariantQuickViewSelects extends HTMLElement {
     }
 
     checkNeedToConvertCurrency() {
+        if (typeof Currency == 'undefined') return window.show_auto_currency;
         return (window.show_multiple_currencies && Currency.currentCurrency != shopCurrency) || window.show_auto_currency;
     }
 
@@ -546,6 +350,27 @@ customElements.define('variant-quick-view-selects', VariantQuickViewSelects);
 class VariantQuickViewRadios extends VariantQuickViewSelects {
     constructor() {
         super();
+    }
+
+    setInputAvailability(optionInputs, optionInputsValue, availableOptionInputsValue) {
+        optionInputs.forEach(input => {
+            if (availableOptionInputsValue.includes(input.getAttribute('value'))) {
+                input.nextSibling.classList.remove('soldout', 'unavailable');
+                input.nextSibling.classList.add('available');
+            } else {
+                input.nextSibling.classList.remove('available', 'unavailable');
+                input.nextSibling.classList.add('soldout');
+
+                if (window.variantStrings.hide_variants_unavailable && !optionInputsValue.includes(input.getAttribute('value'))) {
+                    input.nextSibling.classList.add('unavailable')
+                    if (!input.checked) return;
+                    let inputsValue;
+                    availableOptionInputsValue.length > 0 ? inputsValue = availableOptionInputsValue : inputsValue = optionInputsValue;
+                    input.closest('.product-form__input').querySelector(`input[value="${inputsValue[0]}"]`).checked = true;
+                    this.dispatchEvent(new Event('change'))
+                }
+            }
+        });
     }
 
     updateOptions() {
@@ -645,6 +470,7 @@ class QuantityQuickViewInput extends HTMLElement {
     }
 
     checkNeedToConvertCurrency() {
+        if (typeof Currency == 'undefined') return window.show_auto_currency;
         return (window.show_multiple_currencies && Currency.currentCurrency != shopCurrency) || window.show_auto_currency;
     }
 }

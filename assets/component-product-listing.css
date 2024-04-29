@@ -637,25 +637,6 @@ body.product-card-layout-05 .productList .product-item.quickshop-popup-show .car
     content: none;
 }
 
-/*body:not(.safari).banner-animation-1 .articleLookbook-block .articleLookbook-item {
-    visibility: hidden;
-}
-
-body:not(.safari).banner-animation-1 .articleLookbook-block .articleLookbook-item.shouldShow {
-    visibility: visible;
-}
-
-body:not(.safari).banner-animation-1 .articleLookbook-block .articleLookbook-item img {
-    opacity: 0;
-    transform: scale(1.15);
-    transition: transform 800ms cubic-bezier(.13,.55,.25,1), opacity 700ms cubic-bezier(.26,.54,.32,1);
-}
-
-body:not(.safari).banner-animation-1 .articleLookbook-block .articleLookbook-item.shouldShow img {
-    opacity: 1;
-    transform: scale(1);
-}
-*/
 /* */
 .productListing.productGrid .banner-1,
 .productListing.productGrid .banner-2,
@@ -1203,8 +1184,7 @@ body:not(.safari).banner-animation-1 .articleLookbook-block .articleLookbook-ite
         width: 25px;    
         height: 25px;   
     }   
-    .productListing.column-5 .card-swatch .number-showmore {    
-        width: 24px;    
+    .productListing.column-5 .card-swatch .number-showmore {  
         height: 24px;   
         line-height: 24px   
     }

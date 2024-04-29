@@ -1,6 +1,5 @@
 {{ 'component-collection-list.css' | asset_url | stylesheet_tag }}
 {{ 'component-grid.css' | asset_url | stylesheet_tag }}
-
 {%- liquid
     assign show_sidebar = section.settings.show_sidebar
     if show_sidebar
@@ -15,52 +14,31 @@
     assign breadcrumb_bg_mb = section.settings.breadcrumb_bg_mb
     assign breadcrumb_gradient_mb = section.settings.breadcrumb_gradient_mb
 -%}
-
 <div data-section-id="{{ section.id }}" data-section-type="cart" id="CollectionListSection-{{ section.id }}" data-section="{{ section.id }}">
     <div class="{% if section.settings.container == 'fullwidth' %}container-full{% elsif section.settings.container == '1770' %}container-1770{% else %}container{% endif %}">
         {%- if section.settings.show_breadcrumb -%}
             {% render 'breadcrumb', alignment: section.settings.breadcrumb_alignment %}
         {%- endif -%}
         {%- if section.settings.show_page_title -%}
-            <h1 class="page-header text-{{ section.settings.page_title_alignment }}">
-                {{ 'sections.collection_list.title' | t }}
-            </h1>
+            <h1 class="page-header text-{{ section.settings.page_title_alignment }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">{{ 'sections.collection_list.title' | t }}</h1>
         {%- endif -%}
         {%- if section.settings.des_collection != blank -%}
-            <p class="des-collection text-{{ section.settings.des_collection_alignment }}">
-                {{ section.settings.des_collection }}
-            </p>
+            <p class="des-collection text-{{ section.settings.des_collection_alignment }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">{{ section.settings.des_collection }}</p>
         {%- endif -%}
         <div class="halo-collection-content halo-grid-content">
             {%- if show_sidebar and section.blocks.size > 0 -%}
                 {{ 'component-main-sidebar.css' | asset_url | stylesheet_tag }}
                 <div class="page-sidebar page-sidebar-{{ sidebar_position }} page-sidebar--vertical sidebar--{{ section.settings.sidebar_layout }}{% if enable_sticky %} has-sticky{% endif %}" id="halo-sidebar">
-                    <a href="javascript:void(0)" class="halo-sidebar-close" data-close-sidebar role="button">
-                        <span class="visually-hidden">{{ 'general.common.close' | t }}</span>
-                        {% render 'icon-close' %}
-                    </a>
-                    <div class="halo-sidebar-header text-left">
-                        <span class="title">
-                            {{ 'sections.sidebar.title' | t }}
-                        </span>
-                    </div>
+                    <button type="button" class="halo-sidebar-close" data-close-sidebar role="button"><span class="visually-hidden">{{ 'general.common.close' | t }}</span>{% render 'icon-close' %}</button>
+                    <div class="halo-sidebar-header text-left"><span class="title">{{ 'sections.sidebar.title' | t }}</span></div>
                     <div class="halo-sidebar-wrapper custom-scrollbar">
-                        {% render 'sidebar',
-                            section: section,
-                            show_collapse: show_collapse,
-                            sidebar_collapse: sidebar_collapse_default
-                        %}
+                        {% render 'sidebar', section: section, show_collapse: show_collapse, sidebar_collapse: sidebar_collapse_default %}
                     </div>
                 </div>
             {%- endif -%}
             <div class="halo-page-content page-content main-collection">
                 {%- if show_sidebar and section.blocks.size > 0 -%}
-                    <div class="sidebar-toogle" data-sidebar>
-                        {% render 'icon-sidebar' %}
-                        <span class='filter-text text'>
-                            {{ 'sections.collection_template.filter_button' | t }}
-                        </span>
-                    </div>
+                    <div class="sidebar-toogle" data-sidebar>{% render 'icon-sidebar' %}<span class='filter-text text'>{{ 'sections.collection_template.filter_button' | t }}</span></div>
                 {%- endif -%}
                 {% if settings.list_collections_layout == 'collections_01_grid' %}
                     {% render 'list-collections-template',
@@ -568,7 +546,7 @@
     [
         {
             "type": "header",
-            "content": "t:sections.main-list-collections.settings.header__1.content"
+            "content": "t:settings_schema.general.name"
         },
         {
             "type": "color",
@@ -2207,7 +2185,7 @@
             "settings": [
                 {
                     "type":"header",
-                    "content":"t:sections.main-sidebar.blocks.category.settings.header__1.content"
+                    "content":"t:settings_schema.general.name"
                 },
                 {
                     "type": "checkbox",
@@ -2218,7 +2196,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.category.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Categories"
                 },
                 {
@@ -2255,7 +2233,7 @@
             "settings": [
                 {
                     "type":"header",
-                    "content":"t:sections.main-sidebar.blocks.product_block.settings.header__1.content"
+                    "content":"t:settings_schema.general.name"
                 },
                 {
                     "type": "checkbox",
@@ -2266,7 +2244,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.product_block.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Featured Products"
                 },
                 {
@@ -2318,7 +2296,7 @@
             "settings": [
                 {
                     "type":"header",
-                    "content":"t:sections.main-sidebar.blocks.image.settings.header__1.content"
+                    "content":"t:settings_schema.general.name"
                 },
                 {
                     "type": "checkbox",
@@ -2329,7 +2307,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.image.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Image"
                 },
                 {
@@ -2358,7 +2336,7 @@
                 {
                     "type": "text",
                     "id": "heading",
-                    "label": "t:sections.main-sidebar.blocks.text.settings.general.label__2",
+                    "label": "t:sections.image-banner.blocks.image.settings.content.label__19",
                     "default": "Custom Block"
                 },
                 {
@@ -2371,5 +2349,3 @@
     ]
 }
 {% endschema %}
-
-

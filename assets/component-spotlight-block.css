@@ -11,14 +11,7 @@
 }
 
 .spotlight-inner {
-    padding: 0 10px;
-}
-
-.spotlight-inner.text-left {
     padding-left: var(--align-items-spacing-lr-style);
-}
-
-.spotlight-inner.text-right {
     padding-right: var(--align-items-spacing-lr-style);
 }
 
@@ -36,8 +29,9 @@
 
 .spotlight-inner .title {
     display: block;
-    margin-top: 32px;
+    margin-top: 22px;
     margin-bottom: 10px;
+    font-weight: var(--title-font-weight)
 }
 
 .spotlight-inner.not-image .title {
@@ -181,6 +175,7 @@
     overflow-y: auto;
     line-height: 1;
     font-size: 0;
+    z-index: 1;
 }
 
 .content_absolute .content::-webkit-scrollbar {
@@ -220,6 +215,9 @@
 
 .spotlight-inner h3:hover span {
     border-bottom: 2px solid var(--border-color-title-style);
+}
+.spotlight-inner--border-light h3:hover span {
+    border-bottom-width: 1px;
 }
 
 /* START: Title Border Style 3 */
@@ -270,6 +268,7 @@
     -webkit-transform: translate(-50%, 0);
     transform: translate(-50%, 0);
     padding-bottom: var(--align-items-spacing-style);
+    overflow-y: hidden;
 }
 
 .spotlight-block .content_absolute .content.align-items--bottom.enable-transparnet {
@@ -375,6 +374,10 @@
 
 .spotlight-block .slider{
     overflow-y: hidden;
+}
+
+.animate--hover-vertical-lift .spotlight-block .slider{
+    overflow-y: initial;
 }
 
 .spotlight-block .slick-prev {
@@ -518,6 +521,10 @@
         min-width: 0;   
         max-width: var(--button-width-style);   
     }
+
+    .animate--hover-vertical-lift .spotlight-block .slider.slider--tablet {
+        overflow-y: hidden;
+    }
 }
 
 @media(min-width: 768px){
@@ -527,6 +534,11 @@
 }
 
 @media(min-width: 1025px){
+    .spotlight-block .halo-row.column-2.block-layout-grid .halo-item:not(.slider__slide):not(:first-child):not(:nth-child(2)),
+    .spotlight-block .halo-row.column-2.block-layout-grid .halo-item:not(.slick-slide):not(:first-child):not(:nth-child(2)) {
+        margin-top: 15px;
+    }
+
     .spotlight-block .halo-row:not(.not-distance) {
         margin-left: var(--row-distance-style);
         margin-right: var(--row-distance-style);

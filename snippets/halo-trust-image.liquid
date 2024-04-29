@@ -4,25 +4,17 @@
 			{% capture image %}trust_image_product_{{ i }}{% endcapture %}
 			{%- if settings[image] != blank -%}
                 <li>
-                    {% assign img =  settings[image] %}
-                    <img srcset="{{ img | img_url: 'master' }} 1x, {{ img | img_url: 'master', scale: 2 }} 2x"
-		                src="{{ img | img_url: 'master' }}"
-		                loading="lazy"
-		                alt="{{ img.alt | default: shop.name | escape }}">
-                </li>
+                    {%- assign img =  settings[image] -%}
+                    <img srcset="{{ img | img_url: 'master' }}" src="{{ img | img_url: 'master' }}" loading="lazy" alt="{{ img.alt | default: shop.name | escape }}"></li>
             {%- endif -%}
 		{%- endfor -%}
 	{%- else -%}
 		{%- for i in (1..6) -%}
-			{% capture image %}trust_image_cart_{{ i }}{% endcapture %}
+			{%- capture image -%}trust_image_cart_{{ i }}{%- endcapture -%}
 			{%- if settings[image] != blank -%}
                 <li>
-                    {% assign img =  settings[image] %}
-                    <img srcset="{{ img | img_url: 'master' }} 1x, {{ img | img_url: 'master', scale: 2 }} 2x"
-		                src="{{ img | img_url: 'master' }}"
-		                loading="lazy"
-		                alt="{{ img.alt | default: shop.name | escape }}">
-                </li>
+                    {%- assign img =  settings[image] -%}
+                    <img srcset="{{ img | img_url: 'master' }}" src="{{ img | img_url: 'master' }}" loading="lazy" alt="{{ img.alt | default: shop.name | escape }}"></li>
             {%- endif -%}
 		{%- endfor -%}
 	{%- endif -%}

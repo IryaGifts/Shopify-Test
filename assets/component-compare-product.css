@@ -142,6 +142,7 @@ body.compare-product-show{
 body.compare-product-show .background-overlay{
 	opacity: 1;
     pointer-events: all;
+    z-index: 101;
 }
 
 body.compare-product-show .halo-compare-product-popup{
@@ -149,6 +150,7 @@ body.compare-product-show .halo-compare-product-popup{
     visibility: visible;
     pointer-events: auto;
     transform: translate3d(-50%,-50%,0);
+    z-index: 102;
 }
 
 @media (min-width: 1025px) {

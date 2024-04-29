@@ -1,13 +1,7 @@
 <link rel="stylesheet" href="{{ 'component-large-lookbook-banner.css' | asset_url }}" media="print" onload="this.media='all'">
 <noscript>{{ 'component-large-lookbook-banner.css' | asset_url | stylesheet_tag }}</noscript>
-
 {{ 'lookbook-script.js' | asset_url | script_tag }}
-
-<script>
-    window.currencySymbol ="{{ cart.currency.symbol }}";
-</script>
-
-{% liquid 
+{%- liquid 
     assign mg_top_desktop = section.settings.mg_top_desktop | append: 'px'
     assign mg_top_tablet = section.settings.mg_top_tablet | append: 'px'
     assign mg_top_mobile = section.settings.mg_top_mobile | append: 'px'
@@ -76,49 +70,24 @@
             assign has_fancy_box = true 
         endif 
     endfor 
-%}
+-%}
 
 <style type="text/css">
-    .section-block-{{section.id}} {
-        padding-top: {{ mg_top_desktop }};
-        padding-bottom: {{ mg_bottom_desktop }};
-    }
+    .section-block-{{section.id}} {padding-top: {{ mg_top_desktop }};padding-bottom: {{ mg_bottom_desktop }}}
 
-    {% if container == 'fullwidth' %}
-        .section-block-{{section.id}} .container-full {
-            padding-left: {{ padding_full_width }};
-            padding-right: 0;
-        }
+    {%- if container == 'fullwidth' -%}
+        .section-block-{{section.id}} .container-full {padding-left: {{ padding_full_width }};padding-right: 0}
+        .layout_rtl .section-block-{{section.id}} .container-full {padding-right: {{ padding_full_width }};padding-left: 0}
+    {%- endif -%}
 
-        body.layout_rtl .section-block-{{section.id}} .container-full {
-            padding-right: {{ padding_full_width }};
-            padding-left: 0;
-        }
-    {% endif %}
+    {%- if section_gradient != blank and section_gradient != 'rgba(0,0,0,0)' -%}
+        .section-block-{{section.id}} {background: {{ section_gradient }}}
+    {%- elsif section_bg != blank and section_bg != 'rgba(0,0,0,0)' -%}
+        .section-block-{{section.id}} {background: {{ section_bg }}}
+    {%- endif -%}
 
-    {% if section_gradient != blank and section_gradient != 'rgba(0,0,0,0)' %}
-        .section-block-{{section.id}} {
-            background: {{ section_gradient }};
-        }
-    {% elsif section_bg != blank and section_bg != 'rgba(0,0,0,0)' %}
-        .section-block-{{section.id}} {
-            background: {{ section_bg }};
-        }
-    {% endif %}
-
-    @media screen and (max-width: 1024px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_tablet }};
-            padding-bottom: {{ mg_bottom_tablet }};
-        }
-    }
-
-    @media screen and (max-width: 767px) {
-        .section-block-{{section.id}} {
-            padding-top: {{ mg_top_mobile }};
-            padding-bottom: {{ mg_bottom_mobile }};
-        }
-    }
+    @media screen and (max-width: 1024px) {.section-block-{{section.id}} {padding-top: {{ mg_top_tablet }};padding-bottom: {{ mg_bottom_tablet }}}}
+    @media screen and (max-width: 767px) {.section-block-{{section.id}} {padding-top: {{ mg_top_mobile }};padding-bottom: {{ mg_bottom_mobile }}}}
 </style>
 
 {%- if has_fancy_box -%}
@@ -126,68 +95,30 @@
     <noscript>{{ 'component-fancybox.css' | asset_url | stylesheet_tag }}</noscript>
 {%- endif -%}
 
-<div class="large-lookbook-banner section-block-{{section.id}}" id="large-lookbook-banner-{{section.id}}" data-loader-script="{{ 'halo.large-lookbook-slider.js' | asset_url }}">
+<div class="large-lookbook-banner section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" id="large-lookbook-banner-{{section.id}}" data-loader-script="{{ 'halo.large-lookbook-slider.js' | asset_url }}">
     <div class="{% if container == 'fullwidth' %}container-full{% elsif container == '1170' %}container-1170{% elsif container == '1770' %}container-1770{% else %}container{% endif %}">
-        <div class="large-lookbook-banner-wrapper" style="--header-max-width: {{ content_width }};">
-            {% if title != blank or des != blank %}
+        <div class="large-lookbook-banner-wrapper" style="--header-max-width: {% if title != blank or des != blank %}{{ content_width }}{% else %}0px{% endif %};">
+            {%- if title != blank or des != blank -%}
                 <div class="halo-block-header lookbook__left text-{{ text_align }}">
-                    {% if title != blank %}
-                        <h3 class="title large-lookbook-banner-title" 
-                            style="
-                                --title-color: {{ color_title }};
-                                --title-mg-bottom: {{ mg_bottom_title }};
-                                --title-mg-top: {{ mg_top_title }};
-                                --title-fs: {{ fontsize_title }};
-                                --title-fs-mb: {{ fontsize_title_mb }};
-                                --max-width: {{ content_width }};
-                            "
-                        >
-                            <span class="text">
-                                {{ title }}
-                            </span>
-                        </h3>
-                    {% endif %}
-                    {% if des != blank %}
-                        <div class="des large-lookbook-banner-des" 
-                            style="
-                            --des-color: {{ color_des }};
-                            --des-mg-bottom: {{ margin_bottom_des }};
-                            --des-fs: {{ fontsize_des }};
-                            --des-fw-mb: {{ fontsize_des_mb }};
-                            --max-width: {{ content_width }};
-                            "
-                        >
-                            {{ des }}
-                        </div>        
-                    {% endif %}
-                    {% if view_more != blank %}
-                        <div class="view-all-container text-{{ view_all_pos }}">
-                            <a 
-                                class="view-more"
-                                {% if view_all_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ view_all_link }}"{% endif %}
-                                title="{{ view_more }}"
-                                style="
-                                    --view-color: {% if view_all_color != blank %}{{ view_all_color }}{% endif %};
-                                    --view-fs: {{ view_all_font_size }};
-                                    --view-fw: {{ view_all_font_weight }};
-                                    --view-mg-top: {{  view_more_mg_top | divided_by: 2 | append: 'px'  }};
-                                    {% if view_all_enable_border %}
-                                        text-decoration: underline;
-                                        text-underline-offset: 2px;
-                                        text-decoration-color: {% if view_all_under_color != blank and view_all_under_color != 'rgba(0,0,0,0)' %}{{ view_all_under_color }}{% else %}currentColor{% endif %};
-                                    {% endif %}
-                                "
-                            >{{ view_more }}</a>
+                    {%- if title != blank -%}
+                        <h3 class="title large-lookbook-banner-title{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 0;{% endif %}--title-color: {{ color_title }};--title-mg-bottom: {{ mg_bottom_title }};--title-mg-top: {{ mg_top_title }};--title-fs: {{ fontsize_title }};--title-fs-mb: {{ fontsize_title_mb }};--max-width: {{ content_width }}"><span class="text">{{ title }}</span></h3>
+                    {%- endif %}
+                    {%- if des != blank -%}
+                        <div class="des large-lookbook-banner-des{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" style="{% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 1;{% endif %}--des-color: {{ color_des }};--des-mg-bottom: {{ margin_bottom_des }};--des-fs: {{ fontsize_des }};--des-fw-mb: {{ fontsize_des_mb }};--max-width: {{ content_width }}">{{ des }}</div>        
+                    {%- endif -%}
+                    {%- if view_more != blank -%}
+                        <div class="view-all-container text-{{ view_all_pos }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"{% if settings.banner_animation == 'effect_fade_up' %} style="--animation-order: 2;"{% endif %}>
+                            <a class="view-more"{% if view_all_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ view_all_link }}"{% endif %} title="{{ view_more }}" style="--view-color: {% if view_all_color != blank %}{{ view_all_color }}{% endif %};--view-fs: {{ view_all_font_size }};--view-fw: {{ view_all_font_weight }};--view-mg-top: {{  view_more_mg_top | divided_by: 2 | append: 'px'  }};{% if view_all_enable_border %}text-decoration: underline;text-underline-offset: 2px;text-decoration-color: {% if view_all_under_color != blank and view_all_under_color != 'rgba(0,0,0,0)' %}{{ view_all_under_color }}{% else %}currentColor{% endif %}{% endif %}">{{ view_more }}</a>
                         </div>
-                    {% endif %}
+                    {%- endif -%}
                 </div>
-            {% endif %}
-            {% if section.blocks.size > 0 %}
-                <div class="halo-block-content lookbook__right">
+            {%- endif -%}
+            {%- if section.blocks.size > 0 -%}
+                <div class="halo-block-content lookbook__right{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}">
                     <div class="lookbooks" data-show-lookbook-container style="--scrollbar-spacing: {{ view_more_mg_top | divided_by: 2 | append: 'px' }};" data-large-lookbook-slider>
-                        {% for block in section.blocks %}
-                            {% if block.type == 'lookbook_image' %}
-                                {% liquid 
+                        {%- for block in section.blocks -%}
+                            {%- if block.type == 'lookbook_image' -%}
+                                {%- liquid 
                                     assign lookbook_image = block.settings.lookbook_image
                                     assign lookbook_image_action = block.settings.lookbook_image_action
                                     assign lookbook_image_link = block.settings.lookbook_image_link
@@ -211,43 +142,25 @@
                                     assign left_4 = block.settings.horizontal_pos_4 | append: '%' 
                                     assign top_4 = block.settings.vertical_pos_4 | append: '%' 
                                     assign lookbook_pos_4 = block.settings.lookbook_pos_4
-                                %}
-                                <large-lookbook-with-show-all  
-                                    class="lookbook-image-item {% if enable_lookbook_width %}width-restricted{% endif %}" 
-                                    data-lookbook-item-container
-                                    style="
-                                        --dot-desktop-size: {{ dot_desktop_size }};
-                                        --dot-mobile-size: {{ dot_mobile_size }};
-                                        --dot-shadow-color: {{ dot_shadow_color }};
-                                        --dot-outer-color: {{ dot_outer_color }};
-                                        --dot-inner-color: {{ dot_inner_color }};
-                                        --dot-number-desktop-size: {{ number_desktop_size }};
-                                        --dot-number-mobile-size: {{ number_mobile_size }};
-                                        --max-width: {{ lookbook_width }};
-                                        --des-max-width: {% if des_width > 0 %}{{ des_width | append: 'px' }}{% else %}unset{% endif %};
-                                        --truncate-line: {{ lookbook_truncate }};
-                                    "
-                                >
+                                -%}
+                                <large-lookbook-with-show-all class="lookbook-image-item {% if enable_lookbook_width %}width-restricted{% endif %}" data-lookbook-item-container style="--dot-desktop-size: {{ dot_desktop_size }};--dot-mobile-size: {{ dot_mobile_size }};--dot-shadow-color: {{ dot_shadow_color }};--dot-outer-color: {{ dot_outer_color }};--dot-inner-color: {{ dot_inner_color }};--dot-number-desktop-size: {{ number_desktop_size }};--dot-number-mobile-size: {{ number_mobile_size }};--max-width: {{ lookbook_width }};--des-max-width: {% if des_width > 0 %}{{ des_width | append: 'px' }}{% else %}unset{% endif %};--truncate-line: {{ lookbook_truncate }}">
                                     <div class="lookbook-image" data-lookbook-image>
-                                        <div class="img-box">
-                                            {% if lookbook_image != blank %}
-                                                <a 
-                                                    class="adaptive_height fancybox"
-                                                    {% if lookbook_image_action == 'link' %}{% if lookbook_image_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ lookbook_image_link }}"{% endif %}{% else %}class="fancybox" rel="lookbook" href="{{ lookbook_image | img_url: 'master' }}" data-fancybox="images"{% endif %}
-                                                    style="padding-top: {{ 1 | divided_by: lookbook_image.aspect_ratio | times: 100 }}%">
-                                                        <img {% render 'lazyload',preview_img: lookbook_image %} />
-                                                        {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
+                                        <div class="img-box{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }} o-hidden{% endif %}">
+                                            {%- if lookbook_image != blank -%}
+                                                <a class="adaptive_height fancybox image"{% if lookbook_image_action == 'link' %}{% if lookbook_image_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ lookbook_image_link }}"{% endif %}{% else %} class="fancybox" rel="lookbook" href="{{ lookbook_image | img_url: 'master' }}" data-fancybox="images"{% endif %} style="padding-top: {% unless lookbook_image.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: lookbook_image.aspect_ratio | times: 120 | append: '%' }}{% else %}{{ 1 | divided_by: lookbook_image.aspect_ratio | times: 100 | append: '%' }}{% endunless %}" aria-label="{{lookbook_image.alt | default: shop.name | escape }}">
+                                                        {%- assign width = lookbook_image.width -%}
+                                                        {%- assign height = lookbook_image.width | divided_by: lookbook_image.aspect_ratio | round -%}
+                                                        <img {% render 'lazyload',preview_img: lookbook_image, width: width, height: height %}{% unless lookbook_image.presentation.focal_point == '50.0% 50.0%' %} style="object-position: {{ lookbook_image.presentation.focal_point }}"{% endunless %} />
+                                                        {%- if settings.enable_lazyload -%}<span class="data-lazy-loading"></span>{%- endif -%}
                                                 </a>
-                                            {% else %}
-                                                <a href="javascript:void(0)" class="image-zoom">
-                                                    <div class="not_img" style="--height_not_img: 770px; --width_not_img: {% if forloop.index == 2 %}770px;{% else %}1270px;{% endif %}">1270 x 770px</div>
-                                                </a>
-                                            {% endif %}
+                                            {%- else -%}
+                                                <div class="not_img" style="--height_not_img: 770px; --width_not_img: {% if forloop.index == 2 %}770px;{% else %}1270px;{% endif %}">1270 x 770px</div>
+                                            {%- endif -%}
                                         </div>
                                             
-                                        {% if product_1 != blank or product_2 != blank or product_3 != blank or product_4 != blank %}
+                                        {%- if product_1 != blank or product_2 != blank or product_3 != blank or product_4 != blank -%}
                                             <lookbook-wrapper>
-                                            {% if product_1 != blank %}
+                                            {%- if product_1 != blank -%}
                                                 {% render 'lookbook-modal-wrapper',
                                                     lookbook_style: lookbook_style,
                                                     top: top_1,
@@ -259,8 +172,8 @@
                                                     show_plus_icon: show_plus_icon,
                                                     num: 1,
                                                 %}
-                                            {% endif %}
-                                            {% if product_2 != blank %}
+                                            {%- endif -%}
+                                            {%- if product_2 != blank -%}
                                                 {% render 'lookbook-modal-wrapper',
                                                     lookbook_style: lookbook_style,
                                                     top: top_2,
@@ -272,8 +185,8 @@
                                                     show_plus_icon: show_plus_icon,
                                                     num: 2,
                                                 %}
-                                            {% endif %}
-                                            {% if product_3 != blank %}
+                                            {%- endif -%}
+                                            {%- if product_3 != blank -%}
                                                 {% render 'lookbook-modal-wrapper',
                                                     lookbook_style: lookbook_style,
                                                     top: top_3,
@@ -285,8 +198,8 @@
                                                     show_plus_icon: show_plus_icon,
                                                     num: 3
                                                 %}  
-                                            {% endif %}
-                                            {% if product_4 != blank %}
+                                            {%- endif -%}
+                                            {%- if product_4 != blank -%}
                                                 {% render 'lookbook-modal-wrapper',
                                                     lookbook_style: lookbook_style,
                                                     top: top_4,
@@ -298,69 +211,53 @@
                                                     show_plus_icon: show_plus_icon,
                                                     num: 4
                                                 %}  
-                                            {% endif %}
+                                            {%- endif -%}
                                             </lookbook-wrapper>
-                                        {% endif %}
-                                        {% if lookbook_style == '2' %}
-                                            {% if product_1 != blank or product_2 != blank or product_3 != blank or product_4 != blank %}
-                                                <div 
-                                                    class="show-all-lookbook" 
-                                                    data-show-all-lookbook
-                                                    style="
-                                                        --view-all-bg: {% if show_btn_gradient != blank and show_btn_gradient != 'rgba(0,0,0,0)' %}{{ show_btn_gradient }}{% elsif show_btn_bg_color != blank and show_btn_bg_color != 'rgba(0,0,0,0)' %}{{ show_btn_bg_color }}{% endif %};
-                                                        --show-text-color: {% if show_btn_text_color != blank and show_btn_text_color != 'rgba(0,0,0,0)' %}{{ show_btn_text_color }}{% endif %};
-                                                        --button-width: {{ show_btn_width }};
-                                                        --button-height: {{ show_btn_height }};
-                                                        "
-                                                >
+                                        {%- endif -%}
+                                        {%- if lookbook_style == '2' -%}
+                                            {%- if product_1 != blank or product_2 != blank or product_3 != blank or product_4 != blank -%}
+                                                <div class="show-all-lookbook" data-show-all-lookbook style="--view-all-bg: {% if show_btn_gradient != blank and show_btn_gradient != 'rgba(0,0,0,0)' %}{{ show_btn_gradient }}{% elsif show_btn_bg_color != blank and show_btn_bg_color != 'rgba(0,0,0,0)' %}{{ show_btn_bg_color }}{% endif %};--show-text-color: {% if show_btn_text_color != blank and show_btn_text_color != 'rgba(0,0,0,0)' %}{{ show_btn_text_color }}{% endif %};--button-width: {{ show_btn_width }};--button-height: {{ show_btn_height }}">
                                                     <div class="btns-wrapper">
-                                                        <button class="show-btn-wrapper btn-wrapper">
-                                                            {% render 'icon-plus' %}
-                                                            {% if show_text != blank %}
+                                                        <button class="show-btn-wrapper btn-wrapper">{% render 'icon-plus' %}
+                                                            {%- if show_text != blank -%}
                                                                 <span class="text">{{ show_text }}</span>
-                                                            {% endif %}
+                                                            {%- endif -%}
                                                         </button>
-                                                        <button class="hide-btn-wrapper btn-wrapper">
-                                                            {% render 'icon-close', class: 'icon icon-close' %}
-                                                            {% if hide_text != blank %}
+                                                        <button class="hide-btn-wrapper btn-wrapper">{% render 'icon-close', class: 'icon icon-close' %}
+                                                            {%- if hide_text != blank -%}
                                                                 <span class="text">{{ hide_text }}</span>
-                                                            {% endif %}
+                                                            {%- endif -%}
                                                         </button>
                                                     </div>
                                                 </div>
-                                            {% endif %}
-                                        {% endif %}
+                                            {%- endif -%}
+                                        {%- endif -%}
                                     </div>
                                 </large-lookbook-with-show-all>
-                            {% endif %}
-                        {% endfor %}
+                            {%- endif -%}
+                        {%- endfor -%}
                     </div>
                 </div>
-            {% endif %}
+            {%- endif -%}
         </div> 
     </div>
 </div>
-
 <script>
     class LargeLookbookWithShowAll extends HTMLElement {
         constructor() {
             super();
         }
-
         connectedCallback() {
             this.showAllBtn = this.querySelector('[data-show-all-lookbook]');
             this.lookbookImage = this.querySelector('[data-lookbook-image]');
-
             if (this.showAllBtn) {
                 this.showAllBtn.addEventListener('click', this.toggleShowAll.bind(this));
             }
         }
-
         toggleShowAll() {
             this.lookbookImage.classList.toggle('show-all');
         }
     }
-
     customElements.define('large-lookbook-with-show-all', LargeLookbookWithShowAll);
 </script>
 
@@ -374,7 +271,7 @@
     "settings": [   
         {
             "type": "header",
-            "content": "t:sections.layout.content"
+            "content": "t:settings_schema.general.name"
         },
         {
             "type": "select",
@@ -702,6 +599,31 @@
             "step": 1,
             "default": 35,
             "unit": "t:sections.layout.fontsize.fontsize_title.unit"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.main-product.settings.general.animation"
+        },
+        {
+          "type": "select",
+          "id": "image_behavior",
+          "options": [
+            {
+              "value": "none",
+              "label": "t:settings_schema.typography.settings.text_transform.options__1"
+            },
+            {
+              "value": "ambient",
+              "label": "t:sections.main-product.settings.general.image_behavior.option__1"
+            },
+            {
+              "value": "zoom-in",
+              "label": "t:sections.main-product.settings.general.image_behavior.option__3"
+            }
+          ],
+          "default": "none",
+          "info": "t:sections.main-product.settings.general.image_behavior.info",
+          "label": "t:sections.main-product.settings.general.image_behavior.label"
         },
         {
             "type": "header",
@@ -1130,6 +1052,9 @@
         {
           "name": "t:sections.large_lookbook_banner.name"
         }
-    ]
+    ],
+    "disabled_on": {
+        "groups": ["header"]
+    }
   }
 {% endschema %}

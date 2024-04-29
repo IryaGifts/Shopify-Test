@@ -1,8 +1,6 @@
-<link rel="stylesheet" href="{{ 'component-compare-color.css' | asset_url }}" media="print" onload="this.media='all'">
-
 <noscript>{{ 'component-compare-color.css' | asset_url | stylesheet_tag }}</noscript>
 
-<compare-color class="halo-popup halo-compare-color-popup customPopup-large" data-compare-color-popup id="halo-compare-color-popup">
+<compare-color class="halo-popup halo-compare-color-popup customPopup-large" data-compare-color-popup id="halo-compare-color-popup" data-url-style-compare-color="{{ 'component-compare-color.css' | asset_url }}" data-url-script-compare-color="{% if show_compare_color_drop_drap %}https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js{% endif %}">
     <div class="halo-popup-wrapper">
         <div class="halo-popup-header">
             <button type="button" class="halo-popup-close clearfix" data-close-compare-color-popup aria-label="{{ 'general.common.close' | t }}">
@@ -22,14 +20,44 @@
                         assign colorList = ''
                         assign color = ''
                     -%}
-                    {%- if variantCount > 0 and product.variants.first.title != 'Default Title' -%}
+                    {%- if variantCount > 1 and product.variants.first.title != 'Default Title' -%}
                         <ul class="compareColors-list list-unstyled text-left">
                             {%- for variant in product.variants -%}
                                 {% capture color %}
                                     {{ variant.options[index] }}
                                 {% endcapture %}
                                 {%- unless colorList contains color -%}
-                                    {%- assign text = color | handleize -%}
+                                    {%- liquid
+                                        assign text = color | handleize
+                                        assign enable_variant_image = false
+                                        case swatch_type
+                                            when 'variant_image'
+                                                assign background_image = variant.image.src | product_img_url: '40x'
+                                                if variant.image
+                                                    assign enable_variant_image = true
+                                                endif
+                                            when 'color'
+                                                assign background_image = color | handle | append: '.png' | file_url
+                                                assign enable_variant_image = true
+                                            when 'metafields'
+                                                assign variant_color = variant.metafields.custom.variant_color
+                                                assign color_codes = false
+
+                                                if variant_color
+                                                    assign enable_variant_image = true
+                                                
+                                                    if variant_color contains '#' or variant_color contains 'rgb' or variant_color contains 'hsl'
+                                                        assign color_codes = true
+                                                        assign background_color = variant_color
+                                                    else
+                                                        assign background_image = variant_color | append: '.png' | file_url
+                                                    endif
+                                                elsif variant.image
+                                                    assign enable_variant_image = true
+                                                    assign background_image = variant.image.src | product_img_url: '40x'
+                                                endif
+                                        endcase
+                                    -%}
                                     <li class="item">
                                         <input class="swatch-compare-color-option" type="checkbox" name="swatch-compare-color-{{ text }}" value="{{ text }}" id="swatch-compare-color-{{ text }}">
                                         <label
@@ -41,16 +69,11 @@
                                                 data-variant-img="{{ product.featured_image.src | img_url: '200x' }}"
                                             {% endif %}
                                             for="swatch-compare-color-{{ text }}"
-                                        >   
-                                            {%- if variant.image %}
-                                                <span class="pattern" style="background-image: url({{ variant.image.src | img_url: '40x'}});"></span>
-                                            {%- else -%}
-                                                {%- if swatch_type == 'variant_image' -%}
-                                                    <span class="pattern" style="background-image: url({{ color | handle | append: '.' | append: file_extension | file_url }})"></span>
-                                                {%- else -%}
-                                                    <span class="pattern" style="background-color: {{ color | split: ' ' | last | handle }};"></span>
-                                                {%- endif -%}
-                                            {%- endif -%}
+                                        >
+                                            <span
+                                                class="pattern"
+                                                style="background-color: {{ color | split: ' ' | last | handle }};{% if enable_variant_image %}{% if swatch_type == 'metafields' %}{% if color_codes %} background: {{ background_color }}{% else %} background: url({{ background_image }}); background-size: cover;{% endif %}{% else %} background-image: url({{ background_image }});{% endif %}{% endif %}"
+                                            ></span>
                                         </label>
                                         <span class="tooltip">
                                             {{ text }}
@@ -73,7 +96,5 @@
         </div>
     </div>
 </compare-color>
-{% if show_compare_color_drop_drap %}
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-{% endif %}
+
 <script src="{{ 'halo-compare-color.js' | asset_url }}" defer="defer"></script>

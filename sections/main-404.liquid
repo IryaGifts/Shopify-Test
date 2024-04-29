@@ -39,12 +39,12 @@
 
   -%}  
 
-  .template-404 .title + * {
+  #NotFoundSection-{{ section.id }} .title + * {
     margin-top: 1rem;
   }
 
   @media screen and (min-width: 750px) {
-    .template-404 .title + * {
+    #NotFoundSection-{{ section.id }} .title + * {
       margin-top: 2rem;
     }
   }
@@ -228,7 +228,7 @@
     "settings": [
       {
           "type": "header",
-          "content": "t:sections.general.settings.header__1.content"
+          "content": "t:settings_schema.general.name"
       },
       {
         "type": "image_picker",

@@ -162,6 +162,10 @@
         margin-top: 10px;
         margin-bottom: 10px;
     }
+
+    .counter-positions-image-banner-wrapper .section-block-banner-image.zoom--in {
+        overflow: hidden;
+    }
 }
 
 @media screen and (min-width: 1200px) {
@@ -174,13 +178,13 @@
         overflow: hidden;
     }
     
-    .counter-positions-image-banner-wrapper .section-block-banner-image .img-box {
+   /* .counter-positions-image-banner-wrapper .section-block-banner-image .img-box {
         transform: scale(1.15);
         opacity: 0;
         pointer-events: none;
         transform-style: preserve-3d;
         backface-visibility: visible;
-    }
+    }*/
 
     .counter-positions-image-banner-wrapper .section-block-banner-image.show .img-box {
         opacity: 1;
