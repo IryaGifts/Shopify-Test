@@ -440,7 +440,7 @@ input::-webkit-search-decoration {
     }
 
     #predictive-search-results-list .products-grid .product {
-        width: 250px;
+        width: 50%;
         margin: 0;
     }
 
