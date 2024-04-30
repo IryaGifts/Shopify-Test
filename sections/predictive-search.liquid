@@ -1,3 +1,29 @@
+<style>
+  /* Desktop View */
+.text-suggestions-box {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.text-dropdown {
+  max-height: 300px; /* Adjust height as needed */
+  overflow-y: auto;
+}
+
+.text-suggestions-heading {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* Mobile View */
+@media (max-width: 767px) {
+  .text-dropdown {
+    margin-top: 20px;
+  }
+}
+
+</style>
 {%- if predictive_search.performed -%}
   <div id="predictive-search-results" class="quickSearchResults quickSearchResultsBlock custom-scrollbar">
     <div class="container">
