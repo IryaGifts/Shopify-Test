@@ -1,3 +1,43 @@
+.text-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.text-dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; /* Allow content to expand */
+}
+
+.text-dropdown ul li {
+    padding: 7px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-bottom: 1px solid #ccc; /* Add a line between the texts */
+}
+
+.text-dropdown ul li:first-child {
+    border-top: none; /* Remove the top border for the first item */
+}
+
+.text-dropdown ul li:last-child {
+    border-bottom: none; /* Remove the bottom border for the last item */
+}
+
+.text-dropdown ul li:hover {
+    background-color: #f0f0f0;
+}
+
+/* Adjustments for mobile responsiveness */
+@media only screen and (max-width: 768px) {
+    .text-dropdown ul {
+        max-height: auto; /* Remove fixed height */
+    }
+}
+
 .search-modal {
     display: block;
     opacity: 0;
