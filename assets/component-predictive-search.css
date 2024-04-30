@@ -691,6 +691,7 @@ predictive-search .price--on-sale .price__sale {
         right: 0;
         left: -20px;
         top: 100%;
+      width:100vw;
     }
 }
 
