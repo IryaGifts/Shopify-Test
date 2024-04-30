@@ -689,7 +689,7 @@ predictive-search .price--on-sale .price__sale {
 @media screen and (max-width: 749px) {
     .predictive-search--header {
         right: 0;
-        left: 0;
+        left: -20px;
         top: 100%;
     }
 }
