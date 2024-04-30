@@ -450,7 +450,7 @@ input::-webkit-search-decoration {
     }
 
     .quickSearchResults .container {
-        padding-left: 0;
+        padding-left: 12px;
         padding-right: 0;
     }
 
