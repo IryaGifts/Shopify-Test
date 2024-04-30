@@ -435,7 +435,6 @@ input::-webkit-search-decoration {
         font-size: 0;
         display: block;
         /* flex-wrap: wrap; */
-      width:270px;
         overflow: auto;
         white-space: nowrap;
     }
