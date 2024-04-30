@@ -433,7 +433,8 @@ input::-webkit-search-decoration {
 
     #predictive-search-results-list .products-grid {
         font-size: 0;
-        display: block;
+        display: flex;
+        flex-wrap: wrap;
         overflow: auto;
         white-space: nowrap;
     }
