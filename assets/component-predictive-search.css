@@ -134,6 +134,7 @@ body:not(:has(predictive-search)) .quickSearchResultsWrap {
 }
 
 .quickSearchResultsBlock .search-block-title .text {
+    color:#5f0a0c
     font-size: 13px;
     font-weight: 600;
     display: inline-block;
