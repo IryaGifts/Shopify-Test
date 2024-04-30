@@ -148,6 +148,261 @@
             {%- endfor -%}
         </div>
     </div>
+
+                          <!-- here is the extra search bar code -->
+                   
+
+{%- if section.settings.show_search_bar -%}
+  {%- assign is_mobile = true -%}
+
+  <style>
+    
+    /* Define styles for desktop */
+    @media screen and (min-width: 768px) {
+        .mobile-header-search {
+            display: none; /* Hide search bar on desktop */
+        }
+    }
+    
+  .mobile-header-search {
+    display: none; /* Hide the search bar by default */
+    /* Add your styling for the search bar */
+    width: 90%; /* Adjust the width as needed */
+    margin: auto 20px; /* Center the search bar and move it upwards */
+    border-radius: 9px; /* Add curved edges */
+    background-color: #fff; /* Background color for the search bar */
+    padding: 0px; /* Add padding */
+    margin-top: 0px;
+    margin-bottom: 10px;
+  }
+
+  .mobile-header-search.mobile {
+    display: block; /* Show the search bar on mobile */
+    /* Add mobile-specific styling here */
+  }
+
+  .search-form {
+    /* Add styling for the search form */
+    display: flex;
+    background-color: #fff;
+    border-radius: 5px;
+  }
+    
+  .search-submit img {
+    background-color: #fff;
+    padding: 4px;
+    width:25px;}
+
+  .search-input {
+    /* Add styling for the search input field */
+    flex: 1;
+    /* border: 1px solid #000; Remove border */
+    border: none;
+    outline: none; /* Remove outline */
+    padding: 5px; /* Add padding */
+    border-radius: 5px; /* Add curved edges */
+    overflow: hidden; /* Hide overflow text */
+    background-color: #fff;
+    font-size:16px;
+    padding:10px;
+  }
+
+  .search-input::placeholder {
+    /* Add styling for the placeholder text */
+    opacity: 50; /* Make placeholder text transparent */
+    animation: typing 3s steps(40) infinite;
+  }
+
+  .search-submit {
+    /* Add styling for the search submit button */
+    border: none; /* Remove border */
+    outline: none; /* Remove outline */
+    background-color: #fff;
+    color: #5f0a0c;
+    border-radius: 5px; /* Add curved edges */
+    padding: 3px 10px; /* Add padding */
+    margin-left: 5px; /* Add margin */
+    cursor: pointer; /* Change cursor to pointer */
+      opacity: 1;
+  /* }
+    
+[data-predictive-search] {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    visibility: hidden; /* Initially hide the dropdown */
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s linear;
+}
+
+[data-predictive-search].open {
+    visibility: visible; /* Show the dropdown when open */
+    opacity: 1;
+} */
+
+  </style>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    var placeholders = [
+        "{{ section.settings.placeholder_1 }}",
+        "{{ section.settings.placeholder_2 }}",
+        "{{ section.settings.placeholder_3 }}",
+        "{{ section.settings.placeholder_4 }}",
+        "{{ section.settings.placeholder_5 }}"
+    ];
+    var placeholderIndex = 0;
+    var input = document.querySelector(".search-input");
+    var typingSpeed = 100; // Typing speed in milliseconds
+    var deletingSpeed = 50; // Deleting speed in milliseconds
+    var animationDuration = 3000; // Animation duration in milliseconds
+    var typingInterval;
+
+    function changePlaceholder() {
+        var currentPlaceholder = placeholders[placeholderIndex];
+        var index = 0;
+
+        typingInterval = setInterval(function() {
+            input.setAttribute("placeholder", currentPlaceholder.substring(0, index));
+            index++;
+
+            if (index > currentPlaceholder.length) {
+                clearInterval(typingInterval);
+                setTimeout(function() {
+                    deletePlaceholder(currentPlaceholder);
+                }, animationDuration / 2);
+            }
+        }, typingSpeed);
+    }
+
+    function deletePlaceholder(placeholder) {
+        var index = placeholder.length;
+
+        typingInterval = setInterval(function() {
+            input.setAttribute("placeholder", placeholder.substring(0, index));
+            index--;
+
+            if (index < 0) {
+                clearInterval(typingInterval);
+                placeholderIndex = (placeholderIndex + 1) % placeholders.length;
+                setTimeout(function() {
+                    changePlaceholder();
+                }, animationDuration / 2);
+            }
+        }, deletingSpeed);
+    }
+
+    changePlaceholder();
+          // Initialize predictive search
+        const predictiveSearch = new PredictiveSearch({
+            inputSelector: '.search-input',
+            dropdownSelector: '.predictive-search-dropdown'
+        });
+
+
+    // // PredictiveSearch class definition
+    // class PredictiveSearch extends HTMLElement {
+    //     constructor() {
+    //         super();
+    //         this.input = document.querySelector('.search-input');
+    //         this.dropdown = this.querySelector('[data-predictive-search]');
+            
+    //         this.setupEventListeners();
+    //     }
+
+    //     setupEventListeners() {
+    //         this.input.addEventListener('input', this.handleInput.bind(this));
+    //     }
+
+    //     handleInput() {
+    //         const searchTerm = this.input.value;
+
+    //         // Fetch predictive search results
+    //         fetch(`/routes.search_url?search=${encodeURIComponent(searchTerm)}`)
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 this.renderResults(data);
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error fetching predictive search results:', error);
+    //             }); 
+    //     }
+
+    //     renderResults(data) {
+    //         // Render the predictive search results
+    //         // Here you can append the results to the dropdown
+    //         // For example:
+    //         this.dropdown.innerHTML = data; // Assuming data is HTML string
+    //         this.dropdown.classList.add('open'); // Show the dropdown
+    //     }
+    // }
+
+    // customElements.define('predictive-search', PredictiveSearch);
+
+    // // Initialize PredictiveSearch
+    // const predictiveSearch = document.querySelector('[data-predictive-search]');
+    // if (predictiveSearch) {
+    //     new PredictiveSearch();
+    // }
+// });
+
+    </script>
+
+  
+<div class="mobile-header-search{% if is_mobile %} mobile{% endif %}">
+  {% comment %}
+    <form action="/search" method="get" role="search" class="search-form" >
+        <input type="search" name="q" value="" placeholder="{{ section.settings.placeholder_1 }}" class="search-input" />
+        <button type="submit" class="search-submit">
+            <img src="https://cdn.shopify.com/s/files/1/0042/1888/0111/files/search_icon_fa6cb469-62ca-4868-8b7b-c322cca54fad.png?v=1714204815" alt="search-icon" />
+        </button>
+    </form>
+  {% endcomment %}
+
+
+  
+    <div class="predictive-search-dropdown"></div> <!-- Predictive Search Dropdown -->
+  <predictive-search class="search-modal__form" data-loading-text="{{ 'accessibility.loading' | t }}" data-product-to-show="{{ settings.quick_search_to_show }}">
+            <details class="search_details">
+                <summary class="header__search-full" aria-haspopup="dialog" aria-label="{{ 'general.search.search' | t }}">
+                    <button type="button" class="header-search-close" aria-label="{{ 'general.common.close' | t }}">{% render 'icon-close' %}</button>
+                    <form action="{{ routes.search_url }}" method="get" role="search" class="search search-modal__form" style="border-radius: 9px;">
+                        <div class="field">
+                            <input class="search__input field__input form-input-placeholder" id="Search-In-Modal" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.search_product' | t }}" autocomplete="off" {%- if settings.show_quick_search -%}role="combobox" aria-expanded="false" aria-owns="predictive-search-results-list" aria-controls="predictive-search-results-list" aria-haspopup="listbox" aria-autocomplete="list" autocorrect="off" autocomplete="off" autocapitalize="off" spellcheck="false"{%- endif -%}>
+                            <input type="hidden" name="options[prefix]" value="last">
+                            <label class="field__label hiddenLabels" for="Search-In-Modal-Sidebar">{{ 'general.search.search' | t }}</label>
+                            <button class="button search__button field__button focus-inset" aria-label="{{ 'general.search.search' | t }}">{% render 'icon-search' %}</button>
+                        </div>
+                        <!-- {%- if settings.show_quick_search -%} -->
+                            <!-- {%- if settings.show_search_trending or settings.show_search_product -%} -->
+                                <!-- {%- render 'quick-searching-trending-products', sectionId: 'sidebar-search-list-result' -%}
+                            {%- endif -%} -->
+                            <!-- {%- if settings.show_quick_search -%} -->
+                                {%- render 'predictive-search-results' -%}
+                            {%- endif -%}
+                        {%- endif -%}
+                    </form>
+                </summary>
+                <div class="search-modal modal__content{% if settings.show_quick_search %} quickSearch{% endif %}" role="dialog" aria-modal="true" aria-label="{{ 'general.search.search' | t }}">
+                    <!-- {%- if settings.show_quick_search -%} -->
+                        {% render 'halo-quick-search', sectionId: 'quick-sidebar-search-list-result' %}
+                    {%- endif -%}
+                </div>
+            </details>
+        </predictive-search>
+</div>
+
+{%- endif -%}
+                    <div style="display: block;width: 100%;background-color: #f2f2f2;height: 3px;"></div>
+
+                    
+                    <!-- here ends the extra code -->
+  
 </{% if section.settings.sticky_header_type != 'none' %}sticky-header-mobile{% else %}div{% endif %}>
 
 {% javascript %}
@@ -313,7 +568,41 @@
             "unit": "px",
             "label": "t:sections.main-list-collections.settings.spacing.mg_bottom",
             "default": 0
-        }
+        },      {
+      "type": "checkbox",
+      "id": "show_search_bar",
+      "label": "Show Search Bar in Header"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_1",
+      "label": "Placeholder 1",
+      "default": "Search products..."
+    },
+    {
+      "type": "text",
+      "id": "placeholder_2",
+      "label": "Placeholder 2",
+      "default": "Find items..."
+    },
+    {
+      "type": "text",
+      "id": "placeholder_3",
+      "label": "Placeholder 3",
+      "default": "Type here..."
+    },
+    {
+      "type": "text",
+      "id": "placeholder_4",
+      "label": "Placeholder 4",
+      "default": "Type here..."
+    },
+    {
+      "type": "text",
+      "id": "placeholder_5",
+      "label": "Placeholder 5",
+      "default": "Type here..."
+    }
     ],
     "blocks": [
         {
